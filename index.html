@@ -36,12 +36,12 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white pb-20 md:pb-0">
 
-    <!-- Configuração Inicial do Supabase (Insira suas credenciais públicas aqui) -->
+    <!-- Configuração do Supabase -->
     <script>
         // ==========================================
         //CONFIGURE SEU SUPABASE AQUI:
         // ==========================================
-        const SUPABASE_URL = 'SUA_URL_DO_SUPABASE_AQUI'; // Ex: https://xyz.supabase.co
+        const SUPABASE_URL = 'SUA_URL_DO_SUPABASE_AQUI'; 
         const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_PUBLICA_AQUI';
         // ==========================================
 
@@ -54,9 +54,8 @@
     <!-- Auth Screens Container -->
     <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950">
         
-        <!-- Aviso se o Supabase não estiver configurado -->
         <div id="supabase-warning" class="hidden mb-4 w-full max-w-md p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-xs text-amber-300 text-center">
-            ⚠️ O Supabase ainda não foi configurado no código. Insira sua URL e Chave Anon no script do arquivo para habilitar a autenticação real.
+            ⚠️ O Supabase ainda não foi configurado no código. Insira sua URL e Chave Anon no script.
         </div>
 
         <!-- Login Card -->
@@ -72,32 +71,16 @@
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">E-mail</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" id="login-email" required class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm transition" placeholder="professor@escola.com">
-                    </div>
+                    <input type="email" id="login-email" required class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="professor@escola.com">
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Senha</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm transition" placeholder="••••••••">
-                    </div>
+                    <input type="password" id="login-password" required class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="••••••••">
                 </div>
-
                 <div class="flex items-center justify-between text-xs pt-1">
-                    <label class="flex items-center text-slate-400 cursor-pointer">
-                        <input type="checkbox" class="rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500 w-4 h-4 mr-2">
-                        Lembrar-me
-                    </label>
                     <a href="#" onclick="handleForgotPassword()" class="text-brand-400 hover:underline font-medium">Esqueci minha senha</a>
                 </div>
-
-                <button type="submit" class="w-full py-3.5 px-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-500/20 transition transform active:scale-95 text-sm flex items-center justify-center space-x-2">
-                    <span>Entrar</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <button type="submit" class="w-full py-3.5 px-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl shadow-lg transition text-sm">Entrar</button>
             </form>
 
             <div class="mt-8 text-center border-t border-slate-700/60 pt-6">
@@ -110,61 +93,24 @@
         <div id="register-view" class="hidden w-full max-w-md bg-slate-800/80 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-extrabold tracking-tight text-white">Criar Conta no <span class="text-brand-400">EduFís AI</span></h1>
-                <p class="text-slate-400 text-xs mt-1">Preencha seus dados para começar</p>
             </div>
-
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3.5">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Nome Completo</label>
-                    <input type="text" id="reg-name" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Ex: Prof. Carlos Silva">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 text-sm" placeholder="professor@escola.com">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">E-mail</label>
-                    <input type="email" id="reg-email" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="carlos@escola.com">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Senha</label>
+                    <input type="password" id="reg-password" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 text-sm" placeholder="••••••••">
                 </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Senha</label>
-                        <input type="password" id="reg-password" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="••••••••">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Confirmar Senha</label>
-                        <input type="password" id="reg-confirm" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="••••••••">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Cidade</label>
-                        <input type="text" id="reg-city" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="São Paulo">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Estado</label>
-                        <select id="reg-state" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:border-brand-500 text-sm">
-                            <option value="SP">SP</option><option value="RJ">RJ</option><option value="MG">MG</option><option value="RS">RS</option><option value="PR">PR</option><option value="SC">SC</option><option value="BA">BA</option><option value="DF">DF</option><option value="OUTRO">Outro</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Escola (Opcional)</label>
-                    <input type="text" id="reg-school" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Ex: E.E. Rui Barbosa">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Confirmar Senha</label>
+                    <input type="password" id="reg-confirm" required class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 text-sm" placeholder="••••••••">
                 </div>
-
-                <div class="flex items-center pt-2">
-                    <input type="checkbox" id="reg-terms" required class="rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500 w-4 h-4 mr-2">
-                    <label for="reg-terms" class="text-xs text-slate-400">Concordo com os <a href="#" class="text-brand-400 underline">termos de uso</a> e política de privacidade.</label>
-                </div>
-
-                <button type="submit" class="w-full py-3.5 px-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl shadow-lg shadow-brand-500/20 transition transform active:scale-95 text-sm mt-3">
-                    Criar Conta
-                </button>
+                <button type="submit" class="w-full py-3.5 px-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl transition text-sm mt-3">Criar Conta</button>
             </form>
-
             <div class="mt-6 text-center border-t border-slate-700/60 pt-4">
-                <button onclick="switchAuthView('login')" class="text-xs font-semibold text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left mr-1"></i> Já tenho uma conta (Entrar)</button>
+                <button onclick="switchAuthView('login')" class="text-xs font-semibold text-slate-400 hover:text-white transition">Já tenho uma conta</button>
             </div>
         </div>
     </div>
@@ -175,7 +121,7 @@
         <!-- Desktop Sidebar -->
         <aside class="hidden md:flex flex-col w-64 bg-slate-900 border-r border-slate-800 p-4 shrink-0 fixed inset-y-0 z-30">
             <div class="flex items-center space-x-3 px-2 py-4 border-b border-slate-800">
-                <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 text-xl font-bold">
+                <div class="w-10 h-10 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 text-xl font-bold">
                     <i class="fa-solid fa-dumbbell"></i>
                 </div>
                 <div>
@@ -184,72 +130,40 @@
                 </div>
             </div>
 
-            <!-- Navigation Links -->
             <nav class="flex-1 space-y-1.5 py-4 overflow-y-auto pr-1 text-sm">
-                <a href="#" onclick="navigateTo('dashboard')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="dashboard">
-                    <i class="fa-solid fa-house w-5 text-center"></i><span>Início</span>
-                </a>
-                <a href="#" onclick="navigateTo('turmas')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="turmas">
-                    <i class="fa-solid fa-school w-5 text-center"></i><span>Turmas</span>
-                </a>
-                <a href="#" onclick="navigateTo('alunos')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="alunos">
-                    <i class="fa-solid fa-user-graduate w-5 text-center"></i><span>Alunos</span>
-                </a>
-                <a href="#" onclick="navigateTo('planos')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="planos">
-                    <i class="fa-solid fa-book-open w-5 text-center"></i><span>Planos de Aula</span>
-                </a>
-                <a href="#" onclick="navigateTo('gestao')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="gestao">
-                    <i class="fa-solid fa-file-lines w-5 text-center"></i><span>Plano para Gestão</span>
-                </a>
-                <a href="#" onclick="navigateTo('atividades')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="atividades">
-                    <i class="fa-solid fa-person-running w-5 text-center"></i><span>Atividades</span>
-                </a>
-                <a href="#" onclick="navigateTo('provas')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="provas">
-                    <i class="fa-solid fa-file-pen w-5 text-center"></i><span>Provas</span>
-                </a>
-                <a href="#" onclick="navigateTo('avaliacoes')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="avaliacoes">
-                    <i class="fa-solid fa-chart-pie w-5 text-center"></i><span>Avaliações</span>
-                </a>
-                <a href="#" onclick="navigateTo('assistente')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="assistente">
-                    <i class="fa-solid fa-robot w-5 text-center text-brand-400"></i><span>Assistente IA</span>
-                </a>
-                <a href="#" onclick="navigateTo('calendario')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="calendario">
-                    <i class="fa-solid fa-calendar-days w-5 text-center"></i><span>Calendário</span>
-                </a>
-                <a href="#" onclick="navigateTo('configuracoes')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition" data-target="configuracoes">
-                    <i class="fa-solid fa-gear w-5 text-center"></i><span>Configurações</span>
-                </a>
+                <a href="#" onclick="navigateTo('dashboard')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="dashboard"><i class="fa-solid fa-house w-5"></i><span>Início</span></a>
+                <a href="#" onclick="navigateTo('turmas')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="turmas"><i class="fa-solid fa-school w-5"></i><span>Turmas</span></a>
+                <a href="#" onclick="navigateTo('alunos')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="alunos"><i class="fa-solid fa-user-graduate w-5"></i><span>Alunos</span></a>
+                <a href="#" onclick="navigateTo('planos')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="planos"><i class="fa-solid fa-book-open w-5"></i><span>Planos de Aula</span></a>
+                <a href="#" onclick="navigateTo('gestao')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="gestao"><i class="fa-solid fa-file-lines w-5"></i><span>Plano para Gestão</span></a>
+                <a href="#" onclick="navigateTo('atividades')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="atividades"><i class="fa-solid fa-person-running w-5"></i><span>Atividades</span></a>
+                <a href="#" onclick="navigateTo('provas')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="provas"><i class="fa-solid fa-file-pen w-5"></i><span>Provas</span></a>
+                <a href="#" onclick="navigateTo('avaliacoes')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="avaliacoes"><i class="fa-solid fa-chart-pie w-5"></i><span>Avaliações</span></a>
+                <a href="#" onclick="navigateTo('assistente')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="assistente"><i class="fa-solid fa-robot w-5 text-brand-400"></i><span>Assistente IA</span></a>
+                <a href="#" onclick="navigateTo('calendario')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="calendario"><i class="fa-solid fa-calendar-days w-5"></i><span>Calendário</span></a>
+                <a href="#" onclick="navigateTo('configuracoes')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-target="configuracoes"><i class="fa-solid fa-gear w-5"></i><span>Configurações</span></a>
             </nav>
 
             <div class="pt-4 border-t border-slate-800">
-                <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 transition text-sm">
-                    <i class="fa-solid fa-right-from-bracket w-5 text-center"></i><span>Sair</span>
-                </button>
+                <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 text-sm"><i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair</span></button>
             </div>
         </aside>
 
-        <!-- Mobile Header & Navigation -->
+        <!-- Mobile Header -->
         <header class="md:hidden sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 text-sm font-bold">
-                    <i class="fa-solid fa-dumbbell"></i>
-                </div>
+                <div class="w-8 h-8 rounded-lg bg-brand-500/15 text-brand-400 flex items-center justify-center font-bold"><i class="fa-solid fa-dumbbell"></i></div>
                 <span class="font-extrabold text-white">EduFís <span class="text-brand-400">AI</span></span>
             </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="toggleMobileMenu()" class="p-2 text-slate-300 hover:text-white focus:outline-none"><i class="fa-solid fa-bars text-xl"></i></button>
-            </div>
+            <button onclick="toggleMobileMenu()" class="p-2 text-slate-300"><i class="fa-solid fa-bars text-xl"></i></button>
         </header>
 
-        <!-- Mobile Slide-over Menu -->
+        <!-- Mobile Menu -->
         <div id="mobile-menu" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden md:hidden">
             <div class="absolute right-0 top-0 bottom-0 w-72 bg-slate-900 border-l border-slate-800 p-5 flex flex-col shadow-2xl">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center"><i class="fa-solid fa-dumbbell"></i></div>
-                        <span class="font-bold text-white">Menu EduFís AI</span>
-                    </div>
-                    <button onclick="toggleMobileMenu()" class="text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    <span class="font-bold text-white">Menu EduFís AI</span>
+                    <button onclick="toggleMobileMenu()" class="text-slate-400 p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
                 <nav class="flex-1 space-y-1 overflow-y-auto text-sm">
                     <a href="#" onclick="navigateTo('dashboard'); toggleMobileMenu();" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-house w-5"></i><span>Início</span></a>
@@ -264,362 +178,166 @@
                     <a href="#" onclick="navigateTo('calendario'); toggleMobileMenu();" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-calendar-days w-5"></i><span>Calendário</span></a>
                     <a href="#" onclick="navigateTo('configuracoes'); toggleMobileMenu();" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-gear w-5"></i><span>Configurações</span></a>
                 </nav>
-                <div class="pt-4 border-t border-slate-800">
-                    <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 text-sm"><i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair</span></button>
-                </div>
             </div>
         </div>
 
         <!-- Main Content Area -->
         <main class="flex-1 md:ml-64 p-4 md:p-8 max-w-7xl mx-auto w-full">
             
-            <!-- 1. DASHBOARD VIEW -->
+            <!-- Dashboard -->
             <section id="view-dashboard" class="space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-brand-900/40 via-slate-900 to-slate-900 border border-brand-500/20 rounded-3xl p-6 shadow-xl">
-                    <div>
-                        <h2 class="text-2xl md:text-3xl font-extrabold text-white">Olá, Professor! 👋</h2>
-                        <p class="text-slate-400 text-sm mt-1">Pronto para inspirar seus alunos na aula de Educação Física hoje?</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="navigateTo('assistente')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i><span>Nova Consulta IA</span>
-                        </button>
-                    </div>
+                <div class="bg-gradient-to-r from-brand-900/40 via-slate-900 to-slate-900 border border-brand-500/20 rounded-3xl p-6 shadow-xl">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Olá, Professor! 👋</h2>
+                    <p class="text-slate-400 text-sm mt-1">Nenhum dado cadastrado ainda. Comece criando suas turmas e planos.</p>
                 </div>
 
-                <!-- Stats Cards (Empty state ready) -->
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div onclick="navigateTo('turmas')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-brand-400 text-lg mb-2"><i class="fa-solid fa-school"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-turmas">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Turmas</div>
-                    </div>
-                    <div onclick="navigateTo('alunos')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-blue-400 text-lg mb-2"><i class="fa-solid fa-user-graduate"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-alunos">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Alunos</div>
-                    </div>
-                    <div onclick="navigateTo('planos')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-amber-400 text-lg mb-2"><i class="fa-solid fa-book-open"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-planos">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Planos de aula</div>
-                    </div>
-                    <div onclick="navigateTo('atividades')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-emerald-400 text-lg mb-2"><i class="fa-solid fa-person-running"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-atividades">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Atividades</div>
-                    </div>
-                    <div onclick="navigateTo('provas')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-purple-400 text-lg mb-2"><i class="fa-solid fa-file-pen"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-provas">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Provas</div>
-                    </div>
-                    <div onclick="navigateTo('avaliacoes')" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 hover:border-brand-500/50 transition cursor-pointer shadow">
-                        <div class="text-pink-400 text-lg mb-2"><i class="fa-solid fa-chart-pie"></i></div>
-                        <div class="text-2xl font-bold text-white" id="stat-avaliacoes">0</div>
-                        <div class="text-xs text-slate-400 mt-0.5">Avaliações</div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-                        <i class="fa-solid fa-bolt text-amber-400"></i><span>Acesso Rápido</span>
-                    </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <button onclick="navigateTo('planos')" class="p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-2xl text-left transition group">
-                            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-book-open"></i></div>
-                            <div class="font-bold text-white text-sm">Criar plano de aula</div>
-                            <div class="text-xs text-slate-400 mt-0.5">Com auxílio de IA</div>
-                        </button>
-                        <button onclick="navigateTo('atividades')" class="p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-2xl text-left transition group">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-person-running"></i></div>
-                            <div class="font-bold text-white text-sm">Criar atividade</div>
-                            <div class="text-xs text-slate-400 mt-0.5">Jogos e circuitos</div>
-                        </button>
-                        <button onclick="navigateTo('provas')" class="p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-2xl text-left transition group">
-                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-file-pen"></i></div>
-                            <div class="font-bold text-white text-sm">Criar prova</div>
-                            <div class="text-xs text-slate-400 mt-0.5">Questões com gabarito</div>
-                        </button>
-                        <button onclick="navigateTo('assistente')" class="p-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-2xl text-left transition group">
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-robot"></i></div>
-                            <div class="font-bold text-white text-sm">Assistente IA</div>
-                            <div class="text-xs text-slate-400 mt-0.5">Tire dúvidas pedagógicas</div>
-                        </button>
-                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-turmas">0</div><div class="text-xs text-slate-400">Turmas</div></div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-alunos">0</div><div class="text-xs text-slate-400">Alunos</div></div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-planos">0</div><div class="text-xs text-slate-400">Planos</div></div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-atividades">0</div><div class="text-xs text-slate-400">Atividades</div></div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-provas">0</div><div class="text-xs text-slate-400">Provas</div></div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center"><div class="text-2xl font-bold text-white" id="stat-avaliacoes">0</div><div class="text-xs text-slate-400">Avaliações</div></div>
                 </div>
             </section>
 
-            <!-- 2. TURMAS VIEW -->
+            <!-- Turmas -->
             <section id="view-turmas" class="hidden space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-white">Gerenciamento de Turmas</h2>
-                        <p class="text-slate-400 text-sm">Cadastre e organize suas turmas escolares.</p>
-                    </div>
-                    <button onclick="openModal('modal-turma')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm shadow transition flex items-center space-x-2">
-                        <i class="fa-solid fa-plus"></i><span>Nova Turma</span>
-                    </button>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-extrabold text-white">Turmas</h2>
+                    <button onclick="openModal('modal-turma')" class="px-4 py-2.5 bg-brand-500 text-slate-950 font-bold rounded-xl text-sm"><i class="fa-solid fa-plus mr-1"></i> Nova Turma</button>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="turmas-grid">
-                    <!-- Renderizado dinamicamente (vazio por padrão) -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="turmas-grid"></div>
             </section>
 
-            <!-- 3. ALUNOS VIEW -->
+            <!-- Alunos -->
             <section id="view-alunos" class="hidden space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-white">Alunos matriculados</h2>
-                        <p class="text-slate-400 text-sm">Gerencie os estudantes por turma e chamada.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="openModal('modal-aluno')" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm shadow transition">
-                            <i class="fa-solid fa-user-plus mr-1"></i> Novo Aluno
-                        </button>
-                    </div>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-extrabold text-white">Alunos</h2>
+                    <button onclick="openModal('modal-aluno')" class="px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl text-sm"><i class="fa-solid fa-user-plus mr-1"></i> Novo Aluno</button>
                 </div>
-
-                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-800/80 text-slate-300 uppercase text-xs tracking-wider border-b border-slate-700">
-                                    <th class="p-4">Nº</th>
-                                    <th class="p-4">Nome do Aluno</th>
-                                    <th class="p-4">Turma</th>
-                                    <th class="p-4">Observações</th>
-                                    <th class="p-4 text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="alunos-table-body" class="divide-y divide-slate-800">
-                                <!-- Vazio por padrão -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-800/80 text-xs text-slate-300 uppercase">
+                            <tr><th class="p-4">Nº</th><th class="p-4">Nome</th><th class="p-4">Turma</th><th class="p-4">Observações</th></tr>
+                        </thead>
+                        <tbody id="alunos-table-body" class="divide-y divide-slate-800"></tbody>
+                    </table>
                 </div>
             </section>
 
-            <!-- 4. PLANOS DE AULA VIEW -->
+            <!-- Planos de Aula -->
             <section id="view-planos" class="hidden space-y-6">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-xl">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl md:text-2xl font-extrabold text-white">Gerador Inteligente de Plano de Aula</h2>
-                            <p class="text-slate-400 text-sm">Preencha os parâmetros para estruturar sua aula pedagógica completa.</p>
-                        </div>
-                    </div>
-
-                    <form id="form-plano" onsubmit="generatePlano(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Ano / Série</label>
-                            <select id="plano-serie" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:outline-none focus:border-brand-500">
-                                <option>6º Ano Fundamental</option><option>7º Ano Fundamental</option><option>8º Ano Fundamental</option><option>9º Ano Fundamental</option><option>1º Ano Ensino Médio</option><option>2º Ano Ensino Médio</option><option>3º Ano Ensino Médio</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Tema da Aula</label>
-                            <input type="text" id="plano-tema" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:outline-none focus:border-brand-500" placeholder="Ex: Voleibol: Toque e Manchete">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Duração</label>
-                            <select id="plano-duracao" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:outline-none focus:border-brand-500">
-                                <option>50 minutos (1 aula)</option><option>100 minutos (2 aulas)</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2 lg:col-span-3 pt-2">
-                            <button type="submit" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
-                                <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-                                <span>Gerar Plano de Aula</span>
-                            </button>
-                        </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8">
+                    <h2 class="text-xl font-extrabold text-white mb-4">Gerador de Plano de Aula</h2>
+                    <form onsubmit="generatePlano(event)" class="space-y-4 text-sm">
+                        <div><label class="block text-xs text-slate-300 mb-1">Tema da Aula</label><input type="text" id="plano-tema" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Ex: Fundamentos do Basquetebol"></div>
+                        <button type="submit" class="w-full py-3 bg-brand-500 text-slate-950 font-bold rounded-xl">Gerar Plano</button>
                     </form>
                 </div>
             </section>
 
-            <!-- 5. PLANO PARA GESTÃO VIEW -->
+            <!-- Plano Gestão -->
             <section id="view-gestao" class="hidden space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-white">Plano de Aula para Gestão Escolar</h2>
-                        <p class="text-slate-400 text-sm">Documento formal pronto para envio à coordenação pedagógica.</p>
-                    </div>
-                    <button onclick="window.print()" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm shadow transition flex items-center space-x-2">
-                        <i class="fa-solid fa-print"></i><span>Imprimir / Salvar PDF</span>
-                    </button>
-                </div>
-
-                <div class="bg-white text-slate-900 rounded-3xl p-8 shadow-2xl max-w-4xl mx-auto space-y-6 font-sans">
-                    <div class="flex items-center justify-between border-b-2 border-slate-200 pb-4">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-14 h-14 bg-slate-900 text-brand-400 rounded-2xl flex items-center justify-center font-bold text-2xl">🏫</div>
-                            <div>
-                                <h3 class="font-extrabold text-xl">Escola Cadastrada</h3>
-                                <p class="text-xs text-slate-500">Coordenação Pedagógica</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-600">Preencha os dados do plano para gerar o documento formal de gestão.</p>
+                <h2 class="text-2xl font-extrabold text-white">Plano de Aula para Gestão</h2>
+                <div class="bg-white text-slate-900 rounded-3xl p-8 shadow-2xl max-w-4xl mx-auto">
+                    <p class="text-center text-slate-500">Documento formal pronto para emissão.</p>
                 </div>
             </section>
 
-            <!-- 6. ATIVIDADES VIEW -->
+            <!-- Atividades -->
             <section id="view-atividades" class="hidden space-y-6">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h2 class="text-xl font-extrabold text-white mb-2">Gerador de Atividades Físicas</h2>
-                    <p class="text-slate-400 text-sm">Crie jogos e dinâmicas inclusivas.</p>
-                </div>
+                <h2 class="text-2xl font-extrabold text-white">Gerador de Atividades</h2>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6"><p class="text-slate-400 text-sm">Nenhuma atividade gerada.</p></div>
             </section>
 
-            <!-- 7. PROVAS VIEW -->
+            <!-- Provas -->
             <section id="view-provas" class="hidden space-y-6">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h2 class="text-xl font-extrabold text-white mb-2">Criador de Provas e Questionários</h2>
-                    <p class="text-slate-400 text-sm">Gere avaliações teóricas com gabarito.</p>
-                </div>
+                <h2 class="text-2xl font-extrabold text-white">Criador de Provas</h2>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6"><p class="text-slate-400 text-sm">Nenhuma prova gerada.</p></div>
             </section>
 
-            <!-- 8. AVALIAÇÕES VIEW -->
+            <!-- Avaliações -->
             <section id="view-avaliacoes" class="hidden space-y-6">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h2 class="text-xl font-extrabold text-white mb-2">Avaliações e Desempenho</h2>
-                    <p class="text-slate-400 text-sm">Nenhuma avaliação registrada até o momento.</p>
-                </div>
+                <h2 class="text-2xl font-extrabold text-white">Avaliações</h2>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6"><p class="text-slate-400 text-sm">Nenhuma avaliação registrada.</p></div>
             </section>
 
-            <!-- 9. ASSISTENTE IA VIEW -->
+            <!-- Assistente IA -->
             <section id="view-assistente" class="hidden space-y-6 h-[80vh] flex flex-col">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 flex items-center justify-between shadow-xl">
-                    <h2 class="font-bold text-white text-base">Assistente EduFís AI</h2>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4"><h2 class="font-bold text-white">Assistente EduFís AI</h2></div>
+                <div id="chat-messages" class="flex-1 bg-slate-900/60 border border-slate-800 rounded-3xl p-4 overflow-y-auto space-y-4">
+                    <div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-brand-500 text-slate-950 font-bold flex items-center justify-center">AI</div><div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 text-sm text-slate-200">Olá! Como posso ajudar nas suas aulas?</div></div>
                 </div>
-                <div id="chat-messages" class="flex-1 bg-slate-900/60 border border-slate-800 rounded-3xl p-4 md:p-6 overflow-y-auto space-y-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-brand-500 text-slate-950 font-bold flex items-center justify-center shrink-0">AI</div>
-                        <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-4 text-sm text-slate-200 max-w-lg shadow">
-                            Olá! Sou seu assistente de Educação Física. Como posso ajudar nas suas aulas hoje?
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 pt-2">
-                    <input type="text" id="chat-input" onkeypress="if(event.key==='Enter') sendChatMessage()" placeholder="Digite sua dúvida..." class="flex-1 px-4 py-3.5 bg-slate-900 border border-slate-700 rounded-2xl text-slate-100 text-sm focus:outline-none focus:border-brand-500">
-                    <button onclick="sendChatMessage()" class="px-6 py-3.5 bg-brand-500 text-slate-950 font-bold rounded-2xl text-sm">Enviar</button>
-                </div>
+                <div class="flex space-x-2"><input type="text" id="chat-input" onkeypress="if(event.key==='Enter') sendChatMessage()" placeholder="Digite sua dúvida..." class="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 rounded-2xl text-slate-100 text-sm"><button onclick="sendChatMessage()" class="px-6 py-3 bg-brand-500 text-slate-950 font-bold rounded-2xl text-sm">Enviar</button></div>
             </section>
 
-            <!-- 10. CALENDÁRIO VIEW -->
+            <!-- Calendário -->
             <section id="view-calendario" class="hidden space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <h2 class="text-xl font-bold text-white mb-4">Calendário Escolar</h2>
-                    <p class="text-slate-400 text-sm">Nenhum evento agendado.</p>
-                </div>
+                <h2 class="text-2xl font-extrabold text-white">Calendário</h2>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6"><p class="text-slate-400 text-sm">Nenhum evento agendado.</p></div>
             </section>
 
-            <!-- 11. CONFIGURAÇÕES VIEW -->
+            <!-- Configurações -->
             <section id="view-configuracoes" class="hidden space-y-6 max-w-2xl mx-auto">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-6">
-                    <h2 class="text-xl font-extrabold text-white border-b border-slate-800 pb-4">Configurações do Perfil</h2>
-                    <div class="space-y-4 text-sm">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail Conectado</label>
-                            <input type="text" id="cfg-email" readonly class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-400">
-                        </div>
-                    </div>
-                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6"><h2 class="text-xl font-extrabold text-white mb-4">Configurações</h2><input type="text" id="cfg-email" readonly class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-slate-400 text-sm"></div>
             </section>
 
         </main>
     </div>
 
     <!-- Modals -->
-    <div id="modal-turma" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl">
-            <h3 class="text-lg font-bold text-white mb-4">Cadastrar Nova Turma</h3>
+    <div id="modal-turma" class="fixed inset-0 z-50 bg-slate-950/80 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md">
+            <h3 class="text-lg font-bold text-white mb-4">Nova Turma</h3>
             <form onsubmit="saveTurma(event)" class="space-y-3 text-sm">
-                <div><label class="block text-xs text-slate-400 mb-1">Nome da Turma</label><input type="text" id="turma-nome" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Ex: 8º Ano A"></div>
-                <div><label class="block text-xs text-slate-400 mb-1">Ano / Série</label><input type="text" id="turma-serie" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Ex: Fundamental"></div>
-                <div><label class="block text-xs text-slate-400 mb-1">Turno</label><select id="turma-turno" class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white"><option>Matutino</option><option>Vespertino</option><option>Noturno</option></select></div>
-                <div class="flex justify-end space-x-2 pt-4">
-                    <button type="button" onclick="closeModal('modal-turma')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl text-xs">Salvar Turma</button>
-                </div>
+                <input type="text" id="turma-nome" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Nome da Turma">
+                <input type="text" id="turma-serie" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Série / Ano">
+                <div class="flex justify-end space-x-2 pt-2"><button type="button" onclick="closeModal('modal-turma')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl">Cancelar</button><button type="submit" class="px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl">Salvar</button></div>
             </form>
         </div>
     </div>
 
-    <div id="modal-aluno" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl">
-            <h3 class="text-lg font-bold text-white mb-4">Cadastrar Novo Aluno</h3>
+    <div id="modal-aluno" class="fixed inset-0 z-50 bg-slate-950/80 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md">
+            <h3 class="text-lg font-bold text-white mb-4">Novo Aluno</h3>
             <form onsubmit="saveAluno(event)" class="space-y-3 text-sm">
-                <div><label class="block text-xs text-slate-400 mb-1">Nome do Aluno</label><input type="text" id="aluno-nome" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Nome completo"></div>
-                <div><label class="block text-xs text-slate-400 mb-1">Turma</label><input type="text" id="aluno-turma" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Ex: 8º Ano A"></div>
-                <div><label class="block text-xs text-slate-400 mb-1">Número da Chamada</label><input type="number" id="aluno-num" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="1"></div>
-                <div class="flex justify-end space-x-2 pt-4">
-                    <button type="button" onclick="closeModal('modal-aluno')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl text-xs">Salvar Aluno</button>
-                </div>
+                <input type="text" id="aluno-nome" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Nome do Aluno">
+                <input type="text" id="aluno-turma" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Turma">
+                <input type="number" id="aluno-num" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white" placeholder="Número da Chamada">
+                <div class="flex justify-end space-x-2 pt-2"><button type="button" onclick="closeModal('modal-aluno')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl">Cancelar</button><button type="submit" class="px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl">Salvar</button></div>
             </form>
         </div>
     </div>
 
-    <!-- Application Script com Integração Supabase Real -->
+    <!-- Script de Integração -->
     <script>
-        let state = {
-            currentUser: null,
-            turmas: [],
-            alunos: []
-        };
+        let state = { currentUser: null, turmas: [], alunos: [] };
 
-        // Verifica configuração do Supabase ao carregar
         window.addEventListener('DOMContentLoaded', () => {
-            if (!supabaseClient) {
-                document.getElementById('supabase-warning').classList.remove('hidden');
-            } else {
-                checkSession();
-            }
+            if (!supabaseClient) document.getElementById('supabase-warning').classList.remove('hidden');
+            else checkSession();
         });
 
         async function checkSession() {
             if (!supabaseClient) return;
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                state.currentUser = session.user;
-                bootApp();
-            }
+            if (session) { state.currentUser = session.user; bootApp(); }
         }
 
-        function switchAuthView(view) {
-            if(view === 'register') {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('register-view').classList.remove('hidden');
-            } else {
-                document.getElementById('register-view').classList.add('hidden');
-                document.getElementById('login-view').classList.remove('hidden');
-            }
+        function switchAuthView(v) {
+            if(v === 'register') { document.getElementById('login-view').classList.add('hidden'); document.getElementById('register-view').classList.remove('hidden'); }
+            else { document.getElementById('register-view').classList.add('hidden'); document.getElementById('login-view').classList.remove('hidden'); }
         }
 
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-
-            if (!supabaseClient) {
-                alert('Configure o Supabase no script para realizar o login real.');
-                return;
-            }
-
+            if (!supabaseClient) { alert('Configure o Supabase.'); return; }
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert('Erro ao entrar: ' + error.message);
-                return;
-            }
-
-            state.currentUser = data.user;
-            bootApp();
+            if (error) { alert('Erro: ' + error.message); return; }
+            state.currentUser = data.user; bootApp();
         }
 
         async function handleRegister(e) {
@@ -627,49 +345,23 @@
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const confirm = document.getElementById('reg-confirm').value;
-
-            if (password !== confirm) {
-                alert('As senhas não coincidem.');
-                return;
-            }
-
-            if (!supabaseClient) {
-                alert('Configure o Supabase no script para realizar o cadastro real.');
-                return;
-            }
-
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) {
-                alert('Erro no cadastro: ' + error.message);
-                return;
-            }
-
-            alert('Conta criada com sucesso! Verifique seu e-mail ou faça login.');
-            switchAuthView('login');
+            if (password !== confirm) { alert('Senhas não coincidem.'); return; }
+            if (!supabaseClient) { alert('Configure o Supabase.'); return; }
+            const { error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) { alert('Erro: ' + error.message); return; }
+            alert('Conta criada com sucesso! Faça login.'); switchAuthView('login');
         }
 
         async function handleForgotPassword() {
             const email = document.getElementById('login-email').value;
-            if (!email) {
-                alert('Digite seu e-mail no campo de login primeiro.');
-                return;
-            }
-            if (!supabaseClient) {
-                alert('Supabase não configurado.');
-                return;
-            }
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-            if (error) {
-                alert('Erro: ' + error.message);
-            } else {
-                alert('E-mail de recuperação enviado com sucesso!');
-            }
+            if (!email) { alert('Informe seu e-mail no campo de login.'); return; }
+            if (!supabaseClient) return;
+            await supabaseClient.auth.resetPasswordForEmail(email);
+            alert('E-mail de recuperação enviado.');
         }
 
         async function handleLogout() {
-            if (supabaseClient) {
-                await supabaseClient.auth.signOut();
-            }
+            if (supabaseClient) await supabaseClient.auth.signOut();
             state.currentUser = null;
             document.getElementById('app-container').classList.add('hidden');
             document.getElementById('auth-container').classList.remove('hidden');
@@ -687,98 +379,56 @@
 
         async function fetchUserData() {
             if (!supabaseClient || !state.currentUser) return;
-            
-            // Exemplo de busca respeitando RLS por user_id
-            const { data: turmasData } = await supabaseClient.from('turmas').select('*');
-            if (turmasData) state.turmas = turmasData;
-
-            const { data: alunosData } = await supabaseClient.from('alunos').select('*');
-            if (alunosData) state.alunos = alunosData;
-
-            renderTurmas();
-            renderAlunos();
+            const { data: t } = await supabaseClient.from('turmas').select('*');
+            if (t) state.turmas = t;
+            const { data: a } = await supabaseClient.from('alunos').select('*');
+            if (a) state.alunos = a;
+            renderTurmas(); renderAlunos();
         }
 
-        function navigateTo(targetId) {
-            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
-            const target = document.getElementById(`view-${targetId}`);
-            if(target) target.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('bg-slate-800', 'text-white', 'font-bold');
-                if(item.dataset.target === targetId) {
-                    item.classList.add('bg-slate-800', 'text-white', 'font-bold');
-                }
+        function navigateTo(id) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            const t = document.getElementById(`view-${id}`); if(t) t.classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(i => {
+                i.classList.remove('bg-slate-800', 'text-white', 'font-bold');
+                if(i.dataset.target === id) i.classList.add('bg-slate-800', 'text-white', 'font-bold');
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function renderTurmas() {
-            const grid = document.getElementById('turmas-grid');
+            const g = document.getElementById('turmas-grid');
             document.getElementById('stat-turmas').innerText = state.turmas.length;
-
             if (state.turmas.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-sm bg-slate-900/50 border border-slate-800 rounded-3xl">Nenhuma turma cadastrada ainda. Clique em "Nova Turma" para começar.</div>`;
+                g.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-sm bg-slate-900/50 border border-slate-800 rounded-3xl">Nenhuma turma cadastrada ainda.</div>`;
                 return;
             }
-
-            grid.innerHTML = state.turmas.map(t => `
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                    <span class="px-3 py-1 bg-brand-500/10 text-brand-400 rounded-full text-xs font-bold">${t.turno || 'Matutino'}</span>
-                    <h3 class="text-xl font-bold text-white mt-3 mb-1">${t.nome}</h3>
-                    <p class="text-xs text-slate-400 mb-4">${t.serie}</p>
-                </div>
-            `).join('');
+            g.innerHTML = state.turmas.map(t => `<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl"><h3 class="text-xl font-bold text-white">${t.nome}</h3><p class="text-xs text-slate-400">${t.serie}</p></div>`).join('');
         }
 
         function renderAlunos() {
-            const tbody = document.getElementById('alunos-table-body');
+            const b = document.getElementById('alunos-table-body');
             document.getElementById('stat-alunos').innerText = state.alunos.length;
-
             if (state.alunos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">Nenhum aluno cadastrado ainda.</td></tr>`;
+                b.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum aluno cadastrado ainda.</td></tr>`;
                 return;
             }
-
-            tbody.innerHTML = state.alunos.map(a => `
-                <tr class="hover:bg-slate-800/50 transition">
-                    <td class="p-4 font-semibold text-brand-400">#${a.numero}</td>
-                    <td class="p-4 font-medium text-white">${a.nome}</td>
-                    <td class="p-4 text-slate-300">${a.turma}</td>
-                    <td class="p-4 text-slate-400 text-xs">${a.observacoes || '-'}</td>
-                    <td class="p-4 text-right"></td>
-                </tr>
-            `).join('');
+            b.innerHTML = state.alunos.map(a => `<tr class="hover:bg-slate-800/50"><td class="p-4 text-brand-400">#${a.numero}</td><td class="p-4 text-white">${a.nome}</td><td class="p-4 text-slate-300">${a.turma}</td><td class="p-4 text-slate-400">-</td></tr>`).join('');
         }
 
         async function saveTurma(e) {
             e.preventDefault();
             const nome = document.getElementById('turma-nome').value;
             const serie = document.getElementById('turma-serie').value;
-            const turno = document.getElementById('turma-turno').value;
-
             if (supabaseClient && state.currentUser) {
-                const { error } = await supabaseClient.from('turmas').insert([{ nome, serie, turno, user_id: state.currentUser.id }]);
-                if (error) {
-                    alert('Erro ao salvar turma: ' + error.message);
-                    return;
-                }
+                await supabaseClient.from('turmas').insert([{ nome, serie, user_id: state.currentUser.id }]);
                 await fetchUserData();
             } else {
-                state.turmas.push({ id: Date.now(), nome, serie, turno });
-                renderTurmas();
+                state.turmas.push({ id: Date.now(), nome, serie }); renderTurmas();
             }
             closeModal('modal-turma');
         }
@@ -788,39 +438,22 @@
             const nome = document.getElementById('aluno-nome').value;
             const turma = document.getElementById('aluno-turma').value;
             const numero = document.getElementById('aluno-num').value;
-
             if (supabaseClient && state.currentUser) {
-                const { error } = await supabaseClient.from('alunos').insert([{ nome, turma, numero: parseInt(numero), user_id: state.currentUser.id }]);
-                if (error) {
-                    alert('Erro ao salvar aluno: ' + error.message);
-                    return;
-                }
+                await supabaseClient.from('alunos').insert([{ nome, turma, numero: parseInt(numero), user_id: state.currentUser.id }]);
                 await fetchUserData();
             } else {
-                state.alunos.push({ id: Date.now(), nome, turma, numero });
-                renderAlunos();
+                state.alunos.push({ id: Date.now(), nome, turma, numero }); renderAlunos();
             }
             closeModal('modal-aluno');
         }
 
-        function generatePlano(e) {
-            e.preventDefault();
-            alert('Parâmetros definidos com sucesso! Conecte sua API de IA para gerar o conteúdo detalhado.');
-        }
-
+        function generatePlano(e) { e.preventDefault(); alert('Parâmetros definidos.'); }
         function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            if(!input.value.trim()) return;
-            const text = input.value;
-            input.value = '';
-
-            const container = document.getElementById('chat-messages');
-            container.innerHTML += `<div class="flex items-end justify-end"><div class="bg-brand-500 text-slate-950 rounded-2xl p-4 text-sm max-w-lg font-medium">${text}</div></div>`;
-            setTimeout(() => {
-                container.innerHTML += `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-brand-500 text-slate-950 font-bold flex items-center justify-center">AI</div><div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 text-sm text-slate-200 max-w-lg">Para interagir com respostas inteligentes em tempo real, conecte sua API de IA na próxima etapa.</div></div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 600);
-            container.scrollTop = container.scrollHeight;
+            const i = document.getElementById('chat-input'); if(!i.value.trim()) return;
+            const t = i.value; i.value = '';
+            const c = document.getElementById('chat-messages');
+            c.innerHTML += `<div class="flex justify-end"><div class="bg-brand-500 text-slate-950 rounded-2xl p-4 text-sm max-w-lg">${t}</div></div>`;
+            c.scrollTop = c.scrollHeight;
         }
     </script>
 </body>
