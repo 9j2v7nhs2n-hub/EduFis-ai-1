@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFís AI - Painel do Professor</title>
+    <title>EduFís AI - Seu assistente inteligente de Educação Física</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -15,6 +16,7 @@
                             400: '#34d399',
                             500: '#10b981',
                             600: '#059669',
+                            700: '#047857'
                         }
                     }
                 }
@@ -26,156 +28,140 @@
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Configuração do Supabase -->
+    <!-- Configuração Supabase -->
     <script>
         const SUPABASE_URL = 'https://fdawxgrheoukkuzzpfyr.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_fKYi1kPB6xuQBjR-pV4VQA_qQqJhqHW';
-
         let supabaseClient = null;
-
         try {
-            if (typeof supabase !== 'undefined' && supabase.createClient) {
+            if (typeof supabase !== 'undefined') {
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
-        } catch (e) {
-            console.error('Erro ao inicializar Supabase:', e);
-        }
+        } catch(e) { console.error(e); }
     </script>
 
-    <!-- CONTAINER DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
-    <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950">
-        <div class="w-full max-w-md bg-slate-800/85 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-8 shadow-2xl">
+    <!-- TELA DE AUTENTICAÇÃO -->
+    <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950">
+        <div class="w-full max-w-md bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 text-3xl mb-4 shadow-inner">
-                    <i class="fa-solid fa-dumbbell"></i>
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-4xl mb-4 shadow-inner">
+                    <i class="fa-solid fa-person-running"></i>
                 </div>
-                <h1 id="auth-title" class="text-2xl font-extrabold tracking-tight text-white">EduFís <span class="text-brand-400">AI</span></h1>
-                <p id="auth-subtitle" class="text-slate-400 text-sm mt-1">“Seu assistente inteligente de Educação Física.”</p>
+                <h1 class="text-3xl font-black tracking-tight text-white">EduFís <span class="text-emerald-400">AI</span></h1>
+                <p class="text-slate-400 text-xs mt-2 italic">“Seu assistente inteligente de Educação Física.”</p>
             </div>
 
-            <div id="form-feedback" class="hidden mb-4 p-3 rounded-xl text-xs text-center"></div>
+            <div id="auth-feedback" class="hidden mb-4 p-3 rounded-xl text-xs text-center"></div>
 
-            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">E-mail</label>
-                    <input type="email" id="auth-email" required class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="professor@escola.com">
+                    <input type="email" id="auth-email" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="professor@escola.com">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Senha</label>
-                    <input type="password" id="auth-password" required class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="••••••••">
+                    <input type="password" id="auth-password" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••">
                 </div>
-                
-                <div id="forgot-password-container" class="flex items-center justify-between text-xs pt-1">
-                    <button type="button" onclick="handleForgotPassword()" class="text-brand-400 hover:underline font-medium">Esqueci minha senha</button>
-                </div>
-
-                <button type="submit" id="submit-btn" class="w-full py-3.5 px-4 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl shadow-lg transition text-sm cursor-pointer">Entrar</button>
+                <button type="submit" id="auth-btn" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black rounded-xl shadow-lg transition text-sm cursor-pointer">Acessar Painel</button>
             </form>
-
             <div class="text-center mt-6 text-xs text-slate-400">
-                <span id="toggle-text">Não tem uma conta?</span>
-                <button type="button" onclick="toggleAuthMode()" id="toggle-btn" class="text-brand-400 hover:underline font-semibold ml-1">Criar minha conta</button>
+                <span id="auth-toggle-text">Não tem conta?</span> <button type="button" onclick="toggleAuth()" id="auth-toggle-btn" class="text-emerald-400 font-bold hover:underline ml-1">Criar acesso</button>
             </div>
         </div>
     </div>
 
-    <!-- PAINEL PRINCIPAL (DASHBOARD COM SIDEBAR) -->
-    <div id="dashboard-view" class="hidden min-h-screen flex bg-slate-950 w-full">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0">
+    <!-- PAINEL PRINCIPAL (DASHBOARD) -->
+    <div id="dashboard-view" class="hidden min-h-screen flex flex-col md:flex-row w-full bg-slate-950">
+        
+        <!-- SIDEBAR DE NAVEGAÇÃO -->
+        <aside class="w-full md:w-72 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-5 shrink-0 select-none">
             <div>
-                <div class="flex items-center space-x-3 px-3 py-4 mb-6 border-b border-slate-800">
-                    <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
-                        <i class="fa-solid fa-dumbbell"></i>
+                <div class="flex items-center space-x-3 px-2 py-3 mb-6 border-b border-slate-800">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl">
+                        <i class="fa-solid fa-person-running"></i>
                     </div>
                     <div>
-                        <span class="font-extrabold text-white text-lg">EduFís <span class="text-brand-400">AI</span></span>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Painel do Professor</p>
+                        <span class="font-black text-white text-lg tracking-wide">EduFís <span class="text-emerald-400">AI</span></span>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Painel do Professor</p>
                     </div>
                 </div>
 
-                <nav class="space-y-1.5">
-                    <button onclick="switchTab('inicio')" id="nav-inicio" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition bg-brand-500/10 text-brand-400 border border-brand-500/20 cursor-pointer">
+                <nav class="space-y-1.5 text-sm font-semibold">
+                    <button onclick="nav('inicio')" id="nav-inicio" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-pointer">
                         <i class="fa-solid fa-house w-5"></i><span>Início</span>
                     </button>
-                    <button onclick="switchTab('turmas')" id="nav-turmas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
+                    <button onclick="nav('turmas')" id="nav-turmas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-users-rectangle w-5"></i><span>Turmas</span>
                     </button>
-                    <button onclick="switchTab('alunos')" id="nav-alunos" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
+                    <button onclick="nav('alunos')" id="nav-alunos" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-graduation-cap w-5"></i><span>Alunos</span>
                     </button>
-                    <button onclick="switchTab('ia')" id="nav-ia" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
-                        <i class="fa-solid fa-robot w-5 text-brand-400"></i><span>Assistente IA</span>
+                    <button onclick="nav('planejar')" id="nav-planejar" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
+                        <i class="fa-solid fa-calendar-days w-5"></i><span>Planejar aula</span>
                     </button>
-                    <button onclick="switchTab('configuracoes')" id="nav-configuracoes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
+                    <button onclick="nav('ia')" id="nav-ia" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
+                        <i class="fa-solid fa-robot w-5 text-emerald-400"></i><span>Assistente IA</span>
+                    </button>
+                    <button onclick="nav('config')" id="nav-config" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-gear w-5"></i><span>Configurações</span>
                     </button>
                 </nav>
             </div>
 
-            <div class="pt-4 border-t border-slate-800">
-                <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-500/10 transition border border-transparent hover:border-red-500/20 cursor-pointer">
-                    <i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair da Conta</span>
-                </button>
+            <!-- Rodapé da Sidebar -->
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 font-bold flex items-center justify-center text-slate-950 text-sm shadow-md">PF</div>
+                    <div class="overflow-hidden">
+                        <h4 class="text-xs font-bold text-white truncate">Professor</h4>
+                        <p class="text-[10px] text-slate-400 truncate">Educação Física</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-400 p-2 rounded-lg transition cursor-pointer" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-8 overflow-y-auto max-h-screen">
+        <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto max-h-screen">
             
-            <!-- ABA: INÍCIO -->
-            <section id="tab-inicio" class="tab-content space-y-6">
-                <div class="bg-gradient-to-r from-slate-900 to-emerald-950/40 border border-slate-800 p-6 rounded-3xl shadow-xl flex justify-between items-center">
+            <!-- SEÇÃO: INÍCIO -->
+            <section id="sec-inicio" class="section-view space-y-8">
+                <div class="bg-gradient-to-r from-slate-900 to-emerald-950/40 border border-slate-800 p-8 rounded-3xl shadow-xl flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-extrabold text-white">Olá, Professor! 👋</h2>
-                        <p class="text-slate-400 text-sm mt-1">Gerencie suas turmas, alunos e crie planos de aula inteligentes com IA.</p>
+                        <h2 class="text-3xl font-black text-white">Bem-vindo ao EduFís AI</h2>
+                        <p class="text-slate-400 text-sm mt-1">Gerencie suas turmas, alunos e crie conteúdos pedagógicos com inteligência artificial.</p>
                     </div>
-                    <button onclick="switchTab('ia')" class="px-5 py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-2xl shadow-lg transition text-sm flex items-center space-x-2 cursor-pointer">
+                    <button onclick="nav('planejar')" class="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-2xl shadow-lg transition text-sm flex items-center space-x-2 cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i><span>Criar com IA</span>
                     </button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl shadow-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Turmas Cadastradas</span>
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
-                                <i class="fa-solid fa-users"></i>
-                            </div>
-                        </div>
-                        <h3 id="stat-turmas" class="text-3xl font-extrabold text-white">0</h3>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Turmas Cadastradas</span>
+                        <h3 id="stat-turmas" class="text-3xl font-black text-white mt-2">0</h3>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl shadow-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Alunos Registrados</span>
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </div>
-                        </div>
-                        <h3 id="stat-alunos" class="text-3xl font-extrabold text-white">0</h3>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Alunos Registrados</span>
+                        <h3 id="stat-alunos" class="text-3xl font-black text-white mt-2">0</h3>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl shadow-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Status da IA</span>
-                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-bold text-emerald-400 mt-1">Pronto para uso</h3>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Status da IA</span>
+                        <h3 class="text-lg font-bold text-emerald-400 mt-2">Pronto para uso</h3>
                     </div>
                 </div>
             </section>
 
-            <!-- ABA: TURMAS -->
-            <section id="tab-turmas" class="tab-content hidden space-y-6">
+            <!-- SEÇÃO: TURMAS -->
+            <section id="sec-turmas" class="section-view hidden space-y-6">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-extrabold text-white">Gestão de Turmas</h2>
+                        <h2 class="text-2xl font-black text-white">Gestão de Turmas</h2>
                         <p class="text-slate-400 text-sm">Adicione e controle as turmas escolares.</p>
                     </div>
-                    <button onclick="openModal('turma')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                    <button onclick="abrirModalTurma()" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
                         <i class="fa-solid fa-plus mr-2"></i> Nova Turma
                     </button>
                 </div>
@@ -197,14 +183,14 @@
                 </div>
             </section>
 
-            <!-- ABA: ALUNOS -->
-            <section id="tab-alunos" class="tab-content hidden space-y-6">
+            <!-- SEÇÃO: ALUNOS -->
+            <section id="sec-alunos" class="section-view hidden space-y-6">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-extrabold text-white">Gestão de Alunos</h2>
+                        <h2 class="text-2xl font-black text-white">Gestão de Alunos</h2>
                         <p class="text-slate-400 text-sm">Cadastre os alunos e vincule às turmas.</p>
                     </div>
-                    <button onclick="openModal('aluno')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                    <button onclick="abrirModalAluno()" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
                         <i class="fa-solid fa-plus mr-2"></i> Novo Aluno
                     </button>
                 </div>
@@ -226,46 +212,46 @@
                 </div>
             </section>
 
-            <!-- ABA: ASSISTENTE IA (GEMINI) -->
-            <section id="tab-ia" class="tab-content hidden space-y-6">
+            <!-- SEÇÃO: PLANEJAR AULA -->
+            <section id="sec-planejar" class="section-view hidden space-y-6">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-white">Assistente IA de Educação Física</h2>
-                    <p class="text-slate-400 text-sm">Gere planos de aula completos, dinâmicos e adaptados usando Inteligência Artificial.</p>
+                    <h2 class="text-2xl font-black text-white">Assistente IA de Educação Física</h2>
+                    <p class="text-slate-400 text-sm">Gere planos de aula completos e estruturados usando inteligência artificial.</p>
                 </div>
 
-                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4 max-w-2xl">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">O que você deseja que a IA crie?</label>
-                        <textarea id="ai-prompt" rows="3" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Ex: Crie um plano de aula de 50 minutos sobre fundamentos do Basquete para o 8º ano, incluindo aquecimento e jogo reduzido."></textarea>
+                        <textarea id="ai-prompt" rows="3" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm" placeholder="Ex: Crie um plano de aula de 50 minutos sobre fundamentos do Basquete para o 8º ano."></textarea>
                     </div>
 
-                    <button onclick="gerarPlanoIA()" id="ai-btn" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg flex items-center justify-center space-x-2 cursor-pointer">
+                    <button onclick="gerarPlanoIA()" id="ai-btn" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg flex items-center justify-center space-x-2 cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i><span>Gerar Plano de Aula com IA</span>
                     </button>
                 </div>
 
-                <div id="ai-result-container" class="hidden bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-3">
-                    <h3 class="font-bold text-lg text-brand-400 flex items-center space-x-2">
+                <div id="ai-result-container" class="hidden bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-3 max-w-2xl">
+                    <h3 class="font-bold text-lg text-emerald-400 flex items-center space-x-2">
                         <i class="fa-solid fa-file-lines"></i><span>Resultado da IA:</span>
                     </h3>
                     <div id="ai-result-content" class="text-slate-200 text-sm whitespace-pre-wrap leading-relaxed bg-slate-950/60 p-5 rounded-2xl border border-slate-800/80"></div>
                 </div>
             </section>
 
-            <!-- ABA: CONFIGURAÇÕES -->
-            <section id="tab-configuracoes" class="tab-content hidden space-y-6">
+            <!-- SEÇÃO: CONFIGURAÇÕES -->
+            <section id="sec-config" class="section-view hidden space-y-6">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-white">Configurações do Sistema</h2>
+                    <h2 class="text-2xl font-black text-white">Configurações do Sistema</h2>
                     <p class="text-slate-400 text-sm">Insira sua chave da API do Gemini para habilitar a inteligência artificial.</p>
                 </div>
 
                 <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4 max-w-xl">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Google Gemini API Key</label>
-                        <input type="password" id="gemini-api-key" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Cole sua chave da API aqui (AIzaSy...)">
+                        <input type="password" id="gemini-api-key" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm" placeholder="Cole sua chave da API aqui (AIzaSy...)">
                         <p class="text-[11px] text-slate-500 mt-1">A chave é guardada apenas no seu navegador para uso da IA.</p>
                     </div>
-                    <button onclick="salvarApiKey()" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                    <button onclick="salvarApiKey()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
                         Salvar Chave
                     </button>
                 </div>
@@ -273,262 +259,178 @@
         </main>
     </div>
 
-    <!-- MODAL GENÉRICO PARA CADASTRO DE TURMAS/ALUNOS -->
+    <!-- MODAL DE CADASTRO -->
     <div id="app-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <h3 id="modal-title" class="font-extrabold text-lg text-white">Cadastrar</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="fecharModal()" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
             <form id="modal-form" onsubmit="handleModalSubmit(event)" class="space-y-4">
                 <div id="modal-fields"></div>
                 <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition cursor-pointer">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer">Salvar</button>
+                    <button type="button" onclick="fecharModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
+    <!-- LÓGICA JAVASCRIPT -->
     <script>
-        let isLoginMode = true;
+        let isLogin = true;
         let activeModalType = '';
         let turmasData = [];
         let alunosData = [];
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) document.getElementById('gemini-api-key').value = savedKey;
-
-            if (!supabaseClient) {
-                return;
-            }
-
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                if (session) {
-                    showDashboard();
-                }
-            } catch (err) {
-                console.error('Sessão erro:', err);
-            }
-        });
-
-        window.toggleAuthMode = function() {
-            isLoginMode = !isLoginMode;
-            const titleEl = document.getElementById('auth-title');
-            const subtitleEl = document.getElementById('auth-subtitle');
-            const submitBtn = document.getElementById('submit-btn');
-            const toggleText = document.getElementById('toggle-text');
-            const toggleBtn = document.getElementById('toggle-btn');
-            const forgotContainer = document.getElementById('forgot-password-container');
-            document.getElementById('form-feedback').classList.add('hidden');
-
-            if (isLoginMode) {
-                titleEl.innerHTML = 'EduFís <span class="text-brand-400">AI</span>';
-                subtitleEl.textContent = '“Seu assistente inteligente de Educação Física.”';
-                submitBtn.textContent = 'Entrar';
-                toggleText.textContent = 'Não tem uma conta?';
-                toggleBtn.textContent = 'Criar minha conta';
-                forgotContainer.style.display = 'flex';
-            } else {
-                titleEl.innerHTML = 'Criar Conta - EduFís <span class="text-brand-400">AI</span>';
-                subtitleEl.textContent = 'Cadastre-se para começar a usar a plataforma.';
-                submitBtn.textContent = 'Cadastrar';
-                toggleText.textContent = 'Já tem uma conta?';
-                toggleBtn.textContent = 'Entrar';
-                forgotContainer.style.display = 'none';
-            }
-        }
-
-        window.handleAuthSubmit = async function(event) {
-            event.preventDefault();
-            if (!supabaseClient) return showFeedback('Supabase não inicializado.', 'error');
-
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const submitBtn = document.getElementById('submit-btn');
-
-            submitBtn.disabled = true;
-
-            if (isLoginMode) {
-                submitBtn.textContent = 'Entrando...';
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Entrar';
-
-                if (error) {
-                    showFeedback(error.message, 'error');
-                } else {
-                    showFeedback('Login realizado com sucesso! Redirecionando...', 'success');
-                    setTimeout(showDashboard, 800);
-                }
-            } else {
-                submitBtn.textContent = 'Cadastrando...';
-                const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Cadastrar';
-
-                if (error) {
-                    showFeedback(error.message, 'error');
-                } else {
-                    showFeedback('Conta criada com sucesso! Faça login.', 'success');
-                    if (data.session) setTimeout(showDashboard, 1000);
-                }
-            }
-        }
-
-        window.handleForgotPassword = async function() {
-            const email = prompt('Digite o e-mail cadastrado para recuperar a senha:');
-            if (!email || !supabaseClient) return;
-
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-            if (error) alert('Erro: ' + error.message);
-            else alert('Instruções de recuperação enviadas para o seu e-mail!');
-        }
-
-        window.handleLogout = async function() {
-            if (supabaseClient) await supabaseClient.auth.signOut();
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('auth-container').classList.remove('hidden');
-            document.getElementById('auth-form').reset();
-            if (!isLoginMode) toggleAuthMode();
-        }
-
-        window.showDashboard = function() {
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('dashboard-view').classList.remove('hidden');
-            carregarDadosIniciais();
-        }
-
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-
+        function nav(id) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            
             document.querySelectorAll('aside nav button').forEach(el => {
-                el.classList.remove('bg-brand-500/10', 'text-brand-400', 'border', 'border-brand-500/20');
+                el.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
                 el.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
             });
-
-            const activeBtn = document.getElementById(`nav-${tabName}`);
-            if (activeBtn) {
+            const activeBtn = document.getElementById(`nav-${id}`);
+            if(activeBtn) {
                 activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
-                activeBtn.classList.add('bg-brand-500/10', 'text-brand-400', 'border', 'border-brand-500/20');
+                activeBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
             }
         }
 
-        window.openModal = function(type) {
-            activeModalType = type;
-            const modal = document.getElementById('app-modal');
-            const title = document.getElementById('modal-title');
-            const fields = document.getElementById('modal-fields');
-
-            modal.classList.remove('hidden');
-            if (type === 'turma') {
-                title.textContent = 'Nova Turma';
-                fields.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome da Turma</label>
-                        <input type="text" id="turma-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: 8º Ano A">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ano / Série</label>
-                        <input type="text" id="turma-ano" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Ensino Fundamental II">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turno</label>
-                        <input type="text" id="turma-turno" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Matutino">
-                    </div>
-                `;
-            } else if (type === 'aluno') {
-                title.textContent = 'Novo Aluno';
-                let turmaOptions = turmasData.length > 0 ? turmasData.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas cadastradas</option>';
-                fields.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome do Aluno</label>
-                        <input type="text" id="aluno-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Nome completo">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail ou Contato</label>
-                        <input type="text" id="aluno-email" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="aluno@escola.com">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turma</label>
-                        <select id="aluno-turma" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white">${turmaOptions}</select>
-                    </div>
-                `;
-            }
+        function toggleAuth() {
+            isLogin = !isLogin;
+            document.getElementById('auth-btn').textContent = isLogin ? 'Acessar Painel' : 'Criar Conta';
+            document.getElementById('auth-toggle-text').textContent = isLogin ? 'Não tem conta?' : 'Já tem conta?';
+            document.getElementById('auth-toggle-btn').textContent = isLogin ? 'Criar acesso' : 'Fazer login';
         }
 
-        window.closeModal = function() {
+        async function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+
+            if(supabaseClient) {
+                if(isLogin) {
+                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+                    if(error) return alert('Erro no login: ' + error.message);
+                } else {
+                    const { error } = await supabaseClient.auth.signUp({ email, password: pass });
+                    if(error) return alert('Erro no cadastro: ' + error.message);
+                    alert('Conta criada com sucesso! Faça login.');
+                    toggleAuth();
+                    return;
+                }
+            }
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+        }
+
+        function logout() {
+            if(supabaseClient) supabaseClient.auth.signOut();
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('auth-container').classList.remove('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if(savedKey) document.getElementById('gemini-api-key').value = savedKey;
+        });
+
+        function salvarApiKey() {
+            const key = document.getElementById('gemini-api-key').value.trim();
+            localStorage.setItem('gemini_api_key', key);
+            alert('Chave salva com sucesso!');
+        }
+
+        function abrirModalTurma() {
+            activeModalType = 'turma';
+            document.getElementById('modal-title').textContent = 'Nova Turma';
+            document.getElementById('modal-fields').innerHTML = `
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome da Turma</label><input type="text" id="t-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: 8º Ano A"></div>
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ano / Série</label><input type="text" id="t-ano" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Ensino Fundamental II"></div>
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turno</label><input type="text" id="t-turno" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Matutino"></div>
+            `;
+            document.getElementById('app-modal').classList.remove('hidden');
+        }
+
+        function abrirModalAluno() {
+            activeModalType = 'aluno';
+            document.getElementById('modal-title').textContent = 'Novo Aluno';
+            let options = turmasData.length > 0 ? turmasData.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas cadastradas</option>';
+            document.getElementById('modal-fields').innerHTML = `
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome do Aluno</label><input type="text" id="a-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Nome completo"></div>
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail ou Contato</label><input type="text" id="a-email" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="aluno@escola.com"></div>
+                <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turma</label><select id="a-turma" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white">${options}</select></div>
+            `;
+            document.getElementById('app-modal').classList.remove('hidden');
+        }
+
+        function fecharModal() {
             document.getElementById('app-modal').classList.add('hidden');
         }
 
-        window.handleModalSubmit = function(event) {
-            event.preventDefault();
-            if (activeModalType === 'turma') {
-                const nome = document.getElementById('turma-nome').value;
-                const ano = document.getElementById('turma-ano').value;
-                const turno = document.getElementById('turma-turno').value;
-                turmasData.push({ nome, ano, turno });
+        function handleModalSubmit(e) {
+            e.preventDefault();
+            if(activeModalType === 'turma') {
+                turmasData.push({
+                    nome: document.getElementById('t-nome').value,
+                    ano: document.getElementById('t-ano').value,
+                    turno: document.getElementById('t-turno').value
+                });
                 atualizarTabelaTurmas();
-            } else if (activeModalType === 'aluno') {
-                const nome = document.getElementById('aluno-nome').value;
-                const email = document.getElementById('aluno-email').value;
-                const turma = document.getElementById('aluno-turma').value;
-                alunosData.push({ nome, email, turma });
+            } else if(activeModalType === 'aluno') {
+                alunosData.push({
+                    nome: document.getElementById('a-nome').value,
+                    email: document.getElementById('a-email').value,
+                    turma: document.getElementById('a-turma').value
+                });
                 atualizarTabelaAlunos();
             }
             atualizarEstatisticas();
-            closeModal();
+            fecharModal();
         }
 
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('turmas-table-body');
-            if (turmasData.length === 0) {
+            if(turmasData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma cadastrada.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = turmasData.map((t, index) => `
+            tbody.innerHTML = turmasData.map((t, idx) => `
                 <tr class="hover:bg-slate-900/40">
                     <td class="p-4 font-medium text-white">${t.nome}</td>
                     <td class="p-4 text-slate-300">${t.ano}</td>
                     <td class="p-4 text-slate-300">${t.turno}</td>
-                    <td class="p-4 text-right">
-                        <button onclick="removerTurma(${index})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button>
-                    </td>
+                    <td class="p-4 text-right"><button onclick="removerTurma(${idx})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
 
         function atualizarTabelaAlunos() {
             const tbody = document.getElementById('alunos-table-body');
-            if (alunosData.length === 0) {
+            if(alunosData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno cadastrado.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = alunosData.map((a, index) => `
+            tbody.innerHTML = alunosData.map((a, idx) => `
                 <tr class="hover:bg-slate-900/40">
                     <td class="p-4 font-medium text-white">${a.nome}</td>
                     <td class="p-4 text-slate-300">${a.email || '-'}</td>
                     <td class="p-4 text-slate-300">${a.turma}</td>
-                    <td class="p-4 text-right">
-                        <button onclick="removerAluno(${index})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button>
-                    </td>
+                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
 
-        window.removerTurma = function(index) {
-            turmasData.splice(index, 1);
+        function removerTurma(idx) {
+            turmasData.splice(idx, 1);
             atualizarTabelaTurmas();
             atualizarEstatisticas();
         }
 
-        window.removerAluno = function(index) {
-            alunosData.splice(index, 1);
+        function removerAluno(idx) {
+            alunosData.splice(idx, 1);
             atualizarTabelaAlunos();
             atualizarEstatisticas();
         }
@@ -538,82 +440,47 @@
             document.getElementById('stat-alunos').textContent = alunosData.length;
         }
 
-        function carregarDadosIniciais() {
-            atualizarEstatisticas();
-            atualizarTabelaTurmas();
-            atualizarTabelaAlunos();
-        }
-
-        window.salvarApiKey = function() {
-            const key = document.getElementById('gemini-api-key').value.trim();
-            localStorage.setItem('gemini_api_key', key);
-            alert('Chave da API salva com sucesso!');
-        }
-
-        window.gerarPlanoIA = async function() {
-            const apiKey = localStorage.getItem('gemini_api_key');
-            if (!apiKey) {
-                alert('Por favor, configure sua chave da API do Gemini na aba "Configurações" primeiro.');
-                switchTab('configuracoes');
+        async function gerarPlanoIA() {
+            const key = localStorage.getItem('gemini_api_key');
+            if(!key) {
+                alert('Configure sua chave da API do Gemini nas Configurações.');
+                nav('config');
                 return;
             }
-
-            const promptText = document.getElementById('ai-prompt').value.trim();
-            if (!promptText) {
-                alert('Escreva o que você quer que a IA crie.');
-                return;
-            }
+            const prompt = document.getElementById('ai-prompt').value.trim();
+            if(!prompt) return alert('Escreva o que você deseja que a IA crie.');
 
             const btn = document.getElementById('ai-btn');
-            const resultContainer = document.getElementById('ai-result-container');
-            const resultContent = document.getElementById('ai-result-content');
+            const resContainer = document.getElementById('ai-result-container');
+            const resContent = document.getElementById('ai-result-content');
 
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Gerando plano de aula...</span>`;
-            resultContainer.classList.add('hidden');
+            resContainer.classList.add('hidden');
 
             try {
-                // Endpoint definitivo utilizando gemini-1.5-flash na API v1
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptText}`
+                                text: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${prompt}`
                             }]
                         }]
                     })
                 });
 
                 const data = await response.json();
+                if(data.error) throw new Error(data.error.message);
 
-                if (data.error) {
-                    throw new Error(data.error.message);
-                }
-
-                const textoGerado = data.candidates[0].content.parts[0].text;
-                resultContent.textContent = textoGerado;
-                resultContainer.classList.remove('hidden');
-            } catch (err) {
+                resContent.textContent = data.candidates[0].content.parts[0].text;
+                resContainer.classList.remove('hidden');
+            } catch(err) {
                 alert('Erro ao gerar com a IA: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Gerar Plano de Aula com IA</span>`;
-            }
-        }
-
-        function showFeedback(message, type) {
-            const feedbackEl = document.getElementById('form-feedback');
-            feedbackEl.textContent = message;
-            feedbackEl.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300', 'bg-red-500/10', 'border-red-500/30', 'text-red-300');
-            
-            if (type === 'success') {
-                feedbackEl.classList.add('bg-emerald-500/10', 'border', 'border-emerald-500/30', 'text-emerald-300');
-            } else {
-                feedbackEl.classList.add('bg-red-500/10', 'border', 'border-red-500/30', 'text-red-300');
             }
         }
     </script>
