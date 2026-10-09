@@ -53,7 +53,7 @@
 
     <!-- CONTAINER DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
     <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950">
-        <div class="w-full max-w-md bg-slate-800/80 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-8 shadow-2xl">
+        <div class="w-full max-w-md bg-slate-800/85 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 text-3xl mb-4 shadow-inner">
                     <i class="fa-solid fa-dumbbell"></i>
@@ -104,26 +104,26 @@
                 </div>
 
                 <nav class="space-y-1.5">
-                    <button onclick="switchTab('inicio')" id="nav-inicio" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                    <button onclick="switchTab('inicio')" id="nav-inicio" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition bg-brand-500/10 text-brand-400 border border-brand-500/20 cursor-pointer">
                         <i class="fa-solid fa-house w-5"></i><span>Início</span>
                     </button>
-                    <button onclick="switchTab('turmas')" id="nav-turmas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                    <button onclick="switchTab('turmas')" id="nav-turmas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-users-rectangle w-5"></i><span>Turmas</span>
                     </button>
-                    <button onclick="switchTab('alunos')" id="nav-alunos" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                    <button onclick="switchTab('alunos')" id="nav-alunos" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-graduation-cap w-5"></i><span>Alunos</span>
                     </button>
-                    <button onclick="switchTab('ia')" id="nav-ia" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                    <button onclick="switchTab('ia')" id="nav-ia" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-robot w-5 text-brand-400"></i><span>Assistente IA</span>
                     </button>
-                    <button onclick="switchTab('configuracoes')" id="nav-configuracoes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                    <button onclick="switchTab('configuracoes')" id="nav-configuracoes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-gear w-5"></i><span>Configurações</span>
                     </button>
                 </nav>
             </div>
 
             <div class="pt-4 border-t border-slate-800">
-                <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-500/10 transition border border-transparent hover:border-red-500/20">
+                <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-500/10 transition border border-transparent hover:border-red-500/20 cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair da Conta</span>
                 </button>
             </div>
@@ -576,7 +576,7 @@
             try {
                 const ai = new GoogleGenAI({ apiKey: apiKey });
                 const response = await ai.models.generateContent({
-                    model: 'gemini-3.8-flash',
+                    model: 'gemini-2.5-flash',
                     contents: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptText}`,
                 });
 
