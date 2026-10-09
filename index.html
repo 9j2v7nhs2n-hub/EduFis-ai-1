@@ -55,7 +55,7 @@
             "Aptidão Física Relacionada à Saúde", "Importância da Hidratação na Atividade Física", "Fisiologia Básica: Frequência Cardíaca", "Nutrição e Desempenho Desportivo", "Aquecimento e Prevenção de Lesões",
             "Ginástica Artística e Aparelhos", "Ginástica Rítmica e Elementos", "Ginástica de Consciência Corporal", "Pilates e Flexibilidade na Escola", "Treinamento Funcional para Jovens",
             "Lutas: História e Valores Culturais", "Judô: História, Golpes e Respeito", "Jiu-Jitsu: Defesa Pessoal e Filosofia", "Capoeira: Movimentos, Música e Herança", "Boxe Educacional e Condicionamento",
-            "Danças Urbanas e Street Dance", "Danças Folclóricas Regionais", "Danças de Salão no Ambiente Escolar", "Expressão Corporal e Ritmo", "Coreografias e Autonomia Criativa",
+            "Danças Urbanas e Street Dance", "Danças Folclóricas Regional", "Danças de Salão no Ambiente Escolar", "Expressão Corporal e Ritmo", "Coreografias e Autonomia Criativa",
             "Jogos Cooperativos vs Competitivos", "Brincadeiras Populares Tradicionais", "Jogos de Tabuleiro Gigantes", "Desporto de Orientação na Escola", "Atividades Recreativas em Espaços Reduzidos",
             "Fair Play e Ética Desportiva", "Inclusão e Adaptação de Jogos para PCD", "Gestão de Conflitos em Jogos Coletivos", "Liderança e Trabalho em Equipa", "Cultura Corporal de Movimento e Sociedade"
         ];
@@ -393,30 +393,25 @@
                     </div>
                 </div>
 
-                <!-- ABA PROVAS POR TURMA -->
+                <!-- ABA PROVAS E TRABALHOS (CORRIGIDA E ESTILIZADA) -->
                 <div id="tab-provas-trabalhos" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
                             <h2 class="text-2xl font-black text-slate-900">Provas e PDFs por Turma</h2>
-                            <p class="text-slate-500 text-sm">Documentos gerados prontos para impressão.</p>
+                            <p class="text-slate-500 text-sm">Lista de avaliações geradas pelo construtor prontas para aplicação ou impressão.</p>
                         </div>
                         <button onclick="changeTab('construtor')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all cursor-pointer">+ Criar Nova Prova</button>
                     </div>
-                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm max-w-4xl">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
-                                    <tr><th class="p-4">Turma</th><th class="p-4">Título</th><th class="p-4">Tipo</th><th class="p-4 text-right">Ações</th></tr>
-                                </thead>
-                                <tbody id="tabela-provas-turmas" class="divide-y divide-slate-100">
-                                    <tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum documento gerado ainda.</td></tr>
-                                </tbody>
-                            </table>
+
+                    <div id="lista-provas-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Preenchido dinamicamente com cartões elegantes -->
+                        <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
+                            Nenhum documento gerado ainda. Use o <b>Construtor de Provas</b> para criar avaliações personalizadas!
                         </div>
                     </div>
                 </div>
 
-                <!-- ABA CIRCUITOS (ATUALIZADA COM PADRÃO PROFISSIONAL) -->
+                <!-- ABA CIRCUITOS E ESTAÇÕES (CORRIGIDA E ESTILIZADA) -->
                 <div id="tab-atividades" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -432,7 +427,7 @@
                     </div>
                 </div>
 
-                <!-- ABA CALENDÁRIO (ATUALIZADA COM PADRÃO PROFISSIONAL) -->
+                <!-- ABA CALENDÁRIO ESCOLAR (CORRIGIDA E ESTILIZADA) -->
                 <div id="tab-calendario" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -640,10 +635,10 @@
                 questoesHtml += `<div class="mb-3"><strong>${idx + 1}. Tópico: ${cb.value}</strong><br>Explique detalhadamente os conceitos teóricos e práticos abordados em aula.</div>`;
             });
 
-            provasTurma.push({ turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml.replace(/<[^>]*>/g, '') });
+            provasTurma.push({ turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml });
             atualizarEstatisticas();
             atualizarTabelaProvasTurmas();
-            alert('Documento guardado na aba "Provas por Turma (PDF)"!');
+            alert('Documento gerado e guardado com sucesso!');
             changeTab('provas-trabalhos');
         }
 
@@ -707,22 +702,27 @@
         }
 
         function atualizarTabelaProvasTurmas() {
-            const tbody = document.getElementById('tabela-provas-turmas');
-            if(!tbody) return;
+            const container = document.getElementById('lista-provas-cards');
+            if(!container) return;
             if(provasTurma.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum documento gerado.</td></tr>`;
+                container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">Nenhum documento gerado ainda. Use o <b>Construtor de Provas</b> para criar avaliações personalizadas!</div>`;
                 return;
             }
-            tbody.innerHTML = provasTurma.map((pt, idx) => `
-                <tr class="hover:bg-slate-50 transition-all">
-                    <td class="p-4 font-semibold text-emerald-700">${pt.turma}</td>
-                    <td class="p-4 font-medium text-slate-900">${pt.titulo}</td>
-                    <td class="p-4 text-slate-600"><span class="bg-slate-100 px-3 py-1 rounded-full text-xs">${pt.tipo}</span></td>
-                    <td class="p-4 text-right space-x-2">
-                        <button onclick="imprimirProvaTurma(${idx})" class="bg-slate-100 hover:bg-slate-200 text-emerald-700 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">🖨️ Imprimir</button>
-                        <button onclick="removerProvaTurma(${idx})" class="text-rose-600 text-xs font-semibold cursor-pointer">Excluir</button>
-                    </td>
-                </tr>
+            container.innerHTML = provasTurma.map((pt, idx) => `
+                <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm hover:border-emerald-300 transition-all flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs">🏫 ${pt.turma}</span>
+                            <span class="bg-slate-100 text-slate-700 font-medium px-3 py-1 rounded-full text-xs">${pt.tipo}</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-900">${pt.titulo}</h3>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 max-h-36 overflow-y-auto whitespace-pre-wrap leading-relaxed">${pt.conteudo.replace(/<[^>]*>/g, '')}</div>
+                    </div>
+                    <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                        <button onclick="imprimirProvaTurma(${idx})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-sm">🖨️ Imprimir PDF</button>
+                        <button onclick="removerProvaTurma(${idx})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all">Excluir</button>
+                    </div>
+                </div>
             `).join('');
         }
 
@@ -749,7 +749,7 @@
             const container = document.getElementById('lista-circuitos');
             if(!container) return;
             if(circuitosAtividades.length === 0) {
-                container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">Nenhum circuito registado. Clique em "+ Novo Circuito" para começar.</div>`;
+                container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">Nenhum circuito prático registado. Clique em "+ Novo Circuito" para começar.</div>`;
                 return;
             }
             container.innerHTML = circuitosAtividades.map((c, idx) => `
@@ -791,6 +791,7 @@
 
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('tabela-turmas');
+            if(!tbody) return;
             if(turmas.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">Nenhuma turma.</td></tr>`; return; }
             tbody.innerHTML = turmas.map((t, idx) => {
                 const totalAlunos = alunos.filter(a => a.turma === t.nome).length;
@@ -806,6 +807,7 @@
 
         function atualizarTabelaAlunos() {
             const tbody = document.getElementById('tabela-alunos');
+            if(!tbody) return;
             if(alunos.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum aluno.</td></tr>`; return; }
             tbody.innerHTML = alunos.map((a, idx) => `
                 <tr class="hover:bg-slate-50 transition-all">
@@ -842,6 +844,7 @@
                     <div class="space-x-3"><label class="text-xs text-emerald-700 cursor-pointer font-medium"><input type="radio" name="p_${idx}" checked class="accent-emerald-600"> Presente</label><label class="text-xs text-rose-600 cursor-pointer font-medium"><input type="radio" name="p_${idx}" class="accent-rose-600"> Falta</label></div>
                 </div>
             `).join('');
+            container.classList.add('hidden'); // Ajuste lógico para exibir
             container.classList.remove('hidden');
         }
 
@@ -854,6 +857,7 @@
             alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
             circuitosAtividades.forEach(c => { if(c.tema.toLowerCase().includes(termoLimpo)) encontrados.push(`🏃 Circuito: <b>${c.tema}</b>`); });
             eventosCalendario.forEach(ev => { if(ev.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📅 Evento: <b>${ev.titulo}</b>`); });
+            provasTurma.forEach(pt => { if(pt.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📄 Prova: <b>${pt.titulo}</b> (${pt.turma})`); });
             baseBNCC.forEach(b => { if(b.desc.toLowerCase().includes(termoLimpo) || b.codigo.toLowerCase().includes(termoLimpo)) encontrados.push(`⚖️ BNCC [${b.codigo}]: <b>${b.desc}</b>`); });
             resultado.innerHTML = encontrados.length === 0 ? `<p class="text-sm text-slate-400">Nenhum registo encontrado.</p>` : encontrados.map(e => `<div class="bg-white border border-slate-200 p-3.5 rounded-2xl text-sm text-slate-700 shadow-sm">${e}</div>`).join('');
         }
