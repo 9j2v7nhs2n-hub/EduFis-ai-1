@@ -12,7 +12,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen selection:bg-emerald-500 selection:text-white flex flex-col">
 
-    <!-- MOTOR DE DADOS LOCAL PERSISTENTE (SALVA TUDO AUTOMATICAMENTE) -->
+    <!-- MOTOR DE DADOS LOCAL E BACKUP AUTOMÁTICO -->
     <script>
         let turmas = JSON.parse(localStorage.getItem('edufis_turmas')) || [];
         let alunos = JSON.parse(localStorage.getItem('edufis_alunos')) || [];
@@ -26,6 +26,49 @@
             localStorage.setItem('edufis_provas', JSON.stringify(provasTurma));
             localStorage.setItem('edufis_circuitos', JSON.stringify(circuitosAtividades));
             localStorage.setItem('edufis_eventos', JSON.stringify(eventosCalendario));
+        }
+
+        function exportarBackupGoogleDrive() {
+            const dadosBackup = {
+                versao: "1.0",
+                dataBackup: new Date().toISOString(),
+                turmas,
+                alunos,
+                provasTurma,
+                circuitosAtividades,
+                eventosCalendario
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dadosBackup, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `EduFis_Backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            alert('Backup gerado com sucesso! Pode guardá-lo diretamente na sua pasta do Google Drive.');
+        }
+
+        function importarBackupGoogleDrive(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const conteudo = JSON.parse(e.target.result);
+                    if(conteudo.turmas) turmas = conteudo.turmas;
+                    if(conteudo.alunos) alunos = conteudo.alunos;
+                    if(conteudo.provasTurma) provasTurma = conteudo.provasTurma;
+                    if(conteudo.circuitosAtividades) circuitosAtividades = conteudo.circuitosAtividades;
+                    if(conteudo.eventosCalendario) eventosCalendario = conteudo.eventosCalendario;
+                    
+                    salvarDadosLocais();
+                    carregarTudoNaTela();
+                    alert('Dados restaurados com sucesso a partir do backup!');
+                } catch(err) {
+                    alert('Erro ao ler o ficheiro de backup. Certifique-se de que é um JSON válido.');
+                }
+            };
+            reader.readAsText(file);
         }
 
         const baseBNCC = [
@@ -158,12 +201,13 @@
                     <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer transition-all">📄 Provas por Turma (PDF)</button>
                     <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer transition-all">🏃 Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer transition-all">🗓️ Calendário Escolar</button>
+                    <button onclick="changeTab('backup')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer transition-all">☁️ Backup Google Drive</button>
                     <button onclick="changeTab('pesquisa')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer transition-all">🔍 Pesquisa Interna</button>
                 </div>
                 
                 <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1">
-                    <div class="font-bold text-slate-900 flex items-center gap-1.5">💾 Salvamento Ativo</div>
-                    <div>Guardado no Dispositivo</div>
+                    <div class="font-bold text-slate-900 flex items-center gap-1.5">💾 Salvamento Seguro</div>
+                    <div>Pronto para Backup Diário</div>
                 </div>
             </aside>
 
@@ -179,9 +223,9 @@
                         <div class="space-y-1">
                             <span class="text-xs uppercase font-bold tracking-wider bg-white/20 px-3 py-1 rounded-full">Professor Titular</span>
                             <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Bem-vindo ao EduFís Pro 🏋️</h2>
-                            <p class="text-emerald-100 text-sm">Gira as suas turmas, crie avaliações instantâneas e planeie com a BNCC num só lugar.</p>
+                            <p class="text-emerald-100 text-sm">Gira as suas turmas, crie avaliações instantâneas e faça backup para o Google Drive.</p>
                         </div>
-                        <button onclick="changeTab('construtor')" class="bg-white hover:bg-emerald-50 text-emerald-700 font-bold px-5 py-3 rounded-2xl text-sm transition-all shadow-md cursor-pointer whitespace-nowrap">⚡ Criar Prova Agora</button>
+                        <button onclick="changeTab('backup')" class="bg-white hover:bg-emerald-50 text-emerald-700 font-bold px-5 py-3 rounded-2xl text-sm transition-all shadow-md cursor-pointer whitespace-nowrap">☁️ Fazer Backup Agora</button>
                     </div>
                     
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -200,24 +244,6 @@
                         <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm hover:border-slate-300 transition-all">
                             <div class="text-3xl font-black text-emerald-600" id="stat-circuitos">0</div>
                             <div class="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wider">Circuitos Práticos</div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Atalhos Frequentes</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <button onclick="changeTab('gestao')" class="p-5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-500 rounded-2xl text-left transition-all cursor-pointer space-y-1.5 shadow-sm">
-                                <div class="text-base font-bold text-emerald-700">📅 Plano de Gestão & BNCC</div>
-                                <div class="text-xs text-slate-500">Documento institucional editável com directrizes oficiais</div>
-                            </button>
-                            <button onclick="changeTab('chamada')" class="p-5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-500 rounded-2xl text-left transition-all cursor-pointer space-y-1.5 shadow-sm">
-                                <div class="text-base font-bold text-slate-900">📋 Chamada Rápida</div>
-                                <div class="text-xs text-slate-500">Registar presenças e faltas da aula de hoje</div>
-                            </button>
-                            <button onclick="changeTab('atividades')" class="p-5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-500 rounded-2xl text-left transition-all cursor-pointer space-y-1.5 shadow-sm">
-                                <div class="text-base font-bold text-slate-900">🏃 Circuitos e Estações</div>
-                                <div class="text-xs text-slate-500">Estruturar treino motor e estações em quadra</div>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -339,7 +365,6 @@
                         <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all cursor-pointer">🖨️ Imprimir / PDF</button>
                     </div>
 
-                    <!-- Repositório BNCC Pesquisável -->
                     <div class="bg-white border border-slate-200 p-5 rounded-3xl space-y-3 max-w-3xl shadow-sm">
                         <div class="flex justify-between items-center">
                             <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-700">🔍 Repositório de Habilidades da BNCC</h3>
@@ -349,7 +374,6 @@
                         <div id="resultado-busca-bncc" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                     </div>
 
-                    <!-- Documento Editável Estilizado -->
                     <div class="bg-white text-slate-900 p-8 sm:p-12 rounded-3xl shadow-xl border border-slate-200 space-y-6 max-w-3xl">
                         <div class="text-center border-b border-slate-200 pb-6 space-y-1">
                             <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">PLANO DE GESTÃO PEDAGÓGICA</h3>
@@ -440,6 +464,39 @@
                     </div>
                 </div>
 
+                <!-- ABA BACKUP GOOGLE DRIVE -->
+                <div id="tab-backup" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900">☁️ Backup e Sincronização com o Google Drive</h2>
+                        <p class="text-slate-500 text-sm">Exporte os seus dados para salvá-los no seu Google Drive ou importe um backup anterior.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
+                        <!-- Cartão Exportar -->
+                        <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center font-bold text-xl">📤</div>
+                                <h3 class="font-bold text-lg text-slate-900">Exportar Backup Diário</h3>
+                                <p class="text-xs text-slate-500">Faz o download de um ficheiro com todas as turmas, alunos, provas e circuitos. Pode guardá-lo diretamente na sua pasta do Google Drive.</p>
+                            </div>
+                            <button onclick="exportarBackupGoogleDrive()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-md cursor-pointer text-sm">Baixar Ficheiro de Backup (.json)</button>
+                        </div>
+
+                        <!-- Cartão Importar -->
+                        <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center font-bold text-xl">📥</div>
+                                <h3 class="font-bold text-lg text-slate-900">Restaurar do Google Drive</h3>
+                                <p class="text-xs text-slate-500">Se mudou de dispositivo ou reinstalou o sistema, selecione o ficheiro de backup guardado no seu Google Drive para recuperar tudo.</p>
+                            </div>
+                            <label class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-all shadow-md cursor-pointer text-sm text-center block">
+                                Selecionar Ficheiro Backup
+                                <input type="file" accept=".json" onchange="importarBackupGoogleDrive(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ABA PESQUISA INTERNA -->
                 <div id="tab-pesquisa" class="hidden space-y-6">
                     <div>
@@ -504,7 +561,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE INTERFACE E PERSISTÊNCIA -->
+    <!-- SCRIPT DE INTERFACE E GESTÃO -->
     <script>
         let modalTipo = '';
 
@@ -566,7 +623,7 @@
         function logout() { switchView('login'); }
 
         function changeTab(tabId) {
-            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'pesquisa'].forEach(t => {
+            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'backup', 'pesquisa'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
