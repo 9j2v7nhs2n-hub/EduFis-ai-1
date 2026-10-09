@@ -30,7 +30,7 @@
 
         function exportarParaGoogleDriveSimples() {
             const dadosBackup = {
-                versao: "4.0",
+                versao: "4.1",
                 dataBackup: new Date().toISOString(),
                 turmas, alunos, provasTurma, circuitosAtividades, eventosCalendario
             };
@@ -42,9 +42,8 @@
             downloadAnchor.click();
             downloadAnchor.remove();
             
-            // Abre o Google Drive numa nova aba para facilitar o upload imediato
             window.open('https://drive.google.com/', '_blank');
-            alert('📦 Ficheiro de backup gerado com sucesso!\n\nO Google Drive foi aberto numa nova aba. Basta arrastar este ficheiro descarregado para lá para salvá-lo na nuvem!');
+            alert('📦 Ficheiro de backup gerado e transferido com sucesso!\n\nO Google Drive abriu numa nova aba. Arraste o ficheiro para lá para salvá-lo na nuvem.');
         }
 
         function importarBackupDrive(event) {
@@ -197,8 +196,8 @@
                 </div>
                 
                 <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1">
-                    <div class="font-bold text-slate-900 flex items-center gap-1.5">💾 Salvamento Seguro</div>
-                    <div>Local + Google Drive</div>
+                    <div class="font-bold text-slate-900 flex items-center gap-1.5">💾 Salvamento Ativo</div>
+                    <div>Guardado Automaticamente</div>
                 </div>
             </aside>
 
@@ -386,11 +385,6 @@
                                 <label class="font-bold text-slate-900 block mb-1">2. Diretrizes e Habilidades BNCC Vinculadas:</label>
                                 <textarea id="plano-bncc-texto" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 text-xs focus:outline-none focus:border-emerald-500">(EF67EF01) - Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinativas, valorizando o trabalho coletivo.</textarea>
                             </div>
-
-                            <div>
-                                <label class="font-bold text-slate-900 block mb-1">3. Cronograma de Atividades e Unidades:</label>
-                                <textarea rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none focus:border-emerald-500">- Unidade 1: Esportes Coletivos e Fair Play.\n- Unidade 2: Ginástica e Consciência Corporal.\n- Unidade 3: Lutas e Respeito Mútuo.\n- Unidade 4: Danças e Expressão Cultural.</textarea>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -453,7 +447,6 @@
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
-                        <!-- Enviar para o Drive -->
                         <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center font-bold text-xl">🚀</div>
@@ -465,7 +458,6 @@
                             </button>
                         </div>
 
-                        <!-- Restaurar do Drive -->
                         <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center font-bold text-xl">📂</div>
@@ -498,41 +490,47 @@
         </div>
     </div>
 
-    <!-- MODAIS -->
+    <!-- MODAL PRINCIPAL UNIFICADO -->
     <div id="modal-app" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 id="modal-titulo" class="font-bold text-lg text-slate-900">Registar</h3>
-            <form id="modal-form" onsubmit="salvarModal(event)" class="space-y-4">
-                <div id="modal-corpo" class="space-y-4"></div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer">Cancelar</button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer shadow-md">Salvar</button>
-                </div>
-            </form>
+            <div id="modal-corpo" class="space-y-4"></div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button type="button" onclick="fecharModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer">Cancelar</button>
+                <button type="button" onclick="executarSalvarModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer shadow-md">Salvar</button>
+            </div>
         </div>
     </div>
 
+    <!-- MODAL DE CIRCUITOS -->
     <div id="modal-circuito" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 class="font-bold text-lg text-slate-900">Criar Circuito de Estações</h3>
-            <form onsubmit="salvarCircuito(event)" class="space-y-4">
+            <div class="space-y-4">
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Tema / Nome</label><input type="text" id="circ-tema" required placeholder="Ex: Circuito de Agilidade" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Duração</label><input type="text" id="circ-duracao" required placeholder="Ex: 5 minutos" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Estações</label><textarea id="circ-estacoes" rows="3" required placeholder="Estação 1: Cones" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></textarea></div>
-                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalCircuito()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Criar</button></div>
-            </form>
+            </div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button type="button" onclick="fecharModalCircuito()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button>
+                <button type="button" onclick="salvarCircuitoDirecto()" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer">Salvar Circuito</button>
+            </div>
         </div>
     </div>
 
+    <!-- MODAL DE EVENTOS -->
     <div id="modal-evento" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 class="font-bold text-lg text-slate-900">Agendar Evento</h3>
-            <form onsubmit="salvarEvento(event)" class="space-y-4">
+            <div class="space-y-4">
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Data</label><input type="date" id="ev-data" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Título</label><input type="text" id="ev-titulo" required placeholder="Ex: Torneio" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma</label><input type="text" id="ev-turma" required placeholder="Ex: Ensino Médio" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalEvento()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Agendar</button></div>
-            </form>
+            </div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button type="button" onclick="fecharModalEvento()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button>
+                <button type="button" onclick="salvarEventoDirecto()" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer">Salvar Evento</button>
+            </div>
         </div>
     </div>
 
@@ -544,7 +542,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DA INTERFACE -->
+    <!-- SCRIPT DA INTERFACE E BOTÕES -->
     <script>
         let modalTipo = '';
 
@@ -708,13 +706,20 @@
         function fecharModalEvento() { document.getElementById('modal-evento').classList.add('hidden'); }
         function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
 
-        function salvarModal(e) {
-            e.preventDefault();
+        function executarSalvarModal() {
             if(modalTipo === 'turma') {
-                turmas.push({ nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value });
+                const nome = document.getElementById('m-t-nome').value;
+                const ano = document.getElementById('m-t-ano').value;
+                const turno = document.getElementById('m-t-turno').value;
+                if(!nome || !ano) { alert('Preencha os campos obrigatórios!'); return; }
+                turmas.push({ nome, ano, turno });
                 atualizarTabelaTurmas();
             } else if(modalTipo === 'aluno') {
-                alunos.push({ nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value });
+                const nome = document.getElementById('m-a-nome').value;
+                const email = document.getElementById('m-a-email').value;
+                const turma = document.getElementById('m-a-turma').value;
+                if(!nome) { alert('Insira o nome do aluno!'); return; }
+                alunos.push({ nome, email, turma });
                 atualizarTabelaAlunos();
                 atualizarTabelaTurmas();
             }
@@ -723,18 +728,24 @@
             fecharModal();
         }
 
-        function salvarCircuito(e) {
-            e.preventDefault();
-            circuitosAtividades.push({ tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value });
+        function salvarCircuitoDirecto() {
+            const tema = document.getElementById('circ-tema').value;
+            const duracao = document.getElementById('circ-duracao').value;
+            const estacoes = document.getElementById('circ-estacoes').value;
+            if(!tema) { alert('Preencha o tema do circuito!'); return; }
+            circuitosAtividades.push({ tema, duracao, estacoes });
             salvarDadosLocais();
             atualizarListaCircuitos();
             atualizarEstatisticas();
             fecharModalCircuito();
         }
 
-        function salvarEvento(e) {
-            e.preventDefault();
-            eventosCalendario.push({ data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value });
+        function salvarEventoDirecto() {
+            const data = document.getElementById('ev-data').value;
+            const titulo = document.getElementById('ev-titulo').value;
+            const turma = document.getElementById('ev-turma').value;
+            if(!titulo || !data) { alert('Preencha os dados do evento!'); return; }
+            eventosCalendario.push({ data, titulo, turma });
             salvarDadosLocais();
             atualizarListaEventos();
             fecharModalEvento();
@@ -774,6 +785,7 @@
         }
 
         function removerProvaTurma(idx) { provasTurma.splice(idx, 1); salvarDadosLocais(); atualizarTabelaProvasTurmas(); atualizarEstatisticas(); }
+        
         function atualizarListaCircuitos() {
             const container = document.getElementById('lista-circuitos');
             if(!container) return;
@@ -786,6 +798,7 @@
             `).join('');
         }
         function removerCircuito(idx) { circuitosAtividades.splice(idx, 1); salvarDadosLocais(); atualizarListaCircuitos(); atualizarEstatisticas(); }
+        
         function atualizarListaEventos() {
             const container = document.getElementById('lista-eventos-calendario');
             if(!container) return;
@@ -797,6 +810,7 @@
             `).join('');
         }
         function removerEvento(idx) { eventosCalendario.splice(idx, 1); salvarDadosLocais(); atualizarListaEventos(); }
+        
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('tabela-turmas');
             if(!tbody) return;
@@ -804,20 +818,22 @@
                 <tr class="hover:bg-slate-50">
                     <td class="p-4 font-semibold text-slate-900">${t.nome}</td><td class="p-4 text-slate-600">${t.ano}</td><td class="p-4 text-slate-600">${t.turno}</td>
                     <td class="p-4"><span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs">${alunos.filter(a => a.turma === t.nome).length} aluno(s)</span></td>
-                    <td class="p-4 text-right space-x-2"><button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-700 text-xs font-semibold">Ver Alunos</button><button onclick="removerTurma(${idx})" class="text-rose-600 text-xs">Excluir</button></td>
+                    <td class="p-4 text-right space-x-2"><button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-700 text-xs font-semibold cursor-pointer">Ver Alunos</button><button onclick="removerTurma(${idx})" class="text-rose-600 text-xs cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
+
         function atualizarTabelaAlunos() {
             const tbody = document.getElementById('tabela-alunos');
             if(!tbody) return;
             tbody.innerHTML = alunos.length === 0 ? `<tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum aluno.</td></tr>` : alunos.map((a, idx) => `
                 <tr class="hover:bg-slate-50">
                     <td class="p-4 font-semibold text-slate-900">${a.nome}</td><td class="p-4 text-slate-600">${a.email || '-'}</td><td class="p-4 text-slate-600"><span class="bg-slate-100 px-3 py-1 rounded-md text-xs">${a.turma}</span></td>
-                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-600 text-xs">Excluir</button></td>
+                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-600 text-xs cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
+
         function verAlunosTurma(nomeTurma) {
             document.getElementById('detalhe-turma-titulo').textContent = `Alunos da Turma: ${nomeTurma}`;
             const alunosTurma = alunos.filter(a => a.turma === nomeTurma);
@@ -825,11 +841,13 @@
             document.getElementById('detalhe-turma-total').textContent = `${alunosTurma.length} aluno(s)`;
             document.getElementById('modal-detalhes-turma').classList.remove('hidden');
         }
+
         function atualizarSelectTurmasChamada() {
             const select = document.getElementById('select-turma-chamada');
             if(!select) return;
             select.innerHTML = '<option value="">Escolha uma turma...</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
         }
+
         function carregarChamadaTurma() {
             const nomeTurma = document.getElementById('select-turma-chamada').value;
             const container = document.getElementById('container-lista-chamada');
@@ -844,6 +862,7 @@
             `).join('');
             container.classList.remove('hidden');
         }
+
         function executarPesquisaInterna(termo) {
             const resultado = document.getElementById('resultado-pesquisa-interna');
             const termoLimpo = termo.trim().toLowerCase();
@@ -853,9 +872,12 @@
             alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
             resultado.innerHTML = encontrados.length === 0 ? `<p class="text-sm text-slate-400">Nenhum registo.</p>` : encontrados.map(e => `<div class="bg-white border border-slate-200 p-3.5 rounded-2xl text-sm text-slate-700 shadow-sm">${e}</div>`).join('');
         }
+
         function executarPesquisaGlobal(termo) { if(termo.trim().length > 0) { changeTab('pesquisa'); document.getElementById('input-pesquisa-interna').value = termo; executarPesquisaInterna(termo); } }
+        
         function removerTurma(idx) { turmas.splice(idx, 1); salvarDadosLocais(); atualizarTabelaTurmas(); atualizarEstatisticas(); }
         function removerAluno(idx) { alunos.splice(idx, 1); salvarDadosLocais(); atualizarTabelaAlunos(); atualizarEstatisticas(); }
+        
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
