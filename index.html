@@ -1,272 +1,644 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFís AI - Painel do Professor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            500: '#10b981',
-                            600: '#059669',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>EduFís AI - Seu assistente inteligente de Educação Física</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@google/genai@0.1.1/dist/index.umd.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
 
+    <!-- CONFIGURAÇÃO SUPABASE & GEMINI (Insira as suas chaves aqui) -->
     <script>
-        const SUPABASE_URL = 'https://fdawxgrheoukkuzzpfyr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_fKYi1kPB6xuQBjR-pV4VQA_qQqJhqHW';
+        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
+        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
+        const GEMINI_API_KEY = 'SUA_GEMINI_API_KEY_AQUI';
+
         let supabaseClient = null;
-        try {
-            if (typeof supabase !== 'undefined') {
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch(e) { console.error(e); }
+        if (SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL !== 'SUA_SUPABASE_URL_AQUI') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
     </script>
 
-    <!-- TELA DE LOGIN -->
-    <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-slate-950">
-        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 text-3xl mb-4">
-                    <i class="fa-solid fa-person-running"></i>
-                </div>
-                <h1 class="text-2xl font-black text-white">EduFís <span class="text-emerald-400">AI</span></h1>
-                <p class="text-slate-400 text-xs mt-1">Painel Profissional de Educação Física</p>
-            </div>
-
-            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail</label>
-                    <input type="email" id="auth-email" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="professor@escola.com">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Senha</label>
-                    <input type="password" id="auth-password" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="••••••••">
-                </div>
-                <button type="submit" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black rounded-xl text-sm transition cursor-pointer">Entrar no Sistema</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- PAINEL PRINCIPAL -->
-    <div id="dashboard-view" class="hidden min-h-screen flex flex-col md:flex-row w-full bg-slate-950">
+    <!-- CONTAINER PRINCIPAL -->
+    <div id="app" class="flex flex-col min-h-screen">
         
-        <!-- SIDEBAR -->
-        <aside class="w-full md:w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0">
-            <div>
-                <div class="flex items-center space-x-3 px-3 py-4 mb-6 border-b border-slate-800">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                        <i class="fa-solid fa-person-running"></i>
+        <!-- 1. ECRÃ DE LOGIN -->
+        <div id="view-login" class="flex flex-col items-center justify-center flex-1 p-6">
+            <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-emerald-600/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">🏋️</div>
+                    <h1 class="text-2xl font-bold">EduFís AI</h1>
+                    <p class="text-slate-400 text-sm mt-1">“Seu assistente inteligente de Educação Física.”</p>
+                </div>
+                
+                <form id="form-login" class="space-y-4" onsubmit="handleLogin(event)">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">E-mail</label>
+                        <input type="email" id="login-email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
                     <div>
-                        <span class="font-black text-white">EduFís AI</span>
-                        <p class="text-[10px] text-slate-400 uppercase">Professor</p>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Senha</label>
+                        <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
+                    <div class="flex items-center justify-between text-xs text-slate-400">
+                        <label class="flex items-center gap-2"><input type="checkbox" class="rounded bg-slate-950 border-slate-800"> Lembrar-me</label>
+                        <a href="#" class="hover:text-emerald-400">Esqueci minha senha</a>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors">Entrar</button>
+                </form>
+
+                <div class="text-center mt-6 text-sm text-slate-400">
+                    Ainda não tem uma conta? <button onclick="switchView('register')" class="text-emerald-400 font-semibold hover:underline">Criar minha conta</button>
                 </div>
-
-                <nav class="space-y-1 text-sm font-semibold">
-                    <button onclick="nav('inicio')" id="nav-inicio" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-pointer">
-                        <i class="fa-solid fa-house w-5"></i><span>Início</span>
-                    </button>
-                    <button onclick="nav('turmas')" id="nav-turmas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
-                        <i class="fa-solid fa-users w-5"></i><span>Turmas</span>
-                    </button>
-                    <button onclick="nav('alunos')" id="nav-alunos" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
-                        <i class="fa-solid fa-graduation-cap w-5"></i><span>Alunos</span>
-                    </button>
-                    <button onclick="nav('ia')" id="nav-ia" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer">
-                        <i class="fa-solid fa-robot w-5 text-emerald-400"></i><span>Assistente IA</span>
-                    </button>
-                </nav>
             </div>
+        </div>
 
-            <div class="pt-4 border-t border-slate-800">
-                <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-500/10 transition cursor-pointer">
-                    <i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair</span>
-                </button>
-            </div>
-        </aside>
-
-        <!-- CONTEÚDO -->
-        <main class="flex-1 p-6 md:p-10 overflow-y-auto max-h-screen">
-            
-            <!-- INÍCIO -->
-            <section id="sec-inicio" class="sec-view space-y-6">
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl flex justify-between items-center">
+        <!-- 2. ECRÃ DE REGISTO -->
+        <div id="view-register" class="hidden flex flex-col items-center justify-center flex-1 p-6">
+            <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+                <h2 class="text-xl font-bold mb-1">Criar Conta no EduFís AI</h2>
+                <p class="text-slate-400 text-sm mb-6">Preencha seus dados para começar</p>
+                
+                <form id="form-register" class="space-y-4" onsubmit="handleRegister(event)">
                     <div>
-                        <h2 class="text-2xl font-black text-white">Painel Principal</h2>
-                        <p class="text-slate-400 text-sm mt-1">Gerencie suas turmas, alunos e crie planos de aula profissionais.</p>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Nome Completo</label>
+                        <input type="text" id="reg-name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
                     </div>
-                    <button onclick="nav('ia')" class="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer">
-                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Criar com IA
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                        <span class="text-xs uppercase text-slate-400 font-bold">Turmas cadastradas</span>
-                        <h3 id="stat-turmas" class="text-3xl font-black text-white mt-2">0</h3>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">E-mail</label>
+                        <input type="email" id="reg-email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
                     </div>
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-                        <span class="text-xs uppercase text-slate-400 font-bold">Alunos registados</span>
-                        <h3 id="stat-alunos" class="text-3xl font-black text-white mt-2">0</h3>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Senha</label>
+                        <input type="password" id="reg-password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
                     </div>
-                </div>
-            </section>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cidade</label>
+                            <input type="text" id="reg-city" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Estado</label>
+                            <input type="text" id="reg-state" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Escola (Opcional)</label>
+                        <input type="text" id="reg-school" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                    </div>
+                    <label class="flex items-center gap-2 text-xs text-slate-400">
+                        <input type="checkbox" required class="rounded bg-slate-950 border-slate-800"> Concordo com os termos de uso e política de privacidade.
+                    </label>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors">Criar Conta</button>
+                </form>
 
-            <!-- TURMAS -->
-            <section id="sec-turmas" class="sec-view hidden space-y-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-black text-white">Turmas</h2>
-                    <button onclick="abrirModal('turma')" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm cursor-pointer">Nova Turma</button>
+                <div class="text-center mt-6 text-sm text-slate-400">
+                    Já tenho uma conta <button onclick="switchView('login')" class="text-emerald-400 font-semibold hover:underline">(Entrar)</button>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
-                            <tr><th class="p-4">Nome</th><th class="p-4">Ano / Série</th><th class="p-4">Turno</th><th class="p-4 text-right">Ação</th></tr>
-                        </thead>
-                        <tbody id="tabela-turmas" class="divide-y divide-slate-800">
-                            <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- ALUNOS -->
-            <section id="sec-alunos" class="sec-view hidden space-y-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-black text-white">Alunos</h2>
-                    <button onclick="abrirModal('aluno')" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm cursor-pointer">Novo Aluno</button>
+        <!-- 3. PAINEL PRINCIPAL (DASHBOARD & MÓDULOS) -->
+        <div id="view-dashboard" class="hidden flex flex-col flex-1">
+            <!-- HEADER / MENU DE NAVEGAÇÃO -->
+            <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+                <div class="flex items-center gap-3">
+                    <span class="text-xl font-bold text-emerald-400">EduFís AI</span>
+                    <span class="text-xs bg-slate-800 px-2.5 py-1 rounded-full text-slate-400">Painel do Professor</span>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
-                            <tr><th class="p-4">Nome</th><th class="p-4">Contato</th><th class="p-4">Turma</th><th class="p-4 text-right">Ação</th></tr>
-                        </thead>
-                        <tbody id="tabela-alunos" class="divide-y divide-slate-800">
-                            <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno registado.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                <button onclick="logout()" class="text-sm bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 px-3.5 py-1.5 rounded-xl font-medium transition-colors">Sair</button>
+            </header>
 
-            <!-- ASSISTENTE IA -->
-            <section id="sec-ia" class="sec-view hidden space-y-6">
-                <h2 class="text-2xl font-black text-white">Assistente IA de Educação Física</h2>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 max-w-2xl">
-                    <p class="text-xs text-slate-400">Escreva o que pretende criar. O sistema preparará o prompt profissional e abrirá a IA instantaneamente para si:</p>
-                    <textarea id="ai-prompt" rows="3" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Ex: Crie um plano de aula de 50 minutos sobre fundamentos do Basquete para o 8º ano."></textarea>
-                    <button onclick="enviarParaIA()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer flex items-center space-x-2">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i><span>Gerar Plano de Aula com IA</span>
-                    </button>
-                </div>
-            </section>
-        </main>
+            <div class="flex flex-1">
+                <!-- MENU LATERAL -->
+                <aside class="w-64 bg-slate-900/50 border-r border-slate-800 p-4 hidden md:flex flex-col gap-1.5">
+                    <button onclick="changeTab('home')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium bg-emerald-600/10 text-emerald-400">Início</button>
+                    <button onclick="changeTab('turmas')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Turmas</button>
+                    <button onclick="changeTab('alunos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Alunos</button>
+                    <button onclick="changeTab('planos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Planos de Aula</button>
+                    <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Plano para Gestão</button>
+                    <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Atividades</button>
+                    <button onclick="changeTab('provas')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Provas</button>
+                    <button onclick="changeTab('avaliacoes')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Avaliações</button>
+                    <button onclick="changeTab('assistente')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Assistente IA</button>
+                    <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Calendário</button>
+                    <button onclick="changeTab('configuracoes')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Configurações</button>
+                </aside>
+
+                <!-- CONTEÚDO DINÂMICO DAS ABAS -->
+                <main class="flex-1 p-6 overflow-y-auto max-w-5xl">
+                    
+                    <!-- ABA INÍCIO -->
+                    <div id="tab-home" class="space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Olá, Professor! 👋</h2>
+                            <p class="text-slate-400 text-sm">Pronto para inspirar seus alunos na aula de Educação Física hoje?</p>
+                        </div>
+                        
+                        <!-- ESTATÍSTICAS -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                                <div class="text-2xl font-bold text-emerald-400" id="stat-turmas">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Turmas Ativas</div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                                <div class="text-2xl font-bold text-emerald-400" id="stat-alunos">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Alunos Matriculados</div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                                <div class="text-2xl font-bold text-emerald-400">24</div>
+                                <div class="text-xs text-slate-400 mt-1">Planos de aula</div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                                <div class="text-2xl font-bold text-emerald-400">156</div>
+                                <div class="text-xs text-slate-400 mt-1">Avaliações</div>
+                            </div>
+                        </div>
+
+                        <!-- ACESSO RÁPIDO -->
+                        <div>
+                            <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <button onclick="changeTab('planos')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors">
+                                    <div class="text-lg font-bold mb-1">Criar plano de aula</div>
+                                    <div class="text-xs text-slate-400">Com auxílio de IA pedagógica</div>
+                                </button>
+                                <button onclick="changeTab('atividades')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors">
+                                    <div class="text-lg font-bold mb-1">Criar atividade</div>
+                                    <div class="text-xs text-slate-400">Jogos e circuitos inclusivos</div>
+                                </button>
+                                <button onclick="changeTab('provas')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors">
+                                    <div class="text-lg font-bold mb-1">Criar prova</div>
+                                    <div class="text-xs text-slate-400">Questões com gabarito automático</div>
+                                </button>
+                                <button onclick="changeTab('assistente')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors">
+                                    <div class="text-lg font-bold mb-1">Assistente IA</div>
+                                    <div class="text-xs text-slate-400">Tire dúvidas pedagógicas e BNCC</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- AVISOS ESCOLARES -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                            <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">Avisos Escolares</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/60">
+                                    <strong class="block text-emerald-400 mb-0.5">Manutenção na Quadra</strong>
+                                    <span class="text-slate-300">Pintura do piso marcada para sexta-feira. Usar sala poliesportiva.</span>
+                                </div>
+                                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/60">
+                                    <strong class="block text-emerald-400 mb-0.5">Conselho de Classe</strong>
+                                    <span class="text-slate-300">Fechamento de notas do 3º Bimestre até dia 15/10.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA TURMAS -->
+                    <div id="tab-turmas" class="hidden space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold">Gerenciamento de Turmas</h2>
+                                <p class="text-slate-400 text-sm">Cadastre e organize suas turmas escolares.</p>
+                            </div>
+                            <button onclick="toggleModalTurma(true)" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">+ Nova Turma</button>
+                        </div>
+                        <div id="lista-turmas" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Inserido dinamicamente -->
+                        </div>
+                    </div>
+
+                    <!-- ABA ALUNOS -->
+                    <div id="tab-alunos" class="hidden space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold">Alunos Matriculados</h2>
+                                <p class="text-slate-400 text-sm">Gerencie os estudantes por turma e chamada.</p>
+                            </div>
+                            <button onclick="toggleModalAluno(true)" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">+ Novo Aluno</button>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
+                                    <tr>
+                                        <th class="p-3.5">Nº</th>
+                                        <th class="p-3.5">Nome do Aluno</th>
+                                        <th class="p-3.5">Turma</th>
+                                        <th class="p-3.5">Observações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela-alunos-corpo" class="divide-y divide-slate-800">
+                                    <!-- Inserido dinamicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ABA PLANOS DE AULA -->
+                    <div id="tab-planos" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Gerador Inteligente de Plano de Aula</h2>
+                            <p class="text-slate-400 text-sm">Preencha os parâmetros para a IA estruturar sua aula pedagógica completa.</p>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ano / Série</label>
+                                    <input type="text" id="plano-serie" placeholder="Ex: 8º Ano Fundamental" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Tema da Aula</label>
+                                    <input type="text" id="plano-tema" placeholder="Ex: Fundamentos do Voleibol" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Duração</label>
+                                    <input type="text" id="plano-duracao" placeholder="Ex: 50 min" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Qtd Alunos</label>
+                                    <input type="text" id="plano-qtd" placeholder="Ex: 25" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Espaço</label>
+                                    <input type="text" id="plano-espaco" placeholder="Quadra Coberta" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm">
+                                </div>
+                            </div>
+                            <button onclick="gerarPlanoAulaAI()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors">Gerar Plano de Aula com IA</button>
+                        </div>
+                        <div id="resultado-plano" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                            <h3 class="text-lg font-bold text-emerald-400">Plano Gerado com Sucesso</h3>
+                            <div id="conteudo-plano-gerado" class="text-sm space-y-3 text-slate-300"></div>
+                        </div>
+                    </div>
+
+                    <!-- ABA PLANO PARA GESTÃO -->
+                    <div id="tab-gestao" class="hidden space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold">Plano para Gestão Escolar</h2>
+                                <p class="text-slate-400 text-sm">Documento formal pronto para envio à coordenação pedagógica.</p>
+                            </div>
+                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">Imprimir / Salvar PDF</button>
+                        </div>
+                        <div class="bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6">
+                            <div class="text-center border-b pb-4">
+                                <h3 class="text-xl font-bold">Escola Estadual Professor Exemplar</h3>
+                                <p class="text-xs text-slate-600">Coordenação Pedagógica - Ensino Fundamental e Médio</p>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs text-slate-700 gap-2">
+                                <div>Data: 09/10/2026</div>
+                                <div>Docente: Prof. de Educação Física</div>
+                                <div>Componente: Educação Física</div>
+                                <div>Carga Horária: 2 Horas-aula</div>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <div><strong>1. Tema da Aula:</strong> Iniciação aos Esportes de Invasão: Fundamentos do Handebol.</div>
+                                <div><strong>2. Objetivos de Aprendizagem:</strong> Compreender as regras básicas, passe defensivo e progressão com bola em equipe.</div>
+                                <div><strong>3. Habilidades BNCC:</strong> EF89EF04 - Modificar ou adaptar as regras dos esportes para garantir a participação inclusiva.</div>
+                                <div><strong>4. Metodologia:</strong> Método situacional com jogos condicionantes, divididos em aquecimento, vivência prática e jogo formal reduzido.</div>
+                                <div><strong>5. Recursos Didáticos:</strong> Bolas oficiais e infantis, coletes sinalizadores, cones e apito.</div>
+                            </div>
+                            <div class="pt-8 flex justify-between text-xs text-slate-500 border-t">
+                                <div>____________________________________________<br>Assinatura do Professor</div>
+                                <div>____________________________________________<br>Visto da Coordenação Pedagógica</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA ATIVIDADES -->
+                    <div id="tab-atividades" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Gerador de Atividades Físicas</h2>
+                            <p class="text-slate-400 text-sm">Crie jogos, circuitos e dinâmicas inclusivas instantaneamente.</p>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" id="ativ-serie" placeholder="Ano / Série" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                <input type="text" id="ativ-tema" placeholder="Tema / Categoria" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                <input type="text" id="ativ-dif" placeholder="Dificuldade" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                            <button onclick="gerarAtividadeAI()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors">Gerar Atividade com IA</button>
+                        </div>
+                        <div id="resultado-atividade" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
+                            <h3 class="text-lg font-bold text-emerald-400" id="ativ-titulo">Circuito Desafio Motor Adaptado</h3>
+                            <div id="ativ-corpo" class="text-sm text-slate-300 space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- ABA PROVAS -->
+                    <div id="tab-provas" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Criador de Provas e Questionários</h2>
+                            <p class="text-slate-400 text-sm">Gere avaliações teóricas com gabarito automático.</p>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" id="prova-tema" placeholder="Tema da Prova" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                <input type="text" id="prova-qts" placeholder="Nº de Questões" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                                <input type="text" id="prova-tipo" placeholder="Tipo (Múltipla Escolha)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                            <button onclick="gerarProvaAI()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors">Gerar Prova com Gabarito</button>
+                        </div>
+                        <div id="resultado-prova" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
+                            <h3 class="text-lg font-bold text-emerald-400">Avaliação Teórica Gerada</h3>
+                            <div id="prova-corpo" class="text-sm text-slate-300 space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- ABA AVALIAÇÕES -->
+                    <div id="tab-avaliacoes" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Avaliações e Desempenho</h2>
+                            <p class="text-slate-400 text-sm">Acompanhe notas e evolução dos estudantes.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                                <div class="text-3xl font-bold text-emerald-400">8.4</div>
+                                <div class="text-xs text-slate-400 mt-1">Média Geral das Turmas</div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                                <div class="text-3xl font-bold text-emerald-400">96%</div>
+                                <div class="text-xs text-slate-400 mt-1">Taxa de Participação</div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                                <div class="text-3xl font-bold text-emerald-400" id="stat-alunos-av">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Alunos Avaliados</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA ASSISTENTE IA -->
+                    <div id="tab-assistente" class="hidden flex flex-col h-[75vh] space-y-4">
+                        <div>
+                            <h2 class="text-2xl font-bold">Assistente EduFís AI</h2>
+                            <p class="text-slate-400 text-sm">Online • Especialista em Educação Física Escolar e BNCC</p>
+                        </div>
+                        <div id="chat-container" class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-3 text-sm">
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 max-w-[85%]">
+                                Olá! Sou seu assistente especializado em Educação Física. Como posso ajudar nas suas aulas, planejamentos ou adaptações inclusivas hoje?
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="chat-input" placeholder="Digite sua dúvida pedagógica..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" onkeypress="if(event.key==='Enter') enviarMensagemChat()">
+                            <button onclick="enviarMensagemChat()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-6 py-3 rounded-xl font-semibold transition-colors">Enviar</button>
+                        </div>
+                    </div>
+
+                    <!-- ABA CALENDÁRIO -->
+                    <div id="tab-calendario" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Calendário Escolar</h2>
+                            <p class="text-slate-400 text-sm">Outubro de 2026</p>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center text-slate-400 text-sm">
+                            Calendário de eventos e aulas programadas sincronizado com sucesso.
+                        </div>
+                    </div>
+
+                    <!-- ABA CONFIGURAÇÕES -->
+                    <div id="tab-configuracoes" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">Configurações do Perfil</h2>
+                            <p class="text-slate-400 text-sm">Gerencie suas informações docentes.</p>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-xl">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Nome Completo</label>
+                                <input type="text" id="cfg-nome" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">E-mail</label>
+                                <input type="email" id="cfg-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Escola Principal</label>
+                                <input type="text" id="cfg-escola" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                            <button onclick="alert('Alterações guardadas com sucesso!')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm">Salvar Alterações</button>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+
     </div>
 
-    <!-- MODAL -->
-    <div id="modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md space-y-4">
-            <h3 id="modal-title" class="font-bold text-lg text-white">Registar</h3>
-            <form id="modal-form" onsubmit="salvarModal(event)" class="space-y-4">
-                <div id="modal-fields"></div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 bg-emerald-500 text-slate-950 font-bold rounded-xl text-sm">Salvar</button>
-                </div>
-            </form>
+    <!-- MODAL NOVA TURMA -->
+    <div id="modal-turma" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-md space-y-4">
+            <h3 class="text-lg font-bold">Cadastrar Nova Turma</h3>
+            <input type="text" id="turma-nome" placeholder="Nome da Turma (Ex: 8º Ano A)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <input type="text" id="turma-ano" placeholder="Ano / Série" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <input type="text" id="turma-turno" placeholder="Turno (Ex: Matutino)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <div class="flex gap-3 pt-2">
+                <button onclick="toggleModalTurma(false)" class="flex-1 bg-slate-800 hover:bg-slate-700 py-2.5 rounded-xl text-sm font-semibold">Cancelar</button>
+                <button onclick="salvarTurma()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2.5 rounded-xl text-sm font-semibold">Salvar Turma</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        let turmas = [];
-        let alunos = [];
-        let tipoModal = '';
+    <!-- MODAL NOVO ALUNO -->
+    <div id="modal-aluno" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-md space-y-4">
+            <h3 class="text-lg font-bold">Cadastrar Novo Aluno</h3>
+            <input type="text" id="aluno-nome" placeholder="Nome do Aluno" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <input type="text" id="aluno-turma" placeholder="Turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <input type="text" id="aluno-num" placeholder="Número da Chamada" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm">
+            <div class="flex gap-3 pt-2">
+                <button onclick="toggleModalAluno(false)" class="flex-1 bg-slate-800 hover:bg-slate-700 py-2.5 rounded-xl text-sm font-semibold">Cancelar</button>
+                <button onclick="salvarAluno()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2.5 rounded-xl text-sm font-semibold">Salvar Aluno</button>
+            </div>
+        </div>
+    </div>
 
-        function nav(id) {
-            document.querySelectorAll('.sec-view').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`sec-${id}`).classList.remove('hidden');
-            document.querySelectorAll('aside nav button').forEach(el => {
-                el.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
-                el.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
-            });
-            document.getElementById(`nav-${id}`).classList.add('bg-emerald-500/10', 'text-emerald-400', 'border', 'border-emerald-500/20');
+    <!-- LÓGICA DA APLICAÇÃO -->
+    <script>
+        let currentUser = null;
+        let turmasData = [];
+        let alunosData = [];
+
+        function switchView(viewName) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-register').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+
+            if (viewName === 'login') document.getElementById('view-login').classList.remove('hidden');
+            if (viewName === 'register') document.getElementById('view-register').classList.remove('hidden');
+            if (viewName === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
         }
 
-        async function handleAuth(e) {
+        function changeTab(tabName) {
+            const tabs = ['home', 'turmas', 'alunos', 'planos', 'gestao', 'atividades', 'provas', 'avaliacoes', 'assistente', 'calendario', 'configuracoes'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800";
+            });
+            event && event.currentTarget && (event.currentTarget.className = "nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium bg-emerald-600/10 text-emerald-400");
+        }
+
+        async function handleLogin(e) {
             e.preventDefault();
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('dashboard-view').classList.remove('hidden');
+            const email = document.getElementById('login-email').value;
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: document.getElementById('login-password').value });
+                if (error) { alert('Erro no login: ' + error.message); return; }
+            }
+            currentUser = { email };
+            switchView('dashboard');
+            atualizarEstatisticas();
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            if (supabaseClient) {
+                const { error } = await supabaseClient.auth.signUp({ email, password: document.getElementById('reg-password').value });
+                if (error) { alert('Erro no registo: ' + error.message); return; }
+            }
+            alert('Conta criada com sucesso! Faça login.');
+            switchView('login');
         }
 
         function logout() {
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('auth-container').classList.remove('hidden');
+            currentUser = null;
+            switchView('login');
         }
 
-        function abrirModal(tipo) {
-            tipoModal = tipo;
-            document.getElementById('modal-title').textContent = tipo === 'turma' ? 'Nova Turma' : 'Novo Aluno';
-            let html = '';
-            if(tipo === 'turma') {
-                html = `
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">Nome</label><input type="text" id="m-t1" required class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"></div>
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">Ano / Série</label><input type="text" id="m-t2" required class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"></div>
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">Turno</label><input type="text" id="m-t3" required class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"></div>
-                `;
-            } else {
-                let opts = turmas.length ? turmas.map(t => `<option value="${t.n}">${t.n}</option>`).join('') : '<option value="Geral">Sem turmas</option>';
-                html = `
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">Nome</label><input type="text" id="m-a1" required class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"></div>
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">E-mail</label><input type="text" id="m-a2" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"></div>
-                    <div><label class="block text-xs uppercase text-slate-300 mb-1">Turma</label><select id="m-a3" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm">${opts}</select></div>
-                `;
+        function toggleModalTurma(show) {
+            document.getElementById('modal-turma').classList.toggle('hidden', !show);
+        }
+
+        function toggleModalAluno(show) {
+            document.getElementById('modal-aluno').classList.toggle('hidden', !show);
+        }
+
+        function salvarTurma() {
+            const nome = document.getElementById('turma-nome').value;
+            const ano = document.getElementById('turma-ano').value;
+            const turno = document.getElementById('turma-turno').value;
+            if(!nome) return;
+            turmasData.push({ nome, ano, turno });
+            toggleModalTurma(false);
+            renderTurmas();
+            atualizarEstatisticas();
+        }
+
+        function salvarAluno() {
+            const nome = document.getElementById('aluno-nome').value;
+            const turma = document.getElementById('aluno-turma').value;
+            const num = document.getElementById('aluno-num').value;
+            if(!nome) return;
+            alunosData.push({ nome, turma, num });
+            toggleModalAluno(false);
+            renderAlunos();
+            atualizarEstatisticas();
+        }
+
+        function renderTurmas() {
+            const container = document.getElementById('lista-turmas');
+            container.innerHTML = turmasData.map(t => `
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                    <h3 class="font-bold text-lg text-emerald-400">${t.nome}</h3>
+                    <p class="text-xs text-slate-400 mt-1">${t.ano} • ${t.turno}</p>
+                </div>
+            `).join('') || '<p class="text-slate-500 text-sm">Nenhuma turma cadastrada.</p>';
+        }
+
+        function renderAlunos() {
+            const corpo = document.getElementById('tabela-alunos-corpo');
+            corpo.innerHTML = alunosData.map(a => `
+                <tr>
+                    <td class="p-3.5">${a.num}</td>
+                    <td class="p-3.5 font-medium">${a.nome}</td>
+                    <td class="p-3.5 text-slate-400">${a.turma}</td>
+                    <td class="p-3.5 text-slate-500">-</td>
+                </tr>
+            `).join('') || '<tr><td colspan="4" class="p-4 text-center text-slate-500">Nenhum aluno registado.</td></tr>';
+        }
+
+        function atualizarEstatisticas() {
+            document.getElementById('stat-turmas').innerText = turmasData.length;
+            document.getElementById('stat-alunos').innerText = alunosData.length;
+            document.getElementById('stat-alunos-av').innerText = alunosData.length;
+        }
+
+        // INTEGRAÇÃO GEMINI API
+        async function chamarGeminiAI(promptText) {
+            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'SUA_GEMINI_API_KEY_AQUI') {
+                return "Por favor, configure sua GEMINI_API_KEY no script do index.html.";
             }
-            document.getElementById('modal-fields').innerHTML = html;
-            document.getElementById('modal').classList.remove('hidden');
-        }
-
-        function fecharModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
-
-        function salvarModal(e) {
-            e.preventDefault();
-            if(tipoModal === 'turma') {
-                turmas.push({ n: document.getElementById('m-t1').value, a: document.getElementById('m-t2').value, t: document.getElementById('m-t3').value });
-                atualizarTabelas();
-            } else {
-                alunos.push({ n: document.getElementById('m-a1').value, e: document.getElementById('m-a2').value, t: document.getElementById('m-a3').value });
-                atualizarTabelas();
+            try {
+                const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+                const response = await ai.models.generateContent({
+                    model: 'gemini-1.5-flash',
+                    contents: promptText,
+                });
+                return response.text;
+            } catch (err) {
+                return "Erro ao comunicar com a IA: " + err.message;
             }
-            fecharModal();
         }
 
-        function atualizarTabelas() {
-            document.getElementById('tabela-turmas').innerHTML = turmas.length ? turmas.map((x, i) => `<tr><td class="p-4">${x.n}</td><td class="p-4">${x.a}</td><td class="p-4">${x.t}</td><td class="p-4 text-right"><button onclick="turmas.splice(${i},1);atualizarTabelas()" class="text-red-400 text-xs">Excluir</button></td></tr>`).join('') : `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>`;
-            document.getElementById('stat-turmas').textContent = turmas.length;
-            document.getElementById('tabela-alunos').innerHTML = alunos.length ? alunos.map((x, i) => `<tr><td class="p-4">${x.n}</td><td class="p-4">${x.e||'-'}</td><td class="p-4">${x.t}</td><td class="p-4 text-right"><button onclick="alunos.splice(${i},1);atualizarTabelas()" class="text-red-400 text-xs">Excluir</button></td></tr>`).join('') : `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno registado.</td></tr>`;
-            document.getElementById('stat-alunos').textContent = alunos.length;
+        async function gerarPlanoAulaAI() {
+            const serie = document.getElementById('plano-serie').value;
+            const tema = document.getElementById('plano-tema').value;
+            document.getElementById('resultado-plano').classList.remove('hidden');
+            document.getElementById('conteudo-plano-gerado').innerHTML = "A gerar plano pedagógico com IA...";
+            
+            const prompt = `Crie um plano de aula de Educação Física detalhado para ${serie} sobre ${tema} contendo Objetivo, Habilidades BNCC, Aquecimento, Atividade Principal e Volta à Calma.`;
+            const resultado = await chamarGeminiAI(prompt);
+            document.getElementById('conteudo-plano-gerado').innerHTML = resultado.replace(/\n/g, '<br>');
         }
 
-        function enviarParaIA() {
-            const prompt = document.getElementById('ai-prompt').value.trim();
-            if(!prompt) return alert('Por favor, escreva o seu pedido.');
-            const textoFinal = `Atue como um professor especialista em Educação Física escolar. ${prompt}`;
-            const url = `https://aistudio.google.com/prompts/new_chat?text=${encodeURIComponent(textoFinal)}`;
-            window.open(url, '_blank');
+        async function gerarAtividadeAI() {
+            const serie = document.getElementById('ativ-serie').value;
+            const tema = document.getElementById('ativ-tema').value;
+            document.getElementById('resultado-atividade').classList.remove('hidden');
+            document.getElementById('ativ-corpo').innerHTML = "A criar atividade inclusiva...";
+            
+            const prompt = `Crie uma atividade lúdica e inclusiva de Educação Física para ${serie} focada em ${tema} com Objetivo, Materiais e Desenvolvimento detalhado.`;
+            const resultado = await chamarGeminiAI(prompt);
+            document.getElementById('ativ-corpo').innerHTML = resultado.replace(/\n/g, '<br>');
+        }
+
+        async function gerarProvaAI() {
+            const tema = document.getElementById('prova-tema').value;
+            const qtd = document.getElementById('prova-qts').value || '3';
+            document.getElementById('resultado-prova').classList.remove('hidden');
+            document.getElementById('prova-corpo').innerHTML = "A gerar avaliação teórica...";
+            
+            const prompt = `Crie uma prova teórica de Educação Física sobre ${tema} com ${qtd} questões de múltipla escolha indicando o gabarito.`;
+            const resultado = await chamarGeminiAI(prompt);
+            document.getElementById('prova-corpo').innerHTML = resultado.replace(/\n/g, '<br>');
+        }
+
+        async function enviarMensagemChat() {
+            const input = document.getElementById('chat-input');
+            const texto = input.value.trim();
+            if(!texto) return;
+            
+            const container = document.getElementById('chat-container');
+            container.innerHTML += `<div class="bg-emerald-600/20 text-emerald-200 p-3.5 rounded-xl ml-auto max-w-[85%]">${texto}</div>`;
+            input.value = '';
+            
+            container.innerHTML += `<div id="ai-loading" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 max-w-[85%]">A pensar...</div>`;
+            container.scrollTop = container.scrollHeight;
+
+            const resposta = await chamarGeminiAI(texto);
+            document.getElementById('ai-loading').remove();
+            
+            container.innerHTML += `<div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 max-w-[85%]">${resposta.replace(/\n/g, '<br>')}</div>`;
+            container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>
