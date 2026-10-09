@@ -61,11 +61,11 @@
         ];
     </script>
 
-    <!-- 1. ECRÃ DE LOGIN (CLARO E MODERNO) -->
+    <!-- 1. ECRÃ DE LOGIN -->
     <div id="view-login" class="flex flex-col items-center justify-center flex-1 p-4 sm:p-6 bg-gradient-to-br from-emerald-50 via-slate-100 to-slate-200">
         <div class="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6">
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold shadow-md shadow-emerald-500/30">🏋️</div>
+                <div class="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold shadow-md shadow-emerald-600/30">🏋️</div>
                 <h1 class="text-2xl font-black tracking-tight text-slate-900">EduFís Pro</h1>
                 <p class="text-slate-500 text-sm">Plataforma Inteligente de Gestão de Educação Física</p>
             </div>
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <!-- 2. ECRÃ DE REGISTO (CLARO E MODERNO) -->
+    <!-- 2. ECRÃ DE REGISTO -->
     <div id="view-register" class="hidden flex flex-col items-center justify-center flex-1 p-4 sm:p-6 bg-gradient-to-br from-emerald-50 via-slate-100 to-slate-200">
         <div class="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6">
             <div class="space-y-1">
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <!-- 3. PAINEL PRINCIPAL (TEMA CLARO PROFISSIONAL) -->
+    <!-- 3. PAINEL PRINCIPAL -->
     <div id="view-dashboard" class="hidden flex flex-col flex-1">
         
         <!-- HEADER -->
@@ -416,35 +416,35 @@
                     </div>
                 </div>
 
-                <!-- ABA CIRCUITOS -->
+                <!-- ABA CIRCUITOS (ATUALIZADA COM PADRÃO PROFISSIONAL) -->
                 <div id="tab-atividades" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
-                            <h2 class="text-2xl font-black text-slate-900">Circuitos e Estações</h2>
-                            <p class="text-slate-500 text-sm">Organize treinos motores e estações em quadra.</p>
+                            <h2 class="text-2xl font-black text-slate-900">Circuitos e Estações Práticas</h2>
+                            <p class="text-slate-500 text-sm">Estruture treinos motores, circuitos de agilidade e estações em quadra.</p>
                         </div>
                         <button onclick="abrirModalCircuito()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all cursor-pointer">+ Novo Circuito</button>
                     </div>
-                    <div id="lista-circuitos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="lista-circuitos" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
-                            Nenhum circuito registado.
+                            Nenhum circuito prático registado. Clique em "+ Novo Circuito" para começar.
                         </div>
                     </div>
                 </div>
 
-                <!-- ABA CALENDÁRIO -->
+                <!-- ABA CALENDÁRIO (ATUALIZADA COM PADRÃO PROFISSIONAL) -->
                 <div id="tab-calendario" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
-                            <h2 class="text-2xl font-black text-slate-900">Calendário Escolar</h2>
-                            <p class="text-slate-500 text-sm">Eventos e datas desportivas.</p>
+                            <h2 class="text-2xl font-black text-slate-900">Calendário Escolar e Desportivo</h2>
+                            <p class="text-slate-500 text-sm">Organize testes, campeonatos e datas comemorativas.</p>
                         </div>
                         <button onclick="abrirModalEvento()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all cursor-pointer">+ Agendar Evento</button>
                     </div>
-                    <div class="bg-white border border-slate-200 p-6 rounded-3xl max-w-3xl space-y-4 shadow-sm">
+                    <div class="bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl max-w-3xl space-y-4 shadow-sm">
                         <h3 class="font-bold text-sm text-emerald-700 uppercase tracking-wider">Eventos Programados</h3>
                         <div id="lista-eventos-calendario" class="space-y-3">
-                            <p class="text-sm text-slate-400">Nenhum evento agendado.</p>
+                            <p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>
                         </div>
                     </div>
                 </div>
@@ -467,7 +467,7 @@
         </div>
     </div>
 
-    <!-- MODAIS -->
+    <!-- MODAIS ESTILIZADOS -->
     <div id="modal-app" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 id="modal-titulo" class="font-bold text-lg text-slate-900">Registar</h3>
@@ -485,22 +485,22 @@
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 class="font-bold text-lg text-slate-900">Criar Circuito de Estações</h3>
             <form onsubmit="salvarCircuito(event)" class="space-y-4">
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Tema</label><input type="text" id="circ-tema" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Duração</label><input type="text" id="circ-duracao" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Estações</label><textarea id="circ-estacoes" rows="3" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></textarea></div>
-                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalCircuito()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Criar</button></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Tema / Nome do Circuito</label><input type="text" id="circ-tema" required placeholder="Ex: Circuito de Agilidade" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Duração por Estação</label><input type="text" id="circ-duracao" required placeholder="Ex: 5 minutos" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Descrição das Estações</label><textarea id="circ-estacoes" rows="3" required placeholder="Estação 1: Cones&#10;Estação 2: Saltos" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></textarea></div>
+                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalCircuito()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer">Criar Circuito</button></div>
             </form>
         </div>
     </div>
 
     <div id="modal-evento" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
-            <h3 class="font-bold text-lg text-slate-900">Agendar Evento</h3>
+            <h3 class="font-bold text-lg text-slate-900">Agendar Evento Escolar</h3>
             <form onsubmit="salvarEvento(event)" class="space-y-4">
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Data</label><input type="date" id="ev-data" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Título</label><input type="text" id="ev-titulo" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma</label><input type="text" id="ev-turma" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
-                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalEvento()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Agendar</button></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Título do Evento</label><input type="text" id="ev-titulo" required placeholder="Ex: Torneio Interclasses" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma Envolvida</label><input type="text" id="ev-turma" required placeholder="Ex: Ensino Médio" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-emerald-500"></div>
+                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalEvento()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer">Cancelar</button><button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer">Agendar</button></div>
             </form>
         </div>
     </div>
@@ -749,14 +749,17 @@
             const container = document.getElementById('lista-circuitos');
             if(!container) return;
             if(circuitosAtividades.length === 0) {
-                container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">Nenhum circuito registado.</div>`;
+                container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">Nenhum circuito registado. Clique em "+ Novo Circuito" para começar.</div>`;
                 return;
             }
             container.innerHTML = circuitosAtividades.map((c, idx) => `
-                <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-3 shadow-sm">
-                    <div class="flex justify-between items-center"><h3 class="font-bold text-base text-emerald-700">${c.tema}</h3><button onclick="removerCircuito(${idx})" class="text-rose-600 text-xs cursor-pointer">Excluir</button></div>
-                    <p class="text-xs text-slate-500">⏱️ Duração: ${c.duracao}</p>
-                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs text-slate-700 whitespace-pre-wrap">${c.estacoes}</div>
+                <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm hover:border-emerald-300 transition-all">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-base text-emerald-700 flex items-center gap-2">🏃 ${c.tema}</h3>
+                        <button onclick="removerCircuito(${idx})" class="text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-all">Excluir</button>
+                    </div>
+                    <div class="inline-block bg-emerald-50 text-emerald-700 font-semibold px-3 py-1 rounded-full text-xs">⏱️ Duração: ${c.duracao}</div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">${c.estacoes}</div>
                 </div>
             `).join('');
         }
@@ -767,13 +770,19 @@
             const container = document.getElementById('lista-eventos-calendario');
             if(!container) return;
             if(eventosCalendario.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-400">Nenhum evento agendado.</p>`;
+                container.innerHTML = `<p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>`;
                 return;
             }
             container.innerHTML = eventosCalendario.map((ev, idx) => `
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex justify-between items-center text-sm">
-                    <div><div class="font-bold text-slate-900">${ev.titulo}</div><div class="text-xs text-slate-500">📅 ${ev.data} | Turma: ${ev.turma}</div></div>
-                    <button onclick="removerEvento(${idx})" class="text-rose-600 text-xs cursor-pointer">Excluir</button>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex justify-between items-center text-sm hover:border-emerald-300 transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center font-black text-sm">📅</div>
+                        <div>
+                            <div class="font-bold text-slate-900">${ev.titulo}</div>
+                            <div class="text-xs text-slate-500">Data: ${ev.data} | Turma: <span class="font-semibold text-slate-700">${ev.turma}</span></div>
+                        </div>
+                    </div>
+                    <button onclick="removerEvento(${idx})" class="text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-all">Excluir</button>
                 </div>
             `).join('');
         }
@@ -843,6 +852,8 @@
             let encontrados = [];
             turmas.forEach(t => { if(t.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`🏫 Turma: <b>${t.nome}</b>`); });
             alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
+            circuitosAtividades.forEach(c => { if(c.tema.toLowerCase().includes(termoLimpo)) encontrados.push(`🏃 Circuito: <b>${c.tema}</b>`); });
+            eventosCalendario.forEach(ev => { if(ev.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📅 Evento: <b>${ev.titulo}</b>`); });
             baseBNCC.forEach(b => { if(b.desc.toLowerCase().includes(termoLimpo) || b.codigo.toLowerCase().includes(termoLimpo)) encontrados.push(`⚖️ BNCC [${b.codigo}]: <b>${b.desc}</b>`); });
             resultado.innerHTML = encontrados.length === 0 ? `<p class="text-sm text-slate-400">Nenhum registo encontrado.</p>` : encontrados.map(e => `<div class="bg-white border border-slate-200 p-3.5 rounded-2xl text-sm text-slate-700 shadow-sm">${e}</div>`).join('');
         }
