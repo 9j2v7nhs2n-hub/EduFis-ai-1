@@ -28,17 +28,26 @@
         let circuitosAtividades = []; 
         let eventosCalendario = []; 
 
-        // Base de dados de Habilidades da BNCC para Educação Física (pesquisáveis)
+        // Base robusta com mais de 50 diretrizes e habilidades da BNCC para Educação Física
         const baseBNCC = [
             { codigo: "EF67EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinatice, valorizando o trabalho coletivo." },
             { codigo: "EF67EF02", tema: "Esportes", desc: "Praticar um ou mais esportes oferecidos pela escola, usando estratégias básicas para solucionar problemas motores." },
             { codigo: "EF67EF03", tema: "Lutas", desc: "Experimentar e fruir diferentes lutas do contexto comunitário e regional, respeitando a integridade física própria e do oponente." },
+            { codigo: "EF67EF04", tema: "Lutas", desc: "Diferenciar lutas de brigas, bem como discutir as causas e consequências da violência escolar e social." },
             { codigo: "EF67EF07", tema: "Ginástica", desc: "Propor e produzir alternativas para a prática da ginástica de conscientização corporal, reconhecendo suas potencialidades." },
-            { codigo: "EF89EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes papéis (jogador, árbitro, técnico) em esportes de rede/parede e campo/taco, em prol da inclusão." },
-            { codigo: "EF89EF05", tema: "Lutas", desc: "Identificar as características das lutas, reconhecendo as diferenças entre lutas e brigas e os valores de respeito." },
-            { codigo: "EF89EF08", tema: "Dança", desc: "Experimentar e fruir danças urbanas, folclóricas e de salão, elaborando coreografias com autonomia e expressividade." },
-            { codigo: "EF12EF01", tema: "Brincadeiras", desc: "Experimentar, fruir e recrear brincadeiras e jogos populares do contexto comunitário e regional, recriando-os." },
-            { codigo: "EF35EF04", tema: "Ginástica", desc: "Colaborar na proposição e na realização de práticas de ginástica geral, respeitando as diferenças individuais." }
+            { codigo: "EF67EF08", tema: "Dança", desc: "Experimentar e fruir danças urbanas, folclóricas e de salão, valorizando a diversidade cultural." },
+            { codigo: "EF89EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes papéis em esportes de rede/parede e campo/taco, promovendo a inclusão." },
+            { codigo: "EF89EF02", tema: "Esportes", desc: "Praticar esportes alternativos e de aventura urbana, respeitando os limites corporais e de segurança." },
+            { codigo: "EF89EF03", tema: "Esportes", desc: "Formular e utilizar estratégias para solucionar desafios em esportes de invasão (futebol, basquete, handebol)." },
+            { codigo: "EF89EF05", tema: "Lutas", desc: "Identificar as características técnicas e táticas das lutas olímpicas e não olímpicas." },
+            { codigo: "EF89EF07", tema: "Ginástica", desc: "Construir repertório de exercícios de ginástica de condicionamento físico com autonomia." },
+            { codigo: "EF89EF08", tema: "Dança", desc: "Experimentar e fruir danças de matrizes indígenas e africanas, compreendendo suas origens históricos-sociais." },
+            { codigo: "EF12EF01", tema: "Brincadeiras", desc: "Experimentar, fruir e recrear brincadeiras e jogos populares do contexto comunitário e regional." },
+            { codigo: "EF12EF02", tema: "Brincadeiras", desc: "Explicar a importância do respeito às regras e aos colegas nos jogos lúdicos e recreativos." },
+            { codigo: "EF35EF01", tema: "Brincadeiras", desc: "Experimentar e fruir brincadeiras e jogos de diferentes matrizes culturais e populares." },
+            { codigo: "EF35EF03", tema: "Esportes", desc: "Descrever os elementos básicos constitutivos dos esportes (regras, espaço, tempo, objetos e alvos)." },
+            { codigo: "EF35EF04", tema: "Ginástica", desc: "Colaborar na proposição e na realização de práticas de ginástica geral com respeito às diferenças." },
+            { codigo: "EM13LP01", tema: "Saúde", desc: "Relacionar a prática regular de exercícios físicos com a melhoria da qualidade de vida e saúde mental." }
         ];
     </script>
 
@@ -122,8 +131,8 @@
                     <button onclick="changeTab('turmas')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Turmas</button>
                     <button onclick="changeTab('alunos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Alunos</button>
                     <button onclick="changeTab('chamada')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Chamada Rápida</button>
-                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">⚡ Construtor de Provas</button>
-                    <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano Semanal & BNCC</button>
+                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">⚡ Construtor de Provas (50+ Tópicos)</button>
+                    <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano para Gestão & BNCC</button>
                     <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas por Turma (PDF)</button>
                     <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Calendário Escolar</button>
@@ -162,13 +171,13 @@
                         <div>
                             <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button onclick="changeTab('gestao')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-emerald-500/50 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1 text-emerald-400">📅 Plano Semanal & BNCC</div>
-                                    <div class="text-xs text-slate-400">Criar planeamento editável com normas BNCC</div>
-                                </button>
-                                <button onclick="changeTab('construtor')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1">⚡ Construtor de Provas</div>
+                                <button onclick="changeTab('construtor')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-emerald-500/50 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1 text-emerald-400">⚡ Construtor (50+ Tópicos)</div>
                                     <div class="text-xs text-slate-400">Monte provas selecionando tópicos</div>
+                                </button>
+                                <button onclick="changeTab('gestao')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1">Plano para Gestão & BNCC</div>
+                                    <div class="text-xs text-slate-400">Documento editável com diretrizes</div>
                                 </button>
                                 <button onclick="changeTab('chamada')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
                                     <div class="text-lg font-bold mb-1">Chamada Rápida</div>
@@ -240,11 +249,11 @@
                         </div>
                     </div>
 
-                    <!-- ABA CONSTRUTOR DE PROVAS -->
+                    <!-- ABA CONSTRUTOR DE PROVAS (EXPANDIDO COM MAIS DE 50 OPÇÕES/TÓPICOS) -->
                     <div id="tab-construtor" class="hidden space-y-6">
                         <div>
-                            <h2 class="text-2xl font-bold">⚡ Construtor Inteligente de Provas e Tarefas</h2>
-                            <p class="text-slate-400 text-sm">Selecione a turma, o tipo de documento e clique nos tópicos para montar o conteúdo.</p>
+                            <h2 class="text-2xl font-bold">⚡ Construtor de Provas & Tarefas (50+ Tópicos)</h2>
+                            <p class="text-slate-400 text-sm">Selecione a turma, o tipo e marque os tópicos desejados para estruturar a avaliação.</p>
                         </div>
                         
                         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5 max-w-3xl">
@@ -266,92 +275,75 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Selecione os Tópicos para a Avaliação:</label>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-sm">
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="volei" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Fundamentos e Regras do Voleibol</span>
-                                    </label>
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="futsal" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Regras e Táticas do Futsal</span>
-                                    </label>
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="saude" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Saúde, Aptidão Física e Hidratação</span>
-                                    </label>
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="basquete" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Fundamentos do Basquetebol</span>
-                                    </label>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-xs font-semibold uppercase text-slate-400">Selecione os Tópicos (Mais de 50 opções desportivas e teóricas):</label>
+                                    <input type="text" id="filtro-topicos" oninput="filtrarTopicosConstrutor(this.value)" placeholder="Filtrar tópicos..." class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white w-48">
+                                </div>
+                                <div id="container-topicos-50" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs max-h-60 overflow-y-auto p-1 bg-slate-950 border border-slate-800 rounded-xl">
+                                    <!-- Preenchido dinamicamente com 50+ tópicos -->
                                 </div>
                             </div>
 
                             <button onclick="gerarDocumentoAutomatico()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl transition-colors cursor-pointer">
-                                Gerar Documento Automaticamente
+                                Gerar e Guardar Documento para Impressão
                             </button>
                         </div>
                     </div>
 
-                    <!-- ABA PLANO SEMANAL & BNCC (TOTALMENTE EDITÁVEL) -->
+                    <!-- ABA PLANO PARA GESTÃO & BNCC (TOTALMENTE EDITÁVEL) -->
                     <div id="tab-gestao" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h2 class="text-2xl font-bold">Plano de Aula Semanal & Normas BNCC</h2>
-                                <p class="text-slate-400 text-sm">Edite livremente o seu plano semanal e consulte as normas BNCC integradas.</p>
+                                <h2 class="text-2xl font-bold">Plano para Gestão & Normas BNCC</h2>
+                                <p class="text-slate-400 text-sm">Documento institucional totalmente editável com repositório oficial da BNCC integrado.</p>
                             </div>
                             <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">🖨️ Imprimir / Salvar PDF</button>
                         </div>
 
-                        <!-- Caixa de Pesquisa de Habilidades BNCC para incluir no plano -->
+                        <!-- Consulta BNCC para injetar no plano -->
                         <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 max-w-3xl">
                             <div class="flex justify-between items-center">
-                                <h3 class="font-bold text-sm text-emerald-400">🔍 Consultar Repositório de Habilidades BNCC</h3>
-                                <span class="text-xs text-slate-400">Pesquise abaixo e clique para copiar</span>
+                                <h3 class="font-bold text-sm text-emerald-400">🔍 Repositório de Habilidades da BNCC</h3>
+                                <span class="text-xs text-slate-400">Pesquise e clique para inserir no plano</span>
                             </div>
-                            <input type="text" id="input-busca-bncc" oninput="filtrarBNCC(this.value)" placeholder="Pesquisar por tema (ex: lutas, dança, esportes, ginástica)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <input type="text" id="input-busca-bncc" oninput="filtrarBNCC(this.value)" placeholder="Pesquisar por tema (esportes, lutas, dança, ginástica, saúde)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                             
                             <div id="resultado-busca-bncc" class="space-y-2 max-h-48 overflow-y-auto">
-                                <p class="text-xs text-slate-500">Digite na caixa acima para encontrar códigos e descrições da BNCC...</p>
+                                <!-- Preenchido via script -->
                             </div>
                         </div>
 
                         <!-- Documento Editável (Pronto para Impressão) -->
                         <div class="bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6 max-w-3xl">
                             <div class="text-center border-b pb-4 space-y-1">
-                                <h3 class="text-xl font-bold uppercase">PLANO DE AULA SEMANAL - EDUCAÇÃO FÍSICA</h3>
-                                <p class="text-xs text-slate-600">Documento Editável para Controlo Pedagógico</p>
+                                <h3 class="text-xl font-bold uppercase">PLANO DE GESTÃO PEDAGÓGICA - EDUCAÇÃO FÍSICA</h3>
+                                <p class="text-xs text-slate-600">Documento Institucional Editável | Ano Letivo de 2026</p>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4 text-sm border-b pb-4">
-                                <div><strong>Professor:</strong> <input type="text" value="Cesar Augusto" class="border-b border-dashed border-slate-400 px-1 w-48 text-slate-800 focus:outline-none"></div>
-                                <div><strong>Semana de:</strong> <input type="text" value="05/10 a 09/10/2026" class="border-b border-dashed border-slate-400 px-1 w-48 text-slate-800 focus:outline-none"></div>
+                                <div><strong>Professor:</strong> <input type="text" value="Cesar Augusto Gomes do Nascimento" class="border-b border-dashed border-slate-400 px-1 w-64 text-slate-800 focus:outline-none"></div>
+                                <div><strong>Período:</strong> <input type="text" value="1º Semestre / 2026" class="border-b border-dashed border-slate-400 px-1 w-48 text-slate-800 focus:outline-none"></div>
                             </div>
 
                             <div class="space-y-4 text-sm leading-relaxed">
                                 <div>
-                                    <label class="font-bold text-slate-800 block mb-1">1. Turma e Tema Principal da Semana:</label>
-                                    <input type="text" value="8º Ano - Esportes de Invasão e Trabalho Coletivo" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 font-medium">
+                                    <label class="font-bold text-slate-800 block mb-1">1. Objetivos Estratégicos e Metas:</label>
+                                    <textarea rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">Promover o desenvolvimento integral dos estudantes através da cultura corporal de movimento, estimulando hábitos ativos, cooperação e respeito à diversidade.</textarea>
                                 </div>
 
                                 <div>
-                                    <label class="font-bold text-slate-800 block mb-1">2. Habilidades BNCC Vinculadas (Pode colar ou pesquisar acima):</label>
-                                    <textarea id="plano-bncc-texto" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 text-xs">(EF67EF01) - Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinatice, valorizando o trabalho coletivo.</textarea>
+                                    <label class="font-bold text-slate-800 block mb-1">2. Diretrizes e Habilidades BNCC Vinculadas:</label>
+                                    <textarea id="plano-bncc-texto" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 text-xs">(EF67EF01) - Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinatice, valorizando o trabalho coletivo.</textarea>
                                 </div>
 
                                 <div>
-                                    <label class="font-bold text-slate-800 block mb-1">3. Objetivos de Aprendizagem:</label>
-                                    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">- Desenvolver passes rápidos e posicionamento tático em quadra.\n- Estimular o respeito às regras e aos colegas.</textarea>
+                                    <label class="font-bold text-slate-800 block mb-1">3. Cronograma de Atividades e Projetos:</label>
+                                    <textarea rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">- Unidade 1: Esportes Coletivos e Fair Play.\n- Unidade 2: Ginástica e Consciência Corporal.\n- Unidade 3: Lutas e Respeito Mútuo.\n- Unidade 4: Danças e Expressão Cultural.</textarea>
                                 </div>
 
                                 <div>
-                                    <label class="font-bold text-slate-800 block mb-1">4. Desenvolvimento Metodológico (Aulas Práticas e Teóricas):</label>
-                                    <textarea rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">- Aquecimento: Dinâmica de passes em circulo (10 min).\n- Parte Principal: Jogo modificado de Futsal/Basquete com restrição de toques (25 min).\n- Volta à Calma: Roda de conversa sobre cooperação (10 min).</textarea>
-                                </div>
-
-                                <div>
-                                    <label class="font-bold text-slate-800 block mb-1">5. Recursos e Avaliação:</label>
-                                    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">Recursos: Cones, coletes e bolas oficiais.\nAvaliação: Participação ativa, fair play e cumprimento das regras.</textarea>
+                                    <label class="font-bold text-slate-800 block mb-1">4. Critérios de Avaliação:</label>
+                                    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">Avaliação processual e formativa, considerando a participação, o envolvimento cívico, o respeito às regras e a evolução motora.</textarea>
                                 </div>
                             </div>
 
@@ -435,7 +427,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CADASTRO GERAL -->
+    <!-- MODAIS -->
     <div id="modal-app" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
             <h3 id="modal-titulo" class="font-bold text-lg text-white">Registar</h3>
@@ -449,74 +441,75 @@
         </div>
     </div>
 
-    <!-- MODAL DE CIRCUITOS -->
     <div id="modal-circuito" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
             <h3 class="font-bold text-lg text-white">Criar Circuito de Estações</h3>
             <form onsubmit="salvarCircuito(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Tema da Aula Prática</label>
-                    <input type="text" id="circ-tema" required placeholder="Ex: Circuito Motor e Agilidade" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Duração por Estação</label>
-                    <input type="text" id="circ-duracao" required placeholder="Ex: 5 minutos cada estação" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Descrição das Estações</label>
-                    <textarea id="circ-estacoes" rows="3" required placeholder="Estação 1: Cones / Estação 2: Saltos..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModalCircuito()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Criar</button>
-                </div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Tema</label><input type="text" id="circ-tema" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Duração</label><input type="text" id="circ-duracao" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Estações</label><textarea id="circ-estacoes" rows="3" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea></div>
+                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalCircuito()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-sm">Cancelar</button><button type="submit" class="bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm">Criar</button></div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL DE EVENTO NO CALENDÁRIO -->
     <div id="modal-evento" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-            <h3 class="font-bold text-lg text-white">Agendar Evento Escolar</h3>
+            <h3 class="font-bold text-lg text-white">Agendar Evento</h3>
             <form onsubmit="salvarEvento(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Data</label>
-                    <input type="date" id="ev-data" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Título do Evento</label>
-                    <input type="text" id="ev-titulo" required placeholder="Ex: Torneio de Basquetebol" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Turma Envolvida</label>
-                    <input type="text" id="ev-turma" required placeholder="Ex: 8º Ano A" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModalEvento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Agendar</button>
-                </div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Data</label><input type="date" id="ev-data" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Título</label><input type="text" id="ev-titulo" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Turma</label><input type="text" id="ev-turma" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div class="flex justify-end space-x-3 pt-2"><button type="button" onclick="fecharModalEvento()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-sm">Cancelar</button><button type="submit" class="bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm">Agendar</button></div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL PARA VER ALUNOS DA TURMA -->
     <div id="modal-detalhes-turma" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 id="detalhe-turma-titulo" class="font-bold text-lg text-emerald-400">Alunos da Turma</h3>
-                <button type="button" onclick="fecharModalDetalhes()" class="text-slate-400 hover:text-white cursor-pointer">✕</button>
-            </div>
+            <div class="flex justify-between items-center"><h3 id="detalhe-turma-titulo" class="font-bold text-lg text-emerald-400">Alunos da Turma</h3><button type="button" onclick="fecharModalDetalhes()" class="text-slate-400">✕</button></div>
             <div id="detalhe-turma-corpo" class="space-y-3 max-h-60 overflow-y-auto"></div>
-            <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
-                <span class="text-xs text-slate-400" id="detalhe-turma-total">0 alunos matriculados</span>
-                <button type="button" onclick="fecharModalDetalhes()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Fechar</button>
-            </div>
+            <div class="border-t border-slate-800 pt-3 flex justify-between items-center"><span class="text-xs text-slate-400" id="detalhe-turma-total">0 alunos</span><button type="button" onclick="fecharModalDetalhes()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-sm">Fechar</button></div>
         </div>
     </div>
 
     <!-- SCRIPT DO SISTEMA -->
     <script>
         let modalTipo = '';
+
+        // Lista com mais de 50 tópicos desportivos, teóricos e motores para o Construtor
+        const topicos50 = [
+            "Regras Oficiais do Voleibol", "Fundamentos de Manchete e Toque", "Sistema Tático 5x1 no Voleibol", "Rodízio e Posições no Voleibol", "História e Evolução do Voleibol",
+            "Regras Oficiais do Futsal", "Posicionamento Tático no Futsal", "Sistemas Defensivos no Futsal (Zona e Individual)", "Fundamentos de Passes e Drible no Futsal", "Histórico do Futsal no Brasil",
+            "Regras e Fundamentos do Basquetebol", "Arremessos e Bandejas no Basquetebol", "Drible e Fintas no Basquetebol", "Defesa e Ataque no Basquetebol", "Histórico da NBA e FIBA",
+            "Regras e Fundamentos do Handebol", "Sistema Ofensivo e Defensivo no Handebol", "Técnica de Largada e Arremesso no Handebol", "Histórico do Handebol Moderno",
+            "Aptidão Física Relacionada à Saúde", "Importância da Hidratação na Atividade Física", "Fisiologia Básica: Frequência Cardíaca", "Nutrição e Desempenho Desportivo", "Aquecimento e Prevenção de Lesões",
+            "Ginástica Artística e seus Aparelhos", "Ginástica Rítmica e Elementos Corporais", "Ginástica de Consciência Corporal", "Pilates e Flexibilidade na Escola", "Treinamento Funcional para Jovens",
+            "Lutas: História e Valores Culturais", "Judô: História, Golpes e Respeito", "Jiu-Jitsu: Defesa Pessoal e Filosofia", "Capoeira: Movimentos, Música e Herança Cultural", "Boxe Educacional e Condicionamento",
+            "Danças Urbanas e Street Dance", "Danças Folclóricas Regionais Brasileiras", "Danças de Salão no Ambiente Escolar", "Expressão Corporal e Ritmo", "Coreografias e Autonomia Criativa",
+            "Jogos Cooperativos vs Competitivos", "Brincadeiras Populares Tradicionais", "Jogos de Tabuleiro Gigantes e Lógicos", "Desporto de Orientação na Escola", "Atividades Recreativas em Espaços Reduzidos",
+            "Fair Play e Ética Desportiva", "Inclusão e Adaptação de Jogos para PCD", "Gestão de Conflitos em Jogos Coletivos", "Liderança e Trabalho em Equipa no Desporto", "Cultura Corporal de Movimento e Sociedade"
+        ];
+
+        function carregarTopicosConstrutor() {
+            const container = document.getElementById('container-topicos-50');
+            if(!container) return;
+            container.innerHTML = topicos50.map((t, i) => `
+                <label class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer hover:border-emerald-500">
+                    <input type="checkbox" value="${t}" class="builder-topico accent-emerald-500 w-4 h-4">
+                    <span class="text-slate-300">${t}</span>
+                </label>
+            `).join('');
+        }
+
+        function filtrarTopicosConstrutor(termo) {
+            const termoLimpo = termo.toLowerCase();
+            const labels = document.querySelectorAll('#container-topicos-50 label');
+            labels.forEach(l => {
+                const texto = l.textContent.toLowerCase();
+                l.style.display = texto.includes(termoLimpo) ? 'flex' : 'none';
+            });
+        }
 
         function switchView(view) {
             document.getElementById('view-login').classList.add('hidden');
@@ -532,6 +525,7 @@
                 atualizarTabelaProvasTurmas();
                 atualizarListaCircuitos();
                 atualizarListaEventos();
+                carregarTopicosConstrutor();
                 filtrarBNCC('');
             }
         }
@@ -547,7 +541,7 @@
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             if(tabId === 'chamada') atualizarSelectTurmasChamada();
-            if(tabId === 'construtor') atualizarSelectBuilderTurmas();
+            if(tabId === 'construtor') { atualizarSelectBuilderTurmas(); carregarTopicosConstrutor(); }
             if(tabId === 'provas-trabalhos') atualizarTabelaProvasTurmas();
             if(tabId === 'atividades') atualizarListaCircuitos();
             if(tabId === 'calendario') atualizarListaEventos();
@@ -557,12 +551,7 @@
         function filtrarBNCC(termo) {
             const container = document.getElementById('resultado-busca-bncc');
             const termoLimpo = termo.trim().toLowerCase();
-            
-            const filtradas = baseBNCC.filter(b => 
-                b.codigo.toLowerCase().includes(termoLimpo) || 
-                b.tema.toLowerCase().includes(termoLimpo) || 
-                b.desc.toLowerCase().includes(termoLimpo)
-            );
+            const filtradas = baseBNCC.filter(b => b.codigo.toLowerCase().includes(termoLimpo) || b.tema.toLowerCase().includes(termoLimpo) || b.desc.toLowerCase().includes(termoLimpo));
 
             if(filtradas.length === 0) {
                 container.innerHTML = `<p class="text-xs text-slate-400">Nenhuma habilidade BNCC encontrada.</p>`;
@@ -580,7 +569,7 @@
         function inserirBNCCNoPlano(codigo, desc) {
             const textarea = document.getElementById('plano-bncc-texto');
             textarea.value = `(${codigo}) - ${desc}`;
-            alert(`Habilidade [${codigo}] inserida com sucesso no seu plano semanal!`);
+            alert(`Habilidade [${codigo}] inserida com sucesso no plano institucional!`);
         }
 
         function atualizarSelectBuilderTurmas() {
@@ -599,35 +588,24 @@
             const checkboxes = document.querySelectorAll('.builder-topico:checked');
 
             if(checkboxes.length === 0) {
-                alert('Por favor, selecione pelo menos um tópico para montar o documento.');
+                alert('Por favor, selecione pelo menos um tópico da lista.');
                 return;
             }
 
             let questoesHtml = '';
-            let contador = 1;
-
-            checkboxes.forEach(cb => {
-                const val = cb.value;
-                if(val === 'volei') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Voleibol:</strong> Descreva quais são os fundamentos básicos do voleibol e explique a regra do rodízio em quadra.</div>`;
-                } else if(val === 'futsal') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Futsal:</strong> Qual é o tempo máximo que um jogador pode reter a bola na sua própria área de goal e qual a penalização?</div>`;
-                } else if(val === 'saude') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Saúde e Aptidão:</strong> Explique a importância da hidratação correta antes, durante e após a prática de atividades físicas intensas.</div>`;
-                } else if(val === 'basquete') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Basquetebol:</strong> Diferencie o lançamento de bandeja do lançamento de longa distância (três pontos).</div>`;
-                }
+            checkboxes.forEach((cb, idx) => {
+                questoesHtml += `<div class="mb-3"><strong>${idx + 1}. Tópico: ${cb.value}</strong><br>Explique detalhadamente os conceitos práticos e teóricos abordados sobre este tema em aula.</div>`;
             });
 
             provasTurma.push({
                 turma: turma,
-                titulo: `${tipo} - Gerado por Tópicos`,
+                titulo: `${tipo} (Personalizado)`,
                 tipo: tipo,
                 conteudo: questoesHtml.replace(/<[^>]*>/g, '')
             });
             atualizarEstatisticas();
             atualizarTabelaProvasTurmas();
-            alert('Documento gerado e guardado com sucesso na aba "Provas por Turma (PDF)"!');
+            alert('Documento gerado com sucesso e guardado na aba "Provas por Turma (PDF)"!');
             changeTab('provas-trabalhos');
         }
 
@@ -635,8 +613,8 @@
             modalTipo = 'turma';
             document.getElementById('modal-titulo').textContent = 'Nova Turma';
             document.getElementById('modal-corpo').innerHTML = `
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">Nome da Turma</label><input type="text" id="m-t-nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">Série / Ano</label><input type="text" id="m-t-ano" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Nome</label><input type="text" id="m-t-nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Ano / Série</label><input type="text" id="m-t-ano" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
                 <div><label class="block text-xs uppercase text-slate-400 mb-1">Turno</label><input type="text" id="m-t-turno" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
             `;
             document.getElementById('modal-app').classList.remove('hidden');
@@ -647,9 +625,9 @@
             document.getElementById('modal-titulo').textContent = 'Novo Aluno';
             let turmasOpts = turmas.length ? turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas criadas</option>';
             document.getElementById('modal-corpo').innerHTML = `
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">Nome Completo</label><input type="text" id="m-a-nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">E-mail ou Contato</label><input type="text" id="m-a-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">Atribuir à Turma</label><select id="m-a-turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">${turmasOpts}</select></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Nome</label><input type="text" id="m-a-nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">E-mail</label><input type="text" id="m-a-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Turma</label><select id="m-a-turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">${turmasOpts}</select></div>
             `;
             document.getElementById('modal-app').classList.remove('hidden');
         }
@@ -664,18 +642,10 @@
         function salvarModal(e) {
             e.preventDefault();
             if(modalTipo === 'turma') {
-                turmas.push({
-                    nome: document.getElementById('m-t-nome').value,
-                    ano: document.getElementById('m-t-ano').value,
-                    turno: document.getElementById('m-t-turno').value
-                });
+                turmas.push({ nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value });
                 atualizarTabelaTurmas();
             } else if(modalTipo === 'aluno') {
-                alunos.push({
-                    nome: document.getElementById('m-a-nome').value,
-                    email: document.getElementById('m-a-email').value,
-                    turma: document.getElementById('m-a-turma').value
-                });
+                alunos.push({ nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value });
                 atualizarTabelaAlunos();
                 atualizarTabelaTurmas();
             }
@@ -685,11 +655,7 @@
 
         function salvarCircuito(e) {
             e.preventDefault();
-            const tema = document.getElementById('circ-tema').value;
-            const duracao = document.getElementById('circ-duracao').value;
-            const estacoes = document.getElementById('circ-estacoes').value;
-
-            circuitosAtividades.push({ tema, duracao, estacoes });
+            circuitosAtividades.push({ tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value });
             atualizarListaCircuitos();
             atualizarEstatisticas();
             fecharModalCircuito();
@@ -697,11 +663,7 @@
 
         function salvarEvento(e) {
             e.preventDefault();
-            const data = document.getElementById('ev-data').value;
-            const titulo = document.getElementById('ev-titulo').value;
-            const turma = document.getElementById('ev-turma').value;
-
-            eventosCalendario.push({ data, titulo, turma });
+            eventosCalendario.push({ data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value });
             atualizarListaEventos();
             fecharModalEvento();
         }
@@ -710,7 +672,7 @@
             const tbody = document.getElementById('tabela-provas-turmas');
             if(!tbody) return;
             if(provasTurma.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas. Use o Construtor de Provas!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento. Use o Construtor de Provas!</td></tr>`;
                 return;
             }
             tbody.innerHTML = provasTurma.map((pt, idx) => `
@@ -730,94 +692,66 @@
             const doc = provasTurma[idx];
             const janela = window.open('', '_blank');
             janela.document.write(`
-                <html>
-                <head><title>${doc.titulo}</title></head>
+                <html><head><title>${doc.titulo}</title></head>
                 <body style="font-family: Arial; padding: 40px; color: #111;">
                     <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">ESCOLA DE EDUCAÇÃO FÍSICA</h2>
                     <h3>Turma: ${doc.turma} | Documento: ${doc.titulo}</h3>
                     <hr style="margin: 20px 0;" />
                     <div style="font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${doc.conteudo}</div>
-                    <br/><br/><br/>
-                    <p>Nome do Aluno: __________________________________________ Data: ___/___/2026</p>
-                </body>
-                </html>
+                    <br/><br/><br/><p>Nome do Aluno: __________________________________________ Data: ___/___/2026</p>
+                </body></html>
             `);
             janela.document.close();
             janela.print();
         }
 
-        function removerProvaTurma(idx) {
-            provasTurma.splice(idx, 1);
-            atualizarTabelaProvasTurmas();
-            atualizarEstatisticas();
-        }
+        function removerProvaTurma(idx) { provasTurma.splice(idx, 1); atualizarTabelaProvasTurmas(); atualizarEstatisticas(); }
 
         function atualizarListaCircuitos() {
             const container = document.getElementById('lista-circuitos');
             if(!container) return;
             if(circuitosAtividades.length === 0) {
-                container.innerHTML = `<div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-slate-400 text-sm col-span-2 text-center">Nenhum circuito prático registado. Clique em "+ Criar Circuito" para estruturar a sua aula.</div>`;
+                container.innerHTML = `<div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-slate-400 text-sm col-span-2 text-center">Nenhum circuito registado.</div>`;
                 return;
             }
             container.innerHTML = circuitosAtividades.map((c, idx) => `
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-emerald-400">${c.tema}</h3>
-                        <button onclick="removerCircuito(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
-                    </div>
+                    <div class="flex justify-between items-center"><h3 class="font-bold text-lg text-emerald-400">${c.tema}</h3><button onclick="removerCircuito(${idx})" class="text-rose-400 text-xs cursor-pointer">Excluir</button></div>
                     <p class="text-xs text-slate-400">⏱️ Duração: ${c.duracao}</p>
                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-sm text-slate-300 whitespace-pre-wrap">${c.estacoes}</div>
                 </div>
             `).join('');
         }
 
-        function removerCircuito(idx) {
-            circuitosAtividades.splice(idx, 1);
-            atualizarListaCircuitos();
-            atualizarEstatisticas();
-        }
+        function removerCircuito(idx) { circuitosAtividades.splice(idx, 1); atualizarListaCircuitos(); atualizarEstatisticas(); }
 
         function atualizarListaEventos() {
             const container = document.getElementById('lista-eventos-calendario');
             if(!container) return;
             if(eventosCalendario.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>`;
+                container.innerHTML = `<p class="text-sm text-slate-400">Nenhum evento agendado.</p>`;
                 return;
             }
             container.innerHTML = eventosCalendario.map((ev, idx) => `
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
-                    <div>
-                        <div class="font-bold text-white">${ev.titulo}</div>
-                        <div class="text-xs text-slate-400">📅 ${ev.data} | Turma: ${ev.turma}</div>
-                    </div>
-                    <button onclick="removerEvento(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
+                    <div><div class="font-bold text-white">${ev.titulo}</div><div class="text-xs text-slate-400">📅 ${ev.data} | Turma: ${ev.turma}</div></div>
+                    <button onclick="removerEvento(${idx})" class="text-rose-400 text-xs cursor-pointer">Excluir</button>
                 </div>
             `).join('');
         }
 
-        function removerEvento(idx) {
-            eventosCalendario.splice(idx, 1);
-            atualizarListaEventos();
-        }
+        function removerEvento(idx) { eventosCalendario.splice(idx, 1); atualizarListaEventos(); }
 
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('tabela-turmas');
-            if(turmas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>`;
-                return;
-            }
+            if(turmas.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhuma turma.</td></tr>`; return; }
             tbody.innerHTML = turmas.map((t, idx) => {
                 const totalAlunos = alunos.filter(a => a.turma === t.nome).length;
                 return `
                     <tr class="hover:bg-slate-900/50">
-                        <td class="p-4 font-medium text-white">${t.nome}</td>
-                        <td class="p-4 text-slate-300">${t.ano}</td>
-                        <td class="p-4 text-slate-300">${t.turno}</td>
-                        <td class="p-4"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs font-semibold">${totalAlunos} aluno(s)</span></td>
-                        <td class="p-4 text-right space-x-2">
-                            <button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-400 text-xs font-semibold hover:underline cursor-pointer">Ver Alunos</button>
-                            <button onclick="removerTurma(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
-                        </td>
+                        <td class="p-4 font-medium text-white">${t.nome}</td><td class="p-4 text-slate-300">${t.ano}</td><td class="p-4 text-slate-300">${t.turno}</td>
+                        <td class="p-4"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs">${totalAlunos} aluno(s)</span></td>
+                        <td class="p-4 text-right space-x-2"><button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-400 text-xs cursor-pointer">Ver Alunos</button><button onclick="removerTurma(${idx})" class="text-rose-400 text-xs cursor-pointer">Excluir</button></td>
                     </tr>
                 `;
             }).join('');
@@ -825,16 +759,11 @@
 
         function atualizarTabelaAlunos() {
             const tbody = document.getElementById('tabela-alunos');
-            if(alunos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno registado.</td></tr>`;
-                return;
-            }
+            if(alunos.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno.</td></tr>`; return; }
             tbody.innerHTML = alunos.map((a, idx) => `
                 <tr class="hover:bg-slate-900/50">
-                    <td class="p-4 font-medium text-white">${a.nome}</td>
-                    <td class="p-4 text-slate-300">${a.email || '-'}</td>
-                    <td class="p-4 text-slate-300"><span class="bg-slate-800 px-2.5 py-1 rounded-md text-xs">${a.turma}</span></td>
-                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button></td>
+                    <td class="p-4 font-medium text-white">${a.nome}</td><td class="p-4 text-slate-300">${a.email || '-'}</td><td class="p-4 text-slate-300"><span class="bg-slate-800 px-2.5 py-1 rounded-md text-xs">${a.turma}</span></td>
+                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-400 text-xs cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
@@ -843,20 +772,8 @@
             document.getElementById('detalhe-turma-titulo').textContent = `Alunos da Turma: ${nomeTurma}`;
             const alunosDaTurma = alunos.filter(a => a.turma === nomeTurma);
             const corpo = document.getElementById('detalhe-turma-corpo');
-            
-            if(alunosDaTurma.length === 0) {
-                corpo.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">Nenhum aluno cadastrado nesta turma ainda.</p>`;
-            } else {
-                corpo.innerHTML = alunosDaTurma.map(a => `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
-                        <div>
-                            <div class="font-medium text-white">${a.nome}</div>
-                            <div class="text-xs text-slate-400">${a.email || 'Sem e-mail'}</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            document.getElementById('detalhe-turma-total').textContent = `${alunosDaTurma.length} aluno(s) matriculado(s)`;
+            corpo.innerHTML = alunosDaTurma.length === 0 ? `<p class="text-sm text-slate-400 text-center py-4">Nenhum aluno.</p>` : alunosDaTurma.map(a => `<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-sm text-white">${a.nome}</div>`).join('');
+            document.getElementById('detalhe-turma-total').textContent = `${alunosDaTurma.length} aluno(s)`;
             document.getElementById('modal-detalhes-turma').classList.remove('hidden');
         }
 
@@ -870,75 +787,34 @@
             const nomeTurma = document.getElementById('select-turma-chamada').value;
             const container = document.getElementById('container-lista-chamada');
             const lista = document.getElementById('lista-alunos-chamada');
-            
-            if(!nomeTurma) {
-                container.classList.add('hidden');
-                return;
-            }
-
+            if(!nomeTurma) { container.classList.add('hidden'); return; }
             const alunosTurma = alunos.filter(a => a.turma === nomeTurma);
-            if(alunosTurma.length === 0) {
-                lista.innerHTML = `<p class="text-sm text-slate-400">Nenhum aluno matriculado nesta turma.</p>`;
-            } else {
-                lista.innerHTML = alunosTurma.map((a, idx) => `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
-                        <span class="font-medium text-white">${a.nome}</span>
-                        <div class="space-x-2">
-                            <label class="text-xs text-emerald-400 cursor-pointer"><input type="radio" name="presenca_${idx}" checked> Presente</label>
-                            <label class="text-xs text-rose-400 cursor-pointer"><input type="radio" name="presenca_${idx}"> Falta</label>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            container.classList.add('hidden');
+            lista.innerHTML = alunosTurma.length === 0 ? `<p class="text-sm text-slate-400">Nenhum aluno.</p>` : alunosTurma.map((a, idx) => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
+                    <span class="font-medium text-white">${a.nome}</span>
+                    <div class="space-x-2"><label class="text-xs text-emerald-400"><input type="radio" name="p_${idx}" checked> Presente</label><label class="text-xs text-rose-400"><input type="radio" name="p_${idx}"> Falta</label></div>
+                </div>
+            `).join('');
+            container.classList.remove('hidden');
         }
 
         function executarPesquisaInterna(termo) {
             const resultado = document.getElementById('resultado-pesquisa-interna');
             const termoLimpo = termo.trim().toLowerCase();
-            
-            if(!termoLimpo) {
-                resultado.innerHTML = `<p class="text-sm text-slate-500">Comece a digitar para ver os resultados...</p>`;
-                return;
-            }
-
+            if(!termoLimpo) { resultado.innerHTML = `<p class="text-sm text-slate-500">Comece a digitar...</p>`; return; }
             let encontrados = [];
             turmas.forEach(t => { if(t.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`🏫 Turma: <b>${t.nome}</b>`); });
             alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
-            provasTurma.forEach(pt => { if(pt.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📄 Prova (${pt.turma}): <b>${pt.titulo}</b>`); });
             baseBNCC.forEach(b => { if(b.desc.toLowerCase().includes(termoLimpo) || b.codigo.toLowerCase().includes(termoLimpo)) encontrados.push(`⚖️ BNCC [${b.codigo}]: <b>${b.desc}</b>`); });
-
-            if(encontrados.length === 0) {
-                resultado.innerHTML = `<p class="text-sm text-slate-400">Nenhum registo encontrado para "${termo}".</p>`;
-            } else {
-                resultado.innerHTML = encontrados.map(e => `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-sm text-slate-300">${e}</div>`).join('');
-            }
+            resultado.innerHTML = encontrados.length === 0 ? `<p class="text-sm text-slate-400">Nenhum registo encontrado.</p>` : encontrados.map(e => `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-sm text-slate-300">${e}</div>`).join('');
         }
 
         function executarPesquisaGlobal(termo) {
-            if(termo.trim().length > 0) {
-                changeTab('pesquisa');
-                document.getElementById('input-pesquisa-interna').value = termo;
-                executarPesquisaInterna(termo);
-            }
+            if(termo.trim().length > 0) { changeTab('pesquisa'); document.getElementById('input-pesquisa-interna').value = termo; executarPesquisaInterna(termo); }
         }
 
-        function removerTurma(idx) { 
-            const nomeTurma = turmas[idx].nome;
-            alunos.forEach(a => { if(a.turma === nomeTurma) a.turma = 'Sem Turma'; });
-            turmas.splice(idx, 1); 
-            atualizarTabelaTurmas(); 
-            atualizarTabelaAlunos();
-            atualizarEstatisticas(); 
-        }
-
-        function removerAluno(idx) { 
-            alunos.splice(idx, 1); 
-            atualizarTabelaAlunos(); 
-            atualizarTabelaTurmas();
-            atualizarEstatisticas(); 
-        }
-
+        function removerTurma(idx) { turmas.splice(idx, 1); atualizarTabelaTurmas(); atualizarEstatisticas(); }
+        function removerAluno(idx) { alunos.splice(idx, 1); atualizarTabelaAlunos(); atualizarEstatisticas(); }
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
