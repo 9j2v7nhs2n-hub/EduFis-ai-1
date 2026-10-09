@@ -155,4 +155,462 @@
                         </div>
                         <h3 id="stat-turmas" class="text-3xl font-extrabold text-white">0</h3>
                     </div>
-                    <div class="bg-slate-900/60
+                    <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Alunos Registrados</span>
+                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                        </div>
+                        <h3 id="stat-alunos" class="text-3xl font-extrabold text-white">0</h3>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Status da IA</span>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-emerald-400 mt-1">Pronto para uso</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA: TURMAS -->
+            <section id="tab-turmas" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">Gestão de Turmas</h2>
+                        <p class="text-slate-400 text-sm">Adicione e controle as turmas escolares.</p>
+                    </div>
+                    <button onclick="openModal('turma')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                        <i class="fa-solid fa-plus mr-2"></i> Nova Turma
+                    </button>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs uppercase tracking-wider">
+                                <th class="p-4 font-semibold">Nome da Turma</th>
+                                <th class="p-4 font-semibold">Ano / Série</th>
+                                <th class="p-4 font-semibold">Turno</th>
+                                <th class="p-4 font-semibold text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="turmas-table-body" class="divide-y divide-slate-800">
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma cadastrada. Clique em "Nova Turma".</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ABA: ALUNOS -->
+            <section id="tab-alunos" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">Gestão de Alunos</h2>
+                        <p class="text-slate-400 text-sm">Cadastre os alunos e vincule às turmas.</p>
+                    </div>
+                    <button onclick="openModal('aluno')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                        <i class="fa-solid fa-plus mr-2"></i> Novo Aluno
+                    </button>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs uppercase tracking-wider">
+                                <th class="p-4 font-semibold">Nome do Aluno</th>
+                                <th class="p-4 font-semibold">E-mail / Contato</th>
+                                <th class="p-4 font-semibold">Turma</th>
+                                <th class="p-4 font-semibold text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alunos-table-body" class="divide-y divide-slate-800">
+                            <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno cadastrado. Clique em "Novo Aluno".</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ABA: ASSISTENTE IA (GEMINI) -->
+            <section id="tab-ia" class="tab-content hidden space-y-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white">Assistente IA de Educação Física</h2>
+                    <p class="text-slate-400 text-sm">Gere planos de aula completos, dinâmicos e adaptados usando Inteligência Artificial.</p>
+                </div>
+
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">O que você deseja que a IA crie?</label>
+                        <textarea id="ai-prompt" rows="3" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Ex: Crie um plano de aula de 50 minutos sobre fundamentos do Basquete para o 8º ano, incluindo aquecimento e jogo reduzido."></textarea>
+                    </div>
+
+                    <button onclick="gerarPlanoIA()" id="ai-btn" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg flex items-center justify-center space-x-2 cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i><span>Gerar Plano de Aula com IA</span>
+                    </button>
+                </div>
+
+                <div id="ai-result-container" class="hidden bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-3">
+                    <h3 class="font-bold text-lg text-brand-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-file-lines"></i><span>Resultado da IA:</span>
+                    </h3>
+                    <div id="ai-result-content" class="text-slate-200 text-sm whitespace-pre-wrap leading-relaxed bg-slate-950/60 p-5 rounded-2xl border border-slate-800/80"></div>
+                </div>
+            </section>
+
+            <!-- ABA: CONFIGURAÇÕES -->
+            <section id="tab-configuracoes" class="tab-content hidden space-y-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white">Configurações do Sistema</h2>
+                    <p class="text-slate-400 text-sm">Insira sua chave da API do Gemini para habilitar a inteligência artificial.</p>
+                </div>
+
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4 max-w-xl">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Google Gemini API Key</label>
+                        <input type="password" id="gemini-api-key" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" placeholder="Cole sua chave da API aqui (AIzaSy...)">
+                        <p class="text-[11px] text-slate-500 mt-1">A chave é guardada apenas no seu navegador para uso da IA.</p>
+                    </div>
+                    <button onclick="salvarApiKey()" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md cursor-pointer">
+                        Salvar Chave
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL GENÉRICO PARA CADASTRO DE TURMAS/ALUNOS -->
+    <div id="app-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 id="modal-title" class="font-extrabold text-lg text-white">Cadastrar</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <form id="modal-form" onsubmit="handleModalSubmit(event)" class="space-y-4">
+                <div id="modal-fields"></div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
+
+        let isLoginMode = true;
+        let activeModalType = '';
+        let turmasData = [];
+        let alunosData = [];
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) document.getElementById('gemini-api-key').value = savedKey;
+
+            if (!supabaseClient) {
+                showFeedback('Erro: Supabase não foi carregado corretamente.', 'error');
+                return;
+            }
+
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    showDashboard();
+                }
+            } catch (err) {
+                console.error('Sessão erro:', err);
+            }
+        });
+
+        window.toggleAuthMode = function() {
+            isLoginMode = !isLoginMode;
+            const titleEl = document.getElementById('auth-title');
+            const subtitleEl = document.getElementById('auth-subtitle');
+            const submitBtn = document.getElementById('submit-btn');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleBtn = document.getElementById('toggle-btn');
+            const forgotContainer = document.getElementById('forgot-password-container');
+            document.getElementById('form-feedback').classList.add('hidden');
+
+            if (isLoginMode) {
+                titleEl.innerHTML = 'EduFís <span class="text-brand-400">AI</span>';
+                subtitleEl.textContent = '“Seu assistente inteligente de Educação Física.”';
+                submitBtn.textContent = 'Entrar';
+                toggleText.textContent = 'Não tem uma conta?';
+                toggleBtn.textContent = 'Criar minha conta';
+                forgotContainer.style.display = 'flex';
+            } else {
+                titleEl.innerHTML = 'Criar Conta - EduFís <span class="text-brand-400">AI</span>';
+                subtitleEl.textContent = 'Cadastre-se para começar a usar a plataforma.';
+                submitBtn.textContent = 'Cadastrar';
+                toggleText.textContent = 'Já tem uma conta?';
+                toggleBtn.textContent = 'Entrar';
+                forgotContainer.style.display = 'none';
+            }
+        }
+
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            if (!supabaseClient) return showFeedback('Supabase não inicializado.', 'error');
+
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            submitBtn.disabled = true;
+
+            if (isLoginMode) {
+                submitBtn.textContent = 'Entrando...';
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Entrar';
+
+                if (error) {
+                    showFeedback(error.message, 'error');
+                } else {
+                    showFeedback('Login realizado com sucesso! Redirecionando...', 'success');
+                    setTimeout(showDashboard, 800);
+                }
+            } else {
+                submitBtn.textContent = 'Cadastrando...';
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Cadastrar';
+
+                if (error) {
+                    showFeedback(error.message, 'error');
+                } else {
+                    showFeedback('Conta criada com sucesso! Faça login.', 'success');
+                    if (data.session) setTimeout(showDashboard, 1000);
+                }
+            }
+        }
+
+        window.handleForgotPassword = async function() {
+            const email = prompt('Digite o e-mail cadastrado para recuperar a senha:');
+            if (!email || !supabaseClient) return;
+
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+            if (error) alert('Erro: ' + error.message);
+            else alert('Instruções de recuperação enviadas para o seu e-mail!');
+        }
+
+        window.handleLogout = async function() {
+            if (supabaseClient) await supabaseClient.auth.signOut();
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('auth-form').reset();
+            if (!isLoginMode) toggleAuthMode();
+        }
+
+        window.showDashboard = function() {
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            carregarDadosIniciais();
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('aside nav button').forEach(el => {
+                el.classList.remove('bg-brand-500/10', 'text-brand-400', 'border', 'border-brand-500/20');
+                el.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+                activeBtn.classList.add('bg-brand-500/10', 'text-brand-400', 'border', 'border-brand-500/20');
+            }
+        }
+
+        window.openModal = function(type) {
+            activeModalType = type;
+            const modal = document.getElementById('app-modal');
+            const title = document.getElementById('modal-title');
+            const fields = document.getElementById('modal-fields');
+
+            modal.classList.remove('hidden');
+            if (type === 'turma') {
+                title.textContent = 'Nova Turma';
+                fields.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome da Turma</label>
+                        <input type="text" id="turma-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: 8º Ano A">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ano / Série</label>
+                        <input type="text" id="turma-ano" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Ensino Fundamental II">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turno</label>
+                        <input type="text" id="turma-turno" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Ex: Matutino">
+                    </div>
+                `;
+            } else if (type === 'aluno') {
+                title.textContent = 'Novo Aluno';
+                let turmaOptions = turmasData.length > 0 ? turmasData.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas cadastradas</option>';
+                fields.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nome do Aluno</label>
+                        <input type="text" id="aluno-nome" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="Nome completo">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E-mail ou Contato</label>
+                        <input type="text" id="aluno-email" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white" placeholder="aluno@escola.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Turma</label>
+                        <select id="aluno-turma" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white">${turmaOptions}</select>
+                    </div>
+                `;
+            }
+        }
+
+        window.closeModal = function() {
+            document.getElementById('app-modal').classList.add('hidden');
+        }
+
+        window.handleModalSubmit = function(event) {
+            event.preventDefault();
+            if (activeModalType === 'turma') {
+                const nome = document.getElementById('turma-nome').value;
+                const ano = document.getElementById('turma-ano').value;
+                const turno = document.getElementById('turma-turno').value;
+                turmasData.push({ nome, ano, turno });
+                atualizarTabelaTurmas();
+            } else if (activeModalType === 'aluno') {
+                const nome = document.getElementById('aluno-nome').value;
+                const email = document.getElementById('aluno-email').value;
+                const turma = document.getElementById('aluno-turma').value;
+                alunosData.push({ nome, email, turma });
+                atualizarTabelaAlunos();
+            }
+            atualizarEstatisticas();
+            closeModal();
+        }
+
+        function atualizarTabelaTurmas() {
+            const tbody = document.getElementById('turmas-table-body');
+            if (turmasData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma cadastrada.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = turmasData.map((t, index) => `
+                <tr class="hover:bg-slate-900/40">
+                    <td class="p-4 font-medium text-white">${t.nome}</td>
+                    <td class="p-4 text-slate-300">${t.ano}</td>
+                    <td class="p-4 text-slate-300">${t.turno}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="removerTurma(${index})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function atualizarTabelaAlunos() {
+            const tbody = document.getElementById('alunos-table-body');
+            if (alunosData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum aluno cadastrado.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = alunosData.map((a, index) => `
+                <tr class="hover:bg-slate-900/40">
+                    <td class="p-4 font-medium text-white">${a.nome}</td>
+                    <td class="p-4 text-slate-300">${a.email || '-'}</td>
+                    <td class="p-4 text-slate-300">${a.turma}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="removerAluno(${index})" class="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.removerTurma = function(index) {
+            turmasData.splice(index, 1);
+            atualizarTabelaTurmas();
+            atualizarEstatisticas();
+        }
+
+        window.removerAluno = function(index) {
+            alunosData.splice(index, 1);
+            atualizarTabelaAlunos();
+            atualizarEstatisticas();
+        }
+
+        function atualizarEstatisticas() {
+            document.getElementById('stat-turmas').textContent = turmasData.length;
+            document.getElementById('stat-alunos').textContent = alunosData.length;
+        }
+
+        function carregarDadosIniciais() {
+            atualizarEstatisticas();
+            atualizarTabelaTurmas();
+            atualizarTabelaAlunos();
+        }
+
+        window.salvarApiKey = function() {
+            const key = document.getElementById('gemini-api-key').value.trim();
+            localStorage.setItem('gemini_api_key', key);
+            alert('Chave da API salva com sucesso!');
+        }
+
+        window.gerarPlanoIA = async function() {
+            const apiKey = localStorage.getItem('gemini_api_key');
+            if (!apiKey) {
+                alert('Por favor, configure sua chave da API do Gemini na aba "Configurações" primeiro.');
+                switchTab('configuracoes');
+                return;
+            }
+
+            const promptText = document.getElementById('ai-prompt').value.trim();
+            if (!promptText) {
+                alert('Escreva o que você quer que a IA crie.');
+                return;
+            }
+
+            const btn = document.getElementById('ai-btn');
+            const resultContainer = document.getElementById('ai-result-container');
+            const resultContent = document.getElementById('ai-result-content');
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Gerando plano de aula...</span>`;
+            resultContainer.classList.add('hidden');
+
+            try {
+                const ai = new GoogleGenAI({ apiKey: apiKey });
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptText}`,
+                });
+
+                resultContent.textContent = response.text;
+                resultContainer.classList.remove('hidden');
+            } catch (err) {
+                alert('Erro ao gerar com a IA: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Gerar Plano de Aula com IA</span>`;
+            }
+        }
+
+        function showFeedback(message, type) {
+            const feedbackEl = document.getElementById('form-feedback');
+            feedbackEl.textContent = message;
+            feedbackEl.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300', 'bg-red-500/10', 'border-red-500/30', 'text-red-300');
+            
+            if (type === 'success') {
+                feedbackEl.classList.add('bg-emerald-500/10', 'border', 'border-emerald-500/30', 'text-emerald-300');
+            } else {
+                feedbackEl.classList.add('bg-red-500/10', 'border', 'border-red-500/30', 'text-red-300');
+            }
+        }
+    </script>
+</body>
+</html>
