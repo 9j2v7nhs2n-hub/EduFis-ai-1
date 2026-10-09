@@ -43,11 +43,12 @@
 
         let supabaseClient = null;
 
-        if (typeof supabase !== 'undefined') {
-            supabaseClient = supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_ANON_KEY
-            );
+        try {
+            if (typeof supabase !== 'undefined' && supabase.createClient) {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error('Erro ao inicializar Supabase:', e);
         }
     </script>
 
@@ -311,11 +312,18 @@
             const savedKey = localStorage.getItem('gemini_api_key');
             if (savedKey) document.getElementById('gemini-api-key').value = savedKey;
 
-            if (!supabaseClient) return;
+            if (!supabaseClient) {
+                showFeedback('Erro: Supabase não foi carregado corretamente.', 'error');
+                return;
+            }
 
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                showDashboard();
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    showDashboard();
+                }
+            } catch (err) {
+                console.error('Sessão erro:', err);
             }
         });
 
@@ -362,8 +370,9 @@
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Entrar';
 
-                if (error) showFeedback(error.message, 'error');
-                else {
+                if (error) {
+                    showFeedback(error.message, 'error');
+                } else {
                     showFeedback('Login realizado com sucesso! Redirecionando...', 'success');
                     setTimeout(showDashboard, 800);
                 }
@@ -373,9 +382,10 @@
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Cadastrar';
 
-                if (error) showFeedback(error.message, 'error');
-                else {
-                    showFeedback('Conta criada com sucesso! Verifique seu e-mail ou faça login.', 'success');
+                if (error) {
+                    showFeedback(error.message, 'error');
+                } else {
+                    showFeedback('Conta criada com sucesso! Faça login.', 'success');
                     if (data.session) setTimeout(showDashboard, 1000);
                 }
             }
