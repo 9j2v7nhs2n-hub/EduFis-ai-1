@@ -37,19 +37,17 @@
 <body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white pb-20 md:pb-0">
 
     <!-- Configuração do Supabase -->
-    <script>
-        // ==========================================
-        //CONFIGURE SEU SUPABASE AQUI:
-        // ==========================================
-        const SUPABASE_URL = 'SUA_URL_DO_SUPABASE_AQUI'; 
-        const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_PUBLICA_AQUI';
-        // ==========================================
-
-        let supabaseClient = null;
-        if (SUPABASE_URL !== 'SUA_URL_DO_SUPABASE_AQUI' && SUPABASE_ANON_KEY !== 'SUA_CHAVE_ANON_PUBLICA_AQUI') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-    </script>
+    <    // ==========================================
+    // CONFIGURE SEU SUPABASE AQUI:
+    // ==========================================
+    const SUPABASE_URL = 'https://fdawxgrheoukkuzzpfyr.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_fKYi1kPB6xuQBjR-pV4VQA_qQqJhqHW';
+    // ==========================================
+    let supabaseClient = null;
+    if (typeof supabase !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+</script>
 
     <!-- Auth Screens Container -->
     <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950">
