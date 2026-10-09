@@ -27,7 +27,19 @@
         let provasTurma = []; 
         let circuitosAtividades = []; 
         let eventosCalendario = []; 
-        let documentosGerados = []; // Provas/Trabalhos criados pelo construtor
+
+        // Base de dados de Habilidades da BNCC para Educação Física (pesquisáveis)
+        const baseBNCC = [
+            { codigo: "EF67EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinatice, valorizando o trabalho coletivo." },
+            { codigo: "EF67EF02", tema: "Esportes", desc: "Praticar um ou mais esportes oferecidos pela escola, usando estratégias básicas para solucionar problemas motores." },
+            { codigo: "EF67EF03", tema: "Lutas", desc: "Experimentar e fruir diferentes lutas do contexto comunitário e regional, respeitando a integridade física própria e do oponente." },
+            { codigo: "EF67EF07", tema: "Ginástica", desc: "Propor e produzir alternativas para a prática da ginástica de conscientização corporal, reconhecendo suas potencialidades." },
+            { codigo: "EF89EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes papéis (jogador, árbitro, técnico) em esportes de rede/parede e campo/taco, em prol da inclusão." },
+            { codigo: "EF89EF05", tema: "Lutas", desc: "Identificar as características das lutas, reconhecendo as diferenças entre lutas e brigas e os valores de respeito." },
+            { codigo: "EF89EF08", tema: "Dança", desc: "Experimentar e fruir danças urbanas, folclóricas e de salão, elaborando coreografias com autonomia e expressividade." },
+            { codigo: "EF12EF01", tema: "Brincadeiras", desc: "Experimentar, fruir e recrear brincadeiras e jogos populares do contexto comunitário e regional, recriando-os." },
+            { codigo: "EF35EF04", tema: "Ginástica", desc: "Colaborar na proposição e na realização de práticas de ginástica geral, respeitando as diferenças individuais." }
+        ];
     </script>
 
     <!-- CONTAINER PRINCIPAL -->
@@ -110,10 +122,9 @@
                     <button onclick="changeTab('turmas')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Turmas</button>
                     <button onclick="changeTab('alunos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Alunos</button>
                     <button onclick="changeTab('chamada')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Chamada Rápida</button>
-                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">⚡ Construtor de Provas</button>
+                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">⚡ Construtor de Provas</button>
+                    <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano Semanal & BNCC</button>
                     <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas por Turma (PDF)</button>
-                    <button onclick="changeTab('planos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Planos de Aula</button>
-                    <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano para Gestão</button>
                     <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Calendário Escolar</button>
                     <button onclick="changeTab('pesquisa')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">🔍 Pesquisa Interna</button>
@@ -151,17 +162,17 @@
                         <div>
                             <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button onclick="changeTab('construtor')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-emerald-500/50 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1 text-emerald-400">⚡ Construtor de Provas</div>
+                                <button onclick="changeTab('gestao')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-emerald-500/50 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1 text-emerald-400">📅 Plano Semanal & BNCC</div>
+                                    <div class="text-xs text-slate-400">Criar planeamento editável com normas BNCC</div>
+                                </button>
+                                <button onclick="changeTab('construtor')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1">⚡ Construtor de Provas</div>
                                     <div class="text-xs text-slate-400">Monte provas selecionando tópicos</div>
                                 </button>
                                 <button onclick="changeTab('chamada')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
                                     <div class="text-lg font-bold mb-1">Chamada Rápida</div>
                                     <div class="text-xs text-slate-400">Registar presenças do dia</div>
-                                </button>
-                                <button onclick="changeTab('provas-trabalhos')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1">Provas por Turma (PDF)</div>
-                                    <div class="text-xs text-slate-400">Gerir e imprimir avaliações</div>
                                 </button>
                             </div>
                         </div>
@@ -229,11 +240,11 @@
                         </div>
                     </div>
 
-                    <!-- ABA CONSTRUTOR INTELIGENTE DE PROVAS E TRABALHOS DE CASA -->
+                    <!-- ABA CONSTRUTOR DE PROVAS -->
                     <div id="tab-construtor" class="hidden space-y-6">
                         <div>
                             <h2 class="text-2xl font-bold">⚡ Construtor Inteligente de Provas e Tarefas</h2>
-                            <p class="text-slate-400 text-sm">Selecione a turma, o tipo de documento e clique nos tópicos para montar o conteúdo instantaneamente.</p>
+                            <p class="text-slate-400 text-sm">Selecione a turma, o tipo de documento e clique nos tópicos para montar o conteúdo.</p>
                         </div>
                         
                         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5 max-w-3xl">
@@ -271,15 +282,7 @@
                                     </label>
                                     <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
                                         <input type="checkbox" value="basquete" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Fundamentos do Basquetebol (Drible e Arremesso)</span>
-                                    </label>
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="ginastica" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Ginástica e Consciência Corporal</span>
-                                    </label>
-                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
-                                        <input type="checkbox" value="jogos" class="builder-topico accent-emerald-500 w-4 h-4">
-                                        <span>Jogos Cooperativos e Fair Play</span>
+                                        <span>Fundamentos do Basquetebol</span>
                                     </label>
                                 </div>
                             </div>
@@ -288,78 +291,73 @@
                                 Gerar Documento Automaticamente
                             </button>
                         </div>
-
-                        <!-- Pré-visualização do Documento Gerado -->
-                        <div id="builder-preview-box" class="hidden bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6 max-w-3xl">
-                            <div class="text-center border-b pb-4 space-y-1">
-                                <h3 id="prev-titulo-doc" class="text-xl font-bold uppercase">ESCOLA DE EDUCAÇÃO FÍSICA</h3>
-                                <p id="prev-sub-doc" class="text-xs text-slate-600">Turma: 8º Ano | Avaliação de Conhecimentos</p>
-                            </div>
-                            <div id="prev-conteudo" class="space-y-4 text-sm leading-relaxed"></div>
-                            <div class="pt-6 border-t flex justify-between items-center text-xs text-slate-600">
-                                <div>Nome: __________________________________________</div>
-                                <button onclick="imprimirDocumentoPreview()" class="bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">🖨️ Imprimir / Salvar PDF</button>
-                            </div>
-                        </div>
                     </div>
 
-                    <!-- ABA PLANOS DE AULA -->
-                    <div id="tab-planos" class="hidden space-y-6">
-                        <div>
-                            <h2 class="text-2xl font-bold">Registo de Plano de Aula</h2>
-                            <p class="text-slate-400 text-sm">Preencha os dados para estruturar o seu plano pedagógico.</p>
-                        </div>
-                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ano / Série</label>
-                                    <input type="text" id="plano-serie" placeholder="Ex: 8º Ano Fundamental" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Tema da Aula</label>
-                                    <input type="text" id="plano-tema" placeholder="Ex: Fundamentos do Voleibol" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                                </div>
-                            </div>
-                            <button onclick="registarPlanoAula()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors cursor-pointer">Registar Plano</button>
-                        </div>
-                        <div id="resultado-plano" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
-                            <h3 class="text-lg font-bold text-emerald-400">Plano Registado com Sucesso</h3>
-                            <div id="conteudo-plano-gerado" class="text-sm space-y-3 text-slate-300 whitespace-pre-wrap bg-slate-950 p-4 rounded-xl border border-slate-800"></div>
-                        </div>
-                    </div>
-
-                    <!-- ABA PLANO PARA GESTÃO -->
+                    <!-- ABA PLANO SEMANAL & BNCC (TOTALMENTE EDITÁVEL) -->
                     <div id="tab-gestao" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h2 class="text-2xl font-bold">Plano Diretor e Cronograma de Desporto</h2>
-                                <p class="text-slate-400 text-sm">Planeamento anual estratégico e metas para a direção escolar.</p>
+                                <h2 class="text-2xl font-bold">Plano de Aula Semanal & Normas BNCC</h2>
+                                <p class="text-slate-400 text-sm">Edite livremente o seu plano semanal e consulte as normas BNCC integradas.</p>
                             </div>
                             <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">🖨️ Imprimir / Salvar PDF</button>
                         </div>
+
+                        <!-- Caixa de Pesquisa de Habilidades BNCC para incluir no plano -->
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 max-w-3xl">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-sm text-emerald-400">🔍 Consultar Repositório de Habilidades BNCC</h3>
+                                <span class="text-xs text-slate-400">Pesquise abaixo e clique para copiar</span>
+                            </div>
+                            <input type="text" id="input-busca-bncc" oninput="filtrarBNCC(this.value)" placeholder="Pesquisar por tema (ex: lutas, dança, esportes, ginástica)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            
+                            <div id="resultado-busca-bncc" class="space-y-2 max-h-48 overflow-y-auto">
+                                <p class="text-xs text-slate-500">Digite na caixa acima para encontrar códigos e descrições da BNCC...</p>
+                            </div>
+                        </div>
+
+                        <!-- Documento Editável (Pronto para Impressão) -->
                         <div class="bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6 max-w-3xl">
                             <div class="text-center border-b pb-4 space-y-1">
-                                <h3 class="text-xl font-bold uppercase text-slate-900">PROJETOS E METAS DO DESPORTO ESCOLAR</h3>
-                                <p class="text-xs text-slate-600">Componente Curricular: Educação Física | Professor Titular</p>
+                                <h3 class="text-xl font-bold uppercase">PLANO DE AULA SEMANAL - EDUCAÇÃO FÍSICA</h3>
+                                <p class="text-xs text-slate-600">Documento Editável para Controlo Pedagógico</p>
                             </div>
+
+                            <div class="grid grid-cols-2 gap-4 text-sm border-b pb-4">
+                                <div><strong>Professor:</strong> <input type="text" value="Cesar Augusto" class="border-b border-dashed border-slate-400 px-1 w-48 text-slate-800 focus:outline-none"></div>
+                                <div><strong>Semana de:</strong> <input type="text" value="05/10 a 09/10/2026" class="border-b border-dashed border-slate-400 px-1 w-48 text-slate-800 focus:outline-none"></div>
+                            </div>
+
                             <div class="space-y-4 text-sm leading-relaxed">
-                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                    <h4 class="font-bold text-slate-900 mb-1">🎯 1. Missão Pedagógica</h4>
-                                    <p class="text-slate-700">Consolidar a escola como um ambiente promotor de bem-estar físico, inclusão social e hábitos saudáveis através da cultura corporal e do desporto educacional.</p>
+                                <div>
+                                    <label class="font-bold text-slate-800 block mb-1">1. Turma e Tema Principal da Semana:</label>
+                                    <input type="text" value="8º Ano - Esportes de Invasão e Trabalho Coletivo" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 font-medium">
                                 </div>
-                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                    <h4 class="font-bold text-slate-900 mb-1">📅 2. Cronograma de Eventos Anuais</h4>
-                                    <ul class="list-disc list-inside text-slate-700 space-y-1">
-                                        <li><b>1º Bimestre:</b> Festival de Jogos Cooperativos e Avaliação Postural.</li>
-                                        <li><b>2º Bimestre:</b> Torneio Interno de Modalidades Coletivas (Futsal e Basquetebol).</li>
-                                        <li><b>3º Bimestre:</b> Feira de Conhecimento: "Saúde, Nutrição e Atividade Física".</li>
-                                        <li><b>4º Bimestre:</b> Olimpíada Escolar Recreativa e Encerramento do Ano Letivo.</li>
-                                    </ul>
+
+                                <div>
+                                    <label class="font-bold text-slate-800 block mb-1">2. Habilidades BNCC Vinculadas (Pode colar ou pesquisar acima):</label>
+                                    <textarea id="plano-bncc-texto" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 text-xs">(EF67EF01) - Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinatice, valorizando o trabalho coletivo.</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="font-bold text-slate-800 block mb-1">3. Objetivos de Aprendizagem:</label>
+                                    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">- Desenvolver passes rápidos e posicionamento tático em quadra.\n- Estimular o respeito às regras e aos colegas.</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="font-bold text-slate-800 block mb-1">4. Desenvolvimento Metodológico (Aulas Práticas e Teóricas):</label>
+                                    <textarea rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">- Aquecimento: Dinâmica de passes em circulo (10 min).\n- Parte Principal: Jogo modificado de Futsal/Basquete com restrição de toques (25 min).\n- Volta à Calma: Roda de conversa sobre cooperação (10 min).</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="font-bold text-slate-800 block mb-1">5. Recursos e Avaliação:</label>
+                                    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800">Recursos: Cones, coletes e bolas oficiais.\nAvaliação: Participação ativa, fair play e cumprimento das regras.</textarea>
                                 </div>
                             </div>
+
                             <div class="pt-6 border-t flex justify-between text-xs text-slate-600">
                                 <div>Assinatura do Docente: __________________________</div>
-                                <div>Aprovação da Direção: __________________________</div>
+                                <div>Visto da Coordenação: __________________________</div>
                             </div>
                         </div>
                     </div>
@@ -379,7 +377,7 @@
                                     <tr><th class="p-3.5">Turma</th><th class="p-3.5">Título / Documento</th><th class="p-3.5">Tipo</th><th class="p-3.5 text-right">Ações</th></tr>
                                 </thead>
                                 <tbody id="tabela-provas-turmas" class="divide-y divide-slate-800">
-                                    <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas.</td></tr>
+                                    <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas. Use o Construtor de Provas!</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -534,6 +532,7 @@
                 atualizarTabelaProvasTurmas();
                 atualizarListaCircuitos();
                 atualizarListaEventos();
+                filtrarBNCC('');
             }
         }
 
@@ -542,7 +541,7 @@
         function logout() { switchView('login'); }
 
         function changeTab(tabId) {
-            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'planos', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'pesquisa'].forEach(t => {
+            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'pesquisa'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -552,6 +551,36 @@
             if(tabId === 'provas-trabalhos') atualizarTabelaProvasTurmas();
             if(tabId === 'atividades') atualizarListaCircuitos();
             if(tabId === 'calendario') atualizarListaEventos();
+            if(tabId === 'gestao') filtrarBNCC('');
+        }
+
+        function filtrarBNCC(termo) {
+            const container = document.getElementById('resultado-busca-bncc');
+            const termoLimpo = termo.trim().toLowerCase();
+            
+            const filtradas = baseBNCC.filter(b => 
+                b.codigo.toLowerCase().includes(termoLimpo) || 
+                b.tema.toLowerCase().includes(termoLimpo) || 
+                b.desc.toLowerCase().includes(termoLimpo)
+            );
+
+            if(filtradas.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400">Nenhuma habilidade BNCC encontrada.</p>`;
+                return;
+            }
+
+            container.innerHTML = filtradas.map(b => `
+                <div onclick="inserirBNCCNoPlano('${b.codigo}', '${b.desc}')" class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs text-slate-300 hover:border-emerald-500 cursor-pointer flex justify-between items-center transition-colors">
+                    <div><strong class="text-emerald-400">[${b.codigo}]</strong> (${b.tema}): ${b.desc}</div>
+                    <span class="text-emerald-400 font-bold ml-2">＋ Inserir</span>
+                </div>
+            `).join('');
+        }
+
+        function inserirBNCCNoPlano(codigo, desc) {
+            const textarea = document.getElementById('plano-bncc-texto');
+            textarea.value = `(${codigo}) - ${desc}`;
+            alert(`Habilidade [${codigo}] inserida com sucesso no seu plano semanal!`);
         }
 
         function atualizarSelectBuilderTurmas() {
@@ -587,31 +616,19 @@
                     questoesHtml += `<div class="mb-4"><strong>${contador++}. Saúde e Aptidão:</strong> Explique a importância da hidratação correta antes, durante e após a prática de atividades físicas intensas.</div>`;
                 } else if(val === 'basquete') {
                     questoesHtml += `<div class="mb-4"><strong>${contador++}. Basquetebol:</strong> Diferencie o lançamento de bandeja do lançamento de longa distância (três pontos).</div>`;
-                } else if(val === 'ginastica') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Ginástica:</strong> Qual a importância do aquecimento e dos exercícios de flexibilidade para prevenir lesões musculares?</div>`;
-                } else if(val === 'jogos') {
-                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Jogos Cooperativos:</strong> Dê um exemplo de atividade cooperativa onde o foco não seja a competição, mas sim a inclusão de todos os colegas.</div>`;
                 }
             });
 
-            document.getElementById('prev-titulo-doc').textContent = `ESCOLA DE EDUCAÇÃO FÍSICA - ${tipo.toUpperCase()}`;
-            document.getElementById('prev-sub-doc').textContent = `Turma: ${turma} | Data: ___/___/2026`;
-            document.getElementById('prev-conteudo').innerHTML = questoesHtml;
-            document.getElementById('builder-preview-box').classList.remove('hidden');
-
-            // Guardar automaticamente na lista de provas/trabalhos da turma
             provasTurma.push({
                 turma: turma,
                 titulo: `${tipo} - Gerado por Tópicos`,
                 tipo: tipo,
-                conteudo: questoesHtml.replace(/<[^>]*>/g, '') // Texto limpo para impressão
+                conteudo: questoesHtml.replace(/<[^>]*>/g, '')
             });
             atualizarEstatisticas();
             atualizarTabelaProvasTurmas();
-        }
-
-        function imprimirDocumentoPreview() {
-            window.print();
+            alert('Documento gerado e guardado com sucesso na aba "Provas por Turma (PDF)"!');
+            changeTab('provas-trabalhos');
         }
 
         function abrirModalTurma() {
@@ -873,7 +890,7 @@
                     </div>
                 `).join('');
             }
-            container.classList.remove('hidden');
+            container.classList.add('hidden');
         }
 
         function executarPesquisaInterna(termo) {
@@ -889,7 +906,7 @@
             turmas.forEach(t => { if(t.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`🏫 Turma: <b>${t.nome}</b>`); });
             alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
             provasTurma.forEach(pt => { if(pt.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📄 Prova (${pt.turma}): <b>${pt.titulo}</b>`); });
-            circuitosAtividades.forEach(c => { if(c.tema.toLowerCase().includes(termoLimpo)) encontrados.push(`🏃 Circuito: <b>${c.tema}</b>`); });
+            baseBNCC.forEach(b => { if(b.desc.toLowerCase().includes(termoLimpo) || b.codigo.toLowerCase().includes(termoLimpo)) encontrados.push(`⚖️ BNCC [${b.codigo}]: <b>${b.desc}</b>`); });
 
             if(encontrados.length === 0) {
                 resultado.innerHTML = `<p class="text-sm text-slate-400">Nenhum registo encontrado para "${termo}".</p>`;
@@ -927,17 +944,6 @@
             document.getElementById('stat-alunos').textContent = alunos.length;
             document.getElementById('stat-documentos').textContent = provasTurma.length;
             document.getElementById('stat-circuitos').textContent = circuitosAtividades.length;
-        }
-
-        function registarPlanoAula() {
-            const serie = document.getElementById('plano-serie').value.trim();
-            const tema = document.getElementById('plano-tema').value.trim();
-            if(!serie || !tema) return alert('Por favor, preencha a série e o tema.');
-
-            planos.push({ serie, tema });
-            const texto = `PLANO DE AULA - EDUCAÇÃO FÍSICA ESCOLAR\n--------------------------------------------------\n• Ano / Série: ${serie}\n• Tema Central: ${tema}\n\n1. OBJETIVOS:\n- Promover a prática corporal e o desenvolvimento motor.\n\n2. DESENVOLVIMENTO:\n- Aquecimento, vivência prática da matéria e volta à calma.`;
-            document.getElementById('conteudo-plano-gerado').textContent = texto;
-            document.getElementById('resultado-plano').classList.remove('hidden');
         }
     </script>
 </body>
