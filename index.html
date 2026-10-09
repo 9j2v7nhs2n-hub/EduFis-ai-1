@@ -24,9 +24,10 @@
         let turmas = [];
         let alunos = [];
         let planos = [];
-        let provasTurma = []; // { turma, titulo, tipo, conteudo, arquivoNome }
-        let circuitosAtividades = []; // { tema, estacoes, duracao }
-        let eventosCalendario = []; // { data, titulo, turma }
+        let provasTurma = []; 
+        let circuitosAtividades = []; 
+        let eventosCalendario = []; 
+        let documentosGerados = []; // Provas/Trabalhos criados pelo construtor
     </script>
 
     <!-- CONTAINER PRINCIPAL -->
@@ -109,10 +110,11 @@
                     <button onclick="changeTab('turmas')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Turmas</button>
                     <button onclick="changeTab('alunos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Alunos</button>
                     <button onclick="changeTab('chamada')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Chamada Rápida</button>
+                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">⚡ Construtor de Provas</button>
+                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas por Turma (PDF)</button>
                     <button onclick="changeTab('planos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Planos de Aula</button>
                     <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano para Gestão</button>
-                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas e PDFs por Turma</button>
-                    <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Circuitos e Atividades</button>
+                    <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Calendário Escolar</button>
                     <button onclick="changeTab('pesquisa')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">🔍 Pesquisa Interna</button>
                 </aside>
@@ -137,8 +139,8 @@
                                 <div class="text-xs text-slate-400 mt-1">Alunos Matriculados</div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                                <div class="text-2xl font-bold text-emerald-400" id="stat-provas">0</div>
-                                <div class="text-xs text-slate-400 mt-1">Provas e PDFs</div>
+                                <div class="text-2xl font-bold text-emerald-400" id="stat-documentos">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Documentos Gerados</div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
                                 <div class="text-2xl font-bold text-emerald-400" id="stat-circuitos">0</div>
@@ -149,6 +151,10 @@
                         <div>
                             <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <button onclick="changeTab('construtor')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-emerald-500/50 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1 text-emerald-400">⚡ Construtor de Provas</div>
+                                    <div class="text-xs text-slate-400">Monte provas selecionando tópicos</div>
+                                </button>
                                 <button onclick="changeTab('chamada')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
                                     <div class="text-lg font-bold mb-1">Chamada Rápida</div>
                                     <div class="text-xs text-slate-400">Registar presenças do dia</div>
@@ -156,10 +162,6 @@
                                 <button onclick="changeTab('provas-trabalhos')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
                                     <div class="text-lg font-bold mb-1">Provas por Turma (PDF)</div>
                                     <div class="text-xs text-slate-400">Gerir e imprimir avaliações</div>
-                                </button>
-                                <button onclick="changeTab('atividades')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1">Circuitos e Estações</div>
-                                    <div class="text-xs text-slate-400">Organizar aulas práticas</div>
                                 </button>
                             </div>
                         </div>
@@ -227,6 +229,80 @@
                         </div>
                     </div>
 
+                    <!-- ABA CONSTRUTOR INTELIGENTE DE PROVAS E TRABALHOS DE CASA -->
+                    <div id="tab-construtor" class="hidden space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">⚡ Construtor Inteligente de Provas e Tarefas</h2>
+                            <p class="text-slate-400 text-sm">Selecione a turma, o tipo de documento e clique nos tópicos para montar o conteúdo instantaneamente.</p>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5 max-w-3xl">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Turma Alvo</label>
+                                    <select id="builder-turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+                                        <!-- Preenchido via script -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Tipo de Documento</label>
+                                    <select id="builder-tipo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+                                        <option value="Prova Teórica Escolar">Prova Teórica Escolar</option>
+                                        <option value="Trabalho de Casa (TPC)">Trabalho de Casa (TPC)</option>
+                                        <option value="Ficha de Exercícios Práticos">Ficha de Exercícios Práticos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Selecione os Tópicos para a Avaliação:</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-sm">
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="volei" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Fundamentos e Regras do Voleibol</span>
+                                    </label>
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="futsal" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Regras e Táticas do Futsal</span>
+                                    </label>
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="saude" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Saúde, Aptidão Física e Hidratação</span>
+                                    </label>
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="basquete" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Fundamentos do Basquetebol (Drible e Arremesso)</span>
+                                    </label>
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="ginastica" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Ginástica e Consciência Corporal</span>
+                                    </label>
+                                    <label class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:border-emerald-500">
+                                        <input type="checkbox" value="jogos" class="builder-topico accent-emerald-500 w-4 h-4">
+                                        <span>Jogos Cooperativos e Fair Play</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button onclick="gerarDocumentoAutomatico()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl transition-colors cursor-pointer">
+                                Gerar Documento Automaticamente
+                            </button>
+                        </div>
+
+                        <!-- Pré-visualização do Documento Gerado -->
+                        <div id="builder-preview-box" class="hidden bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6 max-w-3xl">
+                            <div class="text-center border-b pb-4 space-y-1">
+                                <h3 id="prev-titulo-doc" class="text-xl font-bold uppercase">ESCOLA DE EDUCAÇÃO FÍSICA</h3>
+                                <p id="prev-sub-doc" class="text-xs text-slate-600">Turma: 8º Ano | Avaliação de Conhecimentos</p>
+                            </div>
+                            <div id="prev-conteudo" class="space-y-4 text-sm leading-relaxed"></div>
+                            <div class="pt-6 border-t flex justify-between items-center text-xs text-slate-600">
+                                <div>Nome: __________________________________________</div>
+                                <button onclick="imprimirDocumentoPreview()" class="bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">🖨️ Imprimir / Salvar PDF</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- ABA PLANOS DE AULA -->
                     <div id="tab-planos" class="hidden space-y-6">
                         <div>
@@ -252,7 +328,7 @@
                         </div>
                     </div>
 
-                    <!-- ABA PLANO PARA GESTÃO (NOVO E CRIATIVO) -->
+                    <!-- ABA PLANO PARA GESTÃO -->
                     <div id="tab-gestao" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
@@ -280,10 +356,6 @@
                                         <li><b>4º Bimestre:</b> Olimpíada Escolar Recreativa e Encerramento do Ano Letivo.</li>
                                     </ul>
                                 </div>
-                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                    <h4 class="font-bold text-slate-900 mb-1">📊 3. Indicadores de Desempenho</h4>
-                                    <p class="text-slate-700">Meta de 95% de participação ativa nas aulas práticas, acompanhamento individualizado de frequência e relatórios bimestrais entregues à coordenação.</p>
-                                </div>
                             </div>
                             <div class="pt-6 border-t flex justify-between text-xs text-slate-600">
                                 <div>Assinatura do Docente: __________________________</div>
@@ -297,9 +369,9 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <h2 class="text-2xl font-bold">Provas e PDFs por Turma</h2>
-                                <p class="text-slate-400 text-sm">Organize avaliações, questionários ou fichas específicas para cada turma.</p>
+                                <p class="text-slate-400 text-sm">Organize avaliações ou fichas específicas para cada turma.</p>
                             </div>
-                            <button onclick="abrirModalProvaTurma()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Adicionar Documento</button>
+                            <button onclick="changeTab('construtor')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">⚡ Usar Construtor de Provas</button>
                         </div>
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden max-w-3xl">
                             <table class="w-full text-left text-sm">
@@ -313,7 +385,7 @@
                         </div>
                     </div>
 
-                    <!-- ABA CIRCUITOS E ATIVIDADES (CONTEXTUALIZADA) -->
+                    <!-- ABA CIRCUITOS E ATIVIDADES -->
                     <div id="tab-atividades" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
@@ -329,7 +401,7 @@
                         </div>
                     </div>
 
-                    <!-- ABA CALENDÁRIO ESCOLAR (AJUSTADO E INTERATIVO) -->
+                    <!-- ABA CALENDÁRIO ESCOLAR -->
                     <div id="tab-calendario" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
@@ -374,41 +446,6 @@
                 <div class="flex justify-end space-x-3 pt-2">
                     <button type="button" onclick="fecharModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL DE PROVAS POR TURMA (COM UPLOAD/PDF) -->
-    <div id="modal-prova-turma" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-            <h3 class="font-bold text-lg text-white">Adicionar Prova / PDF para Turma</h3>
-            <form onsubmit="salvarProvaTurma(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Selecionar Turma</label>
-                    <select id="pt-turma-select" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                        <!-- Preenchido dinamicamente -->
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Título do Documento</label>
-                    <input type="text" id="pt-titulo" required placeholder="Ex: Avaliação de Voleibol - 8º Ano" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Tipo</label>
-                    <select id="pt-tipo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                        <option value="Prova Teórica">Prova Teórica</option>
-                        <option value="Ficha de Trabalho">Ficha de Trabalho</option>
-                        <option value="PDF / Documento Anexado">PDF / Documento Anexado</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Conteúdo do Documento ou Notas do PDF</label>
-                    <textarea id="pt-conteudo" rows="3" required placeholder="Escreva o conteúdo ou instruções do PDF para impressão..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModalProvaTurma()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Guardar</button>
                 </div>
             </form>
         </div>
@@ -493,6 +530,7 @@
             if(view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
                 atualizarSelectTurmasChamada();
+                atualizarSelectBuilderTurmas();
                 atualizarTabelaProvasTurmas();
                 atualizarListaCircuitos();
                 atualizarListaEventos();
@@ -504,15 +542,76 @@
         function logout() { switchView('login'); }
 
         function changeTab(tabId) {
-            ['home', 'turmas', 'alunos', 'chamada', 'planos', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'pesquisa'].forEach(t => {
+            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'planos', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'pesquisa'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             if(tabId === 'chamada') atualizarSelectTurmasChamada();
+            if(tabId === 'construtor') atualizarSelectBuilderTurmas();
             if(tabId === 'provas-trabalhos') atualizarTabelaProvasTurmas();
             if(tabId === 'atividades') atualizarListaCircuitos();
             if(tabId === 'calendario') atualizarListaEventos();
+        }
+
+        function atualizarSelectBuilderTurmas() {
+            const select = document.getElementById('builder-turma');
+            if(!select) return;
+            if(turmas.length === 0) {
+                select.innerHTML = '<option value="Geral">Nenhuma turma criada (Geral)</option>';
+                return;
+            }
+            select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
+        }
+
+        function gerarDocumentoAutomatico() {
+            const turma = document.getElementById('builder-turma').value;
+            const tipo = document.getElementById('builder-tipo').value;
+            const checkboxes = document.querySelectorAll('.builder-topico:checked');
+
+            if(checkboxes.length === 0) {
+                alert('Por favor, selecione pelo menos um tópico para montar o documento.');
+                return;
+            }
+
+            let questoesHtml = '';
+            let contador = 1;
+
+            checkboxes.forEach(cb => {
+                const val = cb.value;
+                if(val === 'volei') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Voleibol:</strong> Descreva quais são os fundamentos básicos do voleibol e explique a regra do rodízio em quadra.</div>`;
+                } else if(val === 'futsal') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Futsal:</strong> Qual é o tempo máximo que um jogador pode reter a bola na sua própria área de goal e qual a penalização?</div>`;
+                } else if(val === 'saude') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Saúde e Aptidão:</strong> Explique a importância da hidratação correta antes, durante e após a prática de atividades físicas intensas.</div>`;
+                } else if(val === 'basquete') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Basquetebol:</strong> Diferencie o lançamento de bandeja do lançamento de longa distância (três pontos).</div>`;
+                } else if(val === 'ginastica') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Ginástica:</strong> Qual a importância do aquecimento e dos exercícios de flexibilidade para prevenir lesões musculares?</div>`;
+                } else if(val === 'jogos') {
+                    questoesHtml += `<div class="mb-4"><strong>${contador++}. Jogos Cooperativos:</strong> Dê um exemplo de atividade cooperativa onde o foco não seja a competição, mas sim a inclusão de todos os colegas.</div>`;
+                }
+            });
+
+            document.getElementById('prev-titulo-doc').textContent = `ESCOLA DE EDUCAÇÃO FÍSICA - ${tipo.toUpperCase()}`;
+            document.getElementById('prev-sub-doc').textContent = `Turma: ${turma} | Data: ___/___/2026`;
+            document.getElementById('prev-conteudo').innerHTML = questoesHtml;
+            document.getElementById('builder-preview-box').classList.remove('hidden');
+
+            // Guardar automaticamente na lista de provas/trabalhos da turma
+            provasTurma.push({
+                turma: turma,
+                titulo: `${tipo} - Gerado por Tópicos`,
+                tipo: tipo,
+                conteudo: questoesHtml.replace(/<[^>]*>/g, '') // Texto limpo para impressão
+            });
+            atualizarEstatisticas();
+            atualizarTabelaProvasTurmas();
+        }
+
+        function imprimirDocumentoPreview() {
+            window.print();
         }
 
         function abrirModalTurma() {
@@ -538,20 +637,9 @@
             document.getElementById('modal-app').classList.remove('hidden');
         }
 
-        function abrirModalProvaTurma() {
-            const select = document.getElementById('pt-turma-select');
-            if(turmas.length === 0) {
-                alert('Crie pelo menos uma turma antes de adicionar provas.');
-                return;
-            }
-            select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
-            document.getElementById('modal-prova-turma').classList.remove('hidden');
-        }
-
         function abrirModalCircuito() { document.getElementById('modal-circuito').classList.remove('hidden'); }
         function abrirModalEvento() { document.getElementById('modal-evento').classList.remove('hidden'); }
         function fecharModal() { document.getElementById('modal-app').classList.add('hidden'); }
-        function fecharModalProvaTurma() { document.getElementById('modal-prova-turma').classList.add('hidden'); }
         function fecharModalCircuito() { document.getElementById('modal-circuito').classList.add('hidden'); }
         function fecharModalEvento() { document.getElementById('modal-evento').classList.add('hidden'); }
         function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
@@ -576,19 +664,6 @@
             }
             atualizarEstatisticas();
             fecharModal();
-        }
-
-        function salvarProvaTurma(e) {
-            e.preventDefault();
-            const turma = document.getElementById('pt-turma-select').value;
-            const titulo = document.getElementById('pt-titulo').value;
-            const tipo = document.getElementById('pt-tipo').value;
-            const conteudo = document.getElementById('pt-conteudo').value;
-
-            provasTurma.push({ turma, titulo, tipo, conteudo });
-            atualizarTabelaProvasTurmas();
-            atualizarEstatisticas();
-            fecharModalProvaTurma();
         }
 
         function salvarCircuito(e) {
@@ -618,7 +693,7 @@
             const tbody = document.getElementById('tabela-provas-turmas');
             if(!tbody) return;
             if(provasTurma.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas. Use o Construtor de Provas!</td></tr>`;
                 return;
             }
             tbody.innerHTML = provasTurma.map((pt, idx) => `
@@ -643,7 +718,6 @@
                 <body style="font-family: Arial; padding: 40px; color: #111;">
                     <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">ESCOLA DE EDUCAÇÃO FÍSICA</h2>
                     <h3>Turma: ${doc.turma} | Documento: ${doc.titulo}</h3>
-                    <p><strong>Tipo:</strong> ${doc.tipo}</p>
                     <hr style="margin: 20px 0;" />
                     <div style="font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${doc.conteudo}</div>
                     <br/><br/><br/>
@@ -851,7 +925,7 @@
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
-            document.getElementById('stat-provas').textContent = provasTurma.length;
+            document.getElementById('stat-documentos').textContent = provasTurma.length;
             document.getElementById('stat-circuitos').textContent = circuitosAtividades.length;
         }
 
