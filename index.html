@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduFís - Painel Profissional de Educação Física</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -13,23 +12,21 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen selection:bg-emerald-500 selection:text-white flex flex-col">
 
-    <!-- CONFIGURAÇÃO SUPABASE -->
+    <!-- MOTOR DE DADOS LOCAL PERSISTENTE (SALVA TUDO AUTOMATICAMENTE) -->
     <script>
-        const SUPABASE_URL = 'https://fdawxgrheoukkuzzpfyr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_fKYi1kPB6xuQBjR-pV4VQA_qQqJhqHW';
-        
-        let supabaseClient = null;
-        try {
-            if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch(e) { console.error('Erro Supabase:', e); }
+        let turmas = JSON.parse(localStorage.getItem('edufis_turmas')) || [];
+        let alunos = JSON.parse(localStorage.getItem('edufis_alunos')) || [];
+        let provasTurma = JSON.parse(localStorage.getItem('edufis_provas')) || []; 
+        let circuitosAtividades = JSON.parse(localStorage.getItem('edufis_circuitos')) || []; 
+        let eventosCalendario = JSON.parse(localStorage.getItem('edufis_eventos')) || []; 
 
-        let turmas = [];
-        let alunos = [];
-        let provasTurma = []; 
-        let circuitosAtividades = []; 
-        let eventosCalendario = []; 
+        function salvarDadosLocais() {
+            localStorage.setItem('edufis_turmas', JSON.stringify(turmas));
+            localStorage.setItem('edufis_alunos', JSON.stringify(alunos));
+            localStorage.setItem('edufis_provas', JSON.stringify(provasTurma));
+            localStorage.setItem('edufis_circuitos', JSON.stringify(circuitosAtividades));
+            localStorage.setItem('edufis_eventos', JSON.stringify(eventosCalendario));
+        }
 
         const baseBNCC = [
             { codigo: "EF67EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinativas, valorizando o trabalho coletivo." },
@@ -165,8 +162,8 @@
                 </div>
                 
                 <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1">
-                    <div class="font-bold text-slate-900 flex items-center gap-1.5">☁️ Supabase Conectado</div>
-                    <div>Dados salvos na Nuvem</div>
+                    <div class="font-bold text-slate-900 flex items-center gap-1.5">💾 Salvamento Ativo</div>
+                    <div>Guardado no Dispositivo</div>
                 </div>
             </aside>
 
@@ -405,7 +402,7 @@
 
                     <div id="lista-provas-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
-                            A carregar provas...
+                            Nenhum documento gerado ainda. Use o <b>Construtor de Provas</b> para criar avaliações personalizadas!
                         </div>
                     </div>
                 </div>
@@ -421,7 +418,7 @@
                     </div>
                     <div id="lista-circuitos" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
-                            A carregar circuitos...
+                            Nenhum circuito prático registado. Clique em "+ Novo Circuito" para começar.
                         </div>
                     </div>
                 </div>
@@ -438,7 +435,7 @@
                     <div class="bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl max-w-3xl space-y-4 shadow-sm">
                         <h3 class="font-bold text-sm text-emerald-700 uppercase tracking-wider">Eventos Programados</h3>
                         <div id="lista-eventos-calendario" class="space-y-3">
-                            <p class="text-sm text-slate-400">A carregar calendário...</p>
+                            <p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>
                         </div>
                     </div>
                 </div>
@@ -507,7 +504,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT COM INTEGRAÇÃO SUPABASE -->
+    <!-- SCRIPT DE INTERFACE E PERSISTÊNCIA -->
     <script>
         let modalTipo = '';
 
@@ -516,34 +513,6 @@
             const overlay = document.getElementById('sidebar-overlay');
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
-        }
-
-        async function carregarDadosNuvem() {
-            if (!supabaseClient) {
-                // Fallback local se supabase não estiver ativo
-                carregarTudoNaTela();
-                return;
-            }
-            try {
-                const [resT, resA, resP, resC, resE] = await Promise.all([
-                    supabaseClient.from('turmas').select('*'),
-                    supabaseClient.from('alunos').select('*'),
-                    supabaseClient.from('provas').select('*'),
-                    supabaseClient.from('circuitos').select('*'),
-                    supabaseClient.from('eventos').select('*')
-                ]);
-
-                if(resT.data) turmas = resT.data;
-                if(resA.data) alunos = resA.data;
-                if(resP.data) provasTurma = resP.data;
-                if(resC.data) circuitosAtividades = resC.data;
-                if(resE.data) eventosCalendario = resE.data;
-
-                carregarTudoNaTela();
-            } catch(err) {
-                console.error('Erro ao sincronizar com Supabase:', err);
-                carregarTudoNaTela();
-            }
         }
 
         function carregarTudoNaTela() {
@@ -588,7 +557,7 @@
                 document.getElementById('view-dashboard').classList.remove('hidden');
                 carregarTopicosConstrutor();
                 filtrarBNCC('');
-                carregarDadosNuvem();
+                carregarTudoNaTela();
             }
         }
 
@@ -654,7 +623,7 @@
             select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
         }
 
-        async function gerarDocumentoAutomatico() {
+        function gerarDocumentoAutomatico() {
             const turma = document.getElementById('builder-turma').value;
             const tipo = document.getElementById('builder-tipo').value;
             const checkboxes = document.querySelectorAll('.builder-topico:checked');
@@ -669,19 +638,11 @@
                 questoesHtml += `<div class="mb-3"><strong>${idx + 1}. Tópico: ${cb.value}</strong><br>Explique detalhadamente os conceitos teóricos e práticos abordados em aula.</div>`;
             });
 
-            const novaProva = { turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml };
-
-            if(supabaseClient) {
-                await supabaseClient.from('provas').insert([novaProva]);
-                const res = await supabaseClient.from('provas').select('*');
-                if(res.data) provasTurma = res.data;
-            } else {
-                provasTurma.push(novaProva);
-            }
-
+            provasTurma.push({ turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml });
+            salvarDadosLocais();
             atualizarEstatisticas();
             atualizarTabelaProvasTurmas();
-            alert('Documento gerado e guardado na nuvem!');
+            alert('Documento gerado e guardado com sucesso!');
             changeTab('provas-trabalhos');
         }
 
@@ -715,59 +676,34 @@
         function fecharModalEvento() { document.getElementById('modal-evento').classList.add('hidden'); }
         function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
 
-        async function salvarModal(e) {
+        function salvarModal(e) {
             e.preventDefault();
             if(modalTipo === 'turma') {
-                const novaTurma = { nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value };
-                if(supabaseClient) {
-                    await supabaseClient.from('turmas').insert([novaTurma]);
-                    const res = await supabaseClient.from('turmas').select('*');
-                    if(res.data) turmas = res.data;
-                } else {
-                    turmas.push(novaTurma);
-                }
+                turmas.push({ nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value });
                 atualizarTabelaTurmas();
             } else if(modalTipo === 'aluno') {
-                const novoAluno = { nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value };
-                if(supabaseClient) {
-                    await supabaseClient.from('alunos').insert([novoAluno]);
-                    const res = await supabaseClient.from('alunos').select('*');
-                    if(res.data) alunos = res.data;
-                } else {
-                    alunos.push(novoAluno);
-                }
+                alunos.push({ nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value });
                 atualizarTabelaAlunos();
                 atualizarTabelaTurmas();
             }
+            salvarDadosLocais();
             atualizarEstatisticas();
             fecharModal();
         }
 
-        async function salvarCircuito(e) {
+        function salvarCircuito(e) {
             e.preventDefault();
-            const novoCirc = { tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value };
-            if(supabaseClient) {
-                await supabaseClient.from('circuitos').insert([novoCirc]);
-                const res = await supabaseClient.from('circuitos').select('*');
-                if(res.data) circuitosAtividades = res.data;
-            } else {
-                circuitosAtividades.push(novoCirc);
-            }
+            circuitosAtividades.push({ tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value });
+            salvarDadosLocais();
             atualizarListaCircuitos();
             atualizarEstatisticas();
             fecharModalCircuito();
         }
 
-        async function salvarEvento(e) {
+        function salvarEvento(e) {
             e.preventDefault();
-            const novoEv = { data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value };
-            if(supabaseClient) {
-                await supabaseClient.from('eventos').insert([novoEv]);
-                const res = await supabaseClient.from('eventos').select('*');
-                if(res.data) eventosCalendario = res.data;
-            } else {
-                eventosCalendario.push(novoEv);
-            }
+            eventosCalendario.push({ data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value });
+            salvarDadosLocais();
             atualizarListaEventos();
             fecharModalEvento();
         }
@@ -791,7 +727,7 @@
                     </div>
                     <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
                         <button onclick="imprimirProvaTurma(${idx})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-sm">🖨️ Imprimir PDF</button>
-                        <button onclick="removerProvaTurma('${pt.id || idx}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all">Excluir</button>
+                        <button onclick="removerProvaTurma(${idx})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all">Excluir</button>
                     </div>
                 </div>
             `).join('');
@@ -814,13 +750,9 @@
             janela.print();
         }
 
-        async function removerProvaTurma(id) {
-            if(supabaseClient && typeof id === 'number' && provasTurma[id]?.id) {
-                await supabaseClient.from('provas').delete().eq('id', provasTurma[id].id);
-                provasTurma.splice(id, 1);
-            } else {
-                provasTurma.splice(id, 1);
-            }
+        function removerProvaTurma(idx) {
+            provasTurma.splice(idx, 1);
+            salvarDadosLocais();
             atualizarTabelaProvasTurmas();
             atualizarEstatisticas();
         }
@@ -844,11 +776,9 @@
             `).join('');
         }
 
-        async function removerCircuito(idx) {
-            if(supabaseClient && circuitosAtividades[idx]?.id) {
-                await supabaseClient.from('circuitos').delete().eq('id', circuitosAtividades[idx].id);
-            }
+        function removerCircuito(idx) {
             circuitosAtividades.splice(idx, 1);
+            salvarDadosLocais();
             atualizarListaCircuitos();
             atualizarEstatisticas();
         }
@@ -874,11 +804,9 @@
             `).join('');
         }
 
-        async function removerEvento(idx) {
-            if(supabaseClient && eventosCalendario[idx]?.id) {
-                await supabaseClient.from('eventos').delete().eq('id', eventosCalendario[idx].id);
-            }
+        function removerEvento(idx) {
             eventosCalendario.splice(idx, 1);
+            salvarDadosLocais();
             atualizarListaEventos();
         }
 
@@ -958,20 +886,16 @@
             if(termo.trim().length > 0) { changeTab('pesquisa'); document.getElementById('input-pesquisa-interna').value = termo; executarPesquisaInterna(termo); }
         }
 
-        async function removerTurma(idx) {
-            if(supabaseClient && turmas[idx]?.id) {
-                await supabaseClient.from('turmas').delete().eq('id', turmas[idx].id);
-            }
+        function removerTurma(idx) {
             turmas.splice(idx, 1);
+            salvarDadosLocais();
             atualizarTabelaTurmas();
             atualizarEstatisticas();
         }
 
-        async function removerAluno(idx) {
-            if(supabaseClient && alunos[idx]?.id) {
-                await supabaseClient.from('alunos').delete().eq('id', alunos[idx].id);
-            }
+        function removerAluno(idx) {
             alunos.splice(idx, 1);
+            salvarDadosLocais();
             atualizarTabelaAlunos();
             atualizarEstatisticas();
         }
