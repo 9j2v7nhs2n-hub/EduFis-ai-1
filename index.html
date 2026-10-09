@@ -20,7 +20,7 @@
         
         let supabaseClient = null;
         try {
-            if (SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL !== 'SUA_SUPABASE_URL_AQUI') {
+            if (SUPABASE_URL && SUPABASE_ANON_KEY) {
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch(e) { console.error('Erro Supabase:', e); }
@@ -55,7 +55,7 @@
             "Aptidão Física Relacionada à Saúde", "Importância da Hidratação na Atividade Física", "Fisiologia Básica: Frequência Cardíaca", "Nutrição e Desempenho Desportivo", "Aquecimento e Prevenção de Lesões",
             "Ginástica Artística e Aparelhos", "Ginástica Rítmica e Elementos", "Ginástica de Consciência Corporal", "Pilates e Flexibilidade na Escola", "Treinamento Funcional para Jovens",
             "Lutas: História e Valores Culturais", "Judô: História, Golpes e Respeito", "Jiu-Jitsu: Defesa Pessoal e Filosofia", "Capoeira: Movimentos, Música e Herança", "Boxe Educacional e Condicionamento",
-            "Danças Urbanas e Street Dance", "Danças Folclóricas Regional", "Danças de Salão no Ambiente Escolar", "Expressão Corporal e Ritmo", "Coreografias e Autonomia Criativa",
+            "Danças Urbanas e Street Dance", "Danças Folclóricas Regionais", "Danças de Salão no Ambiente Escolar", "Expressão Corporal e Ritmo", "Coreografias e Autonomia Criativa",
             "Jogos Cooperativos vs Competitivos", "Brincadeiras Populares Tradicionais", "Jogos de Tabuleiro Gigantes", "Desporto de Orientação na Escola", "Atividades Recreativas em Espaços Reduzidos",
             "Fair Play e Ética Desportiva", "Inclusão e Adaptação de Jogos para PCD", "Gestão de Conflitos em Jogos Coletivos", "Liderança e Trabalho em Equipa", "Cultura Corporal de Movimento e Sociedade"
         ];
@@ -165,8 +165,8 @@
                 </div>
                 
                 <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1">
-                    <div class="font-bold text-slate-900 flex items-center gap-1.5">🟢 Sistema Ativo</div>
-                    <div>Modo Claro Profissional</div>
+                    <div class="font-bold text-slate-900 flex items-center gap-1.5">☁️ Supabase Conectado</div>
+                    <div>Dados salvos na Nuvem</div>
                 </div>
             </aside>
 
@@ -393,25 +393,24 @@
                     </div>
                 </div>
 
-                <!-- ABA PROVAS E TRABALHOS (CORRIGIDA E ESTILIZADA) -->
+                <!-- ABA PROVAS E TRABALHOS -->
                 <div id="tab-provas-trabalhos" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
                             <h2 class="text-2xl font-black text-slate-900">Provas e PDFs por Turma</h2>
-                            <p class="text-slate-500 text-sm">Lista de avaliações geradas pelo construtor prontas para aplicação ou impressão.</p>
+                            <p class="text-slate-500 text-sm">Lista de avaliações geradas prontas para aplicação ou impressão.</p>
                         </div>
                         <button onclick="changeTab('construtor')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all cursor-pointer">+ Criar Nova Prova</button>
                     </div>
 
                     <div id="lista-provas-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <!-- Preenchido dinamicamente com cartões elegantes -->
                         <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
-                            Nenhum documento gerado ainda. Use o <b>Construtor de Provas</b> para criar avaliações personalizadas!
+                            A carregar provas...
                         </div>
                     </div>
                 </div>
 
-                <!-- ABA CIRCUITOS E ESTAÇÕES (CORRIGIDA E ESTILIZADA) -->
+                <!-- ABA CIRCUITOS E ESTAÇÕES -->
                 <div id="tab-atividades" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -422,12 +421,12 @@
                     </div>
                     <div id="lista-circuitos" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center shadow-sm">
-                            Nenhum circuito prático registado. Clique em "+ Novo Circuito" para começar.
+                            A carregar circuitos...
                         </div>
                     </div>
                 </div>
 
-                <!-- ABA CALENDÁRIO ESCOLAR (CORRIGIDA E ESTILIZADA) -->
+                <!-- ABA CALENDÁRIO ESCOLAR -->
                 <div id="tab-calendario" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -439,7 +438,7 @@
                     <div class="bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl max-w-3xl space-y-4 shadow-sm">
                         <h3 class="font-bold text-sm text-emerald-700 uppercase tracking-wider">Eventos Programados</h3>
                         <div id="lista-eventos-calendario" class="space-y-3">
-                            <p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>
+                            <p class="text-sm text-slate-400">A carregar calendário...</p>
                         </div>
                     </div>
                 </div>
@@ -508,7 +507,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT COM INTEGRAÇÃO SUPABASE -->
     <script>
         let modalTipo = '';
 
@@ -517,6 +516,45 @@
             const overlay = document.getElementById('sidebar-overlay');
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
+        }
+
+        async function carregarDadosNuvem() {
+            if (!supabaseClient) {
+                // Fallback local se supabase não estiver ativo
+                carregarTudoNaTela();
+                return;
+            }
+            try {
+                const [resT, resA, resP, resC, resE] = await Promise.all([
+                    supabaseClient.from('turmas').select('*'),
+                    supabaseClient.from('alunos').select('*'),
+                    supabaseClient.from('provas').select('*'),
+                    supabaseClient.from('circuitos').select('*'),
+                    supabaseClient.from('eventos').select('*')
+                ]);
+
+                if(resT.data) turmas = resT.data;
+                if(resA.data) alunos = resA.data;
+                if(resP.data) provasTurma = resP.data;
+                if(resC.data) circuitosAtividades = resC.data;
+                if(resE.data) eventosCalendario = resE.data;
+
+                carregarTudoNaTela();
+            } catch(err) {
+                console.error('Erro ao sincronizar com Supabase:', err);
+                carregarTudoNaTela();
+            }
+        }
+
+        function carregarTudoNaTela() {
+            atualizarTabelaTurmas();
+            atualizarTabelaAlunos();
+            atualizarTabelaProvasTurmas();
+            atualizarListaCircuitos();
+            atualizarListaEventos();
+            atualizarSelectTurmasChamada();
+            atualizarSelectBuilderTurmas();
+            atualizarEstatisticas();
         }
 
         function carregarTopicosConstrutor() {
@@ -548,13 +586,9 @@
             if(view === 'register') document.getElementById('view-register').classList.remove('hidden');
             if(view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
-                atualizarSelectTurmasChamada();
-                atualizarSelectBuilderTurmas();
-                atualizarTabelaProvasTurmas();
-                atualizarListaCircuitos();
-                atualizarListaEventos();
                 carregarTopicosConstrutor();
                 filtrarBNCC('');
+                carregarDadosNuvem();
             }
         }
 
@@ -620,7 +654,7 @@
             select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
         }
 
-        function gerarDocumentoAutomatico() {
+        async function gerarDocumentoAutomatico() {
             const turma = document.getElementById('builder-turma').value;
             const tipo = document.getElementById('builder-tipo').value;
             const checkboxes = document.querySelectorAll('.builder-topico:checked');
@@ -635,10 +669,19 @@
                 questoesHtml += `<div class="mb-3"><strong>${idx + 1}. Tópico: ${cb.value}</strong><br>Explique detalhadamente os conceitos teóricos e práticos abordados em aula.</div>`;
             });
 
-            provasTurma.push({ turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml });
+            const novaProva = { turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml };
+
+            if(supabaseClient) {
+                await supabaseClient.from('provas').insert([novaProva]);
+                const res = await supabaseClient.from('provas').select('*');
+                if(res.data) provasTurma = res.data;
+            } else {
+                provasTurma.push(novaProva);
+            }
+
             atualizarEstatisticas();
             atualizarTabelaProvasTurmas();
-            alert('Documento gerado e guardado com sucesso!');
+            alert('Documento gerado e guardado na nuvem!');
             changeTab('provas-trabalhos');
         }
 
@@ -672,13 +715,27 @@
         function fecharModalEvento() { document.getElementById('modal-evento').classList.add('hidden'); }
         function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
 
-        function salvarModal(e) {
+        async function salvarModal(e) {
             e.preventDefault();
             if(modalTipo === 'turma') {
-                turmas.push({ nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value });
+                const novaTurma = { nome: document.getElementById('m-t-nome').value, ano: document.getElementById('m-t-ano').value, turno: document.getElementById('m-t-turno').value };
+                if(supabaseClient) {
+                    await supabaseClient.from('turmas').insert([novaTurma]);
+                    const res = await supabaseClient.from('turmas').select('*');
+                    if(res.data) turmas = res.data;
+                } else {
+                    turmas.push(novaTurma);
+                }
                 atualizarTabelaTurmas();
             } else if(modalTipo === 'aluno') {
-                alunos.push({ nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value });
+                const novoAluno = { nome: document.getElementById('m-a-nome').value, email: document.getElementById('m-a-email').value, turma: document.getElementById('m-a-turma').value };
+                if(supabaseClient) {
+                    await supabaseClient.from('alunos').insert([novoAluno]);
+                    const res = await supabaseClient.from('alunos').select('*');
+                    if(res.data) alunos = res.data;
+                } else {
+                    alunos.push(novoAluno);
+                }
                 atualizarTabelaAlunos();
                 atualizarTabelaTurmas();
             }
@@ -686,17 +743,31 @@
             fecharModal();
         }
 
-        function salvarCircuito(e) {
+        async function salvarCircuito(e) {
             e.preventDefault();
-            circuitosAtividades.push({ tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value });
+            const novoCirc = { tema: document.getElementById('circ-tema').value, duracao: document.getElementById('circ-duracao').value, estacoes: document.getElementById('circ-estacoes').value };
+            if(supabaseClient) {
+                await supabaseClient.from('circuitos').insert([novoCirc]);
+                const res = await supabaseClient.from('circuitos').select('*');
+                if(res.data) circuitosAtividades = res.data;
+            } else {
+                circuitosAtividades.push(novoCirc);
+            }
             atualizarListaCircuitos();
             atualizarEstatisticas();
             fecharModalCircuito();
         }
 
-        function salvarEvento(e) {
+        async function salvarEvento(e) {
             e.preventDefault();
-            eventosCalendario.push({ data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value });
+            const novoEv = { data: document.getElementById('ev-data').value, titulo: document.getElementById('ev-titulo').value, turma: document.getElementById('ev-turma').value };
+            if(supabaseClient) {
+                await supabaseClient.from('eventos').insert([novoEv]);
+                const res = await supabaseClient.from('eventos').select('*');
+                if(res.data) eventosCalendario = res.data;
+            } else {
+                eventosCalendario.push(novoEv);
+            }
             atualizarListaEventos();
             fecharModalEvento();
         }
@@ -720,7 +791,7 @@
                     </div>
                     <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
                         <button onclick="imprimirProvaTurma(${idx})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-sm">🖨️ Imprimir PDF</button>
-                        <button onclick="removerProvaTurma(${idx})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all">Excluir</button>
+                        <button onclick="removerProvaTurma('${pt.id || idx}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all">Excluir</button>
                     </div>
                 </div>
             `).join('');
@@ -743,7 +814,16 @@
             janela.print();
         }
 
-        function removerProvaTurma(idx) { provasTurma.splice(idx, 1); atualizarTabelaProvasTurmas(); atualizarEstatisticas(); }
+        async function removerProvaTurma(id) {
+            if(supabaseClient && typeof id === 'number' && provasTurma[id]?.id) {
+                await supabaseClient.from('provas').delete().eq('id', provasTurma[id].id);
+                provasTurma.splice(id, 1);
+            } else {
+                provasTurma.splice(id, 1);
+            }
+            atualizarTabelaProvasTurmas();
+            atualizarEstatisticas();
+        }
 
         function atualizarListaCircuitos() {
             const container = document.getElementById('lista-circuitos');
@@ -764,7 +844,14 @@
             `).join('');
         }
 
-        function removerCircuito(idx) { circuitosAtividades.splice(idx, 1); atualizarListaCircuitos(); atualizarEstatisticas(); }
+        async function removerCircuito(idx) {
+            if(supabaseClient && circuitosAtividades[idx]?.id) {
+                await supabaseClient.from('circuitos').delete().eq('id', circuitosAtividades[idx].id);
+            }
+            circuitosAtividades.splice(idx, 1);
+            atualizarListaCircuitos();
+            atualizarEstatisticas();
+        }
 
         function atualizarListaEventos() {
             const container = document.getElementById('lista-eventos-calendario');
@@ -787,7 +874,13 @@
             `).join('');
         }
 
-        function removerEvento(idx) { eventosCalendario.splice(idx, 1); atualizarListaEventos(); }
+        async function removerEvento(idx) {
+            if(supabaseClient && eventosCalendario[idx]?.id) {
+                await supabaseClient.from('eventos').delete().eq('id', eventosCalendario[idx].id);
+            }
+            eventosCalendario.splice(idx, 1);
+            atualizarListaEventos();
+        }
 
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('tabela-turmas');
@@ -844,7 +937,6 @@
                     <div class="space-x-3"><label class="text-xs text-emerald-700 cursor-pointer font-medium"><input type="radio" name="p_${idx}" checked class="accent-emerald-600"> Presente</label><label class="text-xs text-rose-600 cursor-pointer font-medium"><input type="radio" name="p_${idx}" class="accent-rose-600"> Falta</label></div>
                 </div>
             `).join('');
-            container.classList.add('hidden'); // Ajuste lógico para exibir
             container.classList.remove('hidden');
         }
 
@@ -866,8 +958,24 @@
             if(termo.trim().length > 0) { changeTab('pesquisa'); document.getElementById('input-pesquisa-interna').value = termo; executarPesquisaInterna(termo); }
         }
 
-        function removerTurma(idx) { turmas.splice(idx, 1); atualizarTabelaTurmas(); atualizarEstatisticas(); }
-        function removerAluno(idx) { alunos.splice(idx, 1); atualizarTabelaAlunos(); atualizarEstatisticas(); }
+        async function removerTurma(idx) {
+            if(supabaseClient && turmas[idx]?.id) {
+                await supabaseClient.from('turmas').delete().eq('id', turmas[idx].id);
+            }
+            turmas.splice(idx, 1);
+            atualizarTabelaTurmas();
+            atualizarEstatisticas();
+        }
+
+        async function removerAluno(idx) {
+            if(supabaseClient && alunos[idx]?.id) {
+                await supabaseClient.from('alunos').delete().eq('id', alunos[idx].id);
+            }
+            alunos.splice(idx, 1);
+            atualizarTabelaAlunos();
+            atualizarEstatisticas();
+        }
+
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
