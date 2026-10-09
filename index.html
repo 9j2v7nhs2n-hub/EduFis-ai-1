@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Supabase Client -->
+    <!-- Supabase Client v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
@@ -38,16 +38,16 @@
 
     <!-- Configuração do Supabase -->
     <script>
-        // ==========================================
-        //CONFIGURE SEU SUPABASE AQUI:
-        // ==========================================
-        const SUPABASE_URL = 'SUA_URL_DO_SUPABASE_AQUI'; 
-        const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_PUBLICA_AQUI';
-        // ==========================================
+        const SUPABASE_URL = 'https://fdawxgrheoukkuzzpfyr.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_fKYi1kPB6xuQBjR-pV4VQA_qQqJhqHW';
 
-        let supabaseClient = null;
-        if (SUPABASE_URL !== 'SUA_URL_DO_SUPABASE_AQUI' && SUPABASE_ANON_KEY !== 'SUA_CHAVE_ANON_PUBLICA_AQUI') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        function getSupabase() {
+            if (window.supabaseClient) return window.supabaseClient;
+            if (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_ANON_KEY) {
+                window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                return window.supabaseClient;
+            }
+            return null;
         }
     </script>
 
@@ -55,7 +55,7 @@
     <div id="auth-container" class="min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950">
         
         <div id="supabase-warning" class="hidden mb-4 w-full max-w-md p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-xs text-amber-300 text-center">
-            ⚠️ O Supabase ainda não foi configurado no código. Insira sua URL e Chave Anon no script.
+            ⚠️ A biblioteca do Supabase demorou a carregar. Verifique sua conexão.
         </div>
 
         <!-- Login Card -->
@@ -310,34 +310,52 @@
         </div>
     </div>
 
-    <!-- Script de Integração -->
+    <!-- Script Principal -->
     <script>
         let state = { currentUser: null, turmas: [], alunos: [] };
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (!supabaseClient) document.getElementById('supabase-warning').classList.remove('hidden');
-            else checkSession();
+            const client = getSupabase();
+            if (!client) {
+                document.getElementById('supabase-warning').classList.remove('hidden');
+            } else {
+                checkSession();
+            }
         });
 
         async function checkSession() {
-            if (!supabaseClient) return;
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) { state.currentUser = session.user; bootApp(); }
+            const client = getSupabase();
+            if (!client) return;
+            const { data: { session } } = await client.auth.getSession();
+            if (session) { 
+                state.currentUser = session.user; 
+                bootApp(); 
+            }
         }
 
         function switchAuthView(v) {
-            if(v === 'register') { document.getElementById('login-view').classList.add('hidden'); document.getElementById('register-view').classList.remove('hidden'); }
-            else { document.getElementById('register-view').classList.add('hidden'); document.getElementById('login-view').classList.remove('hidden'); }
+            if(v === 'register') { 
+                document.getElementById('login-view').classList.add('hidden'); 
+                document.getElementById('register-view').classList.remove('hidden'); 
+            } else { 
+                document.getElementById('register-view').classList.add('hidden'); 
+                document.getElementById('login-view').classList.remove('hidden'); 
+            }
         }
 
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            if (!supabaseClient) { alert('Configure o Supabase.'); return; }
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) { alert('Erro: ' + error.message); return; }
-            state.currentUser = data.user; bootApp();
+            const client = getSupabase();
+            
+            if (!client) { alert('Erro: Cliente Supabase não inicializado.'); return; }
+            
+            const { data, error } = await client.auth.signInWithPassword({ email, password });
+            if (error) { alert('Erro ao entrar: ' + error.message); return; }
+            
+            state.currentUser = data.user; 
+            bootApp();
         }
 
         async function handleRegister(e) {
@@ -345,23 +363,32 @@
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const confirm = document.getElementById('reg-confirm').value;
-            if (password !== confirm) { alert('Senhas não coincidem.'); return; }
-            if (!supabaseClient) { alert('Configure o Supabase.'); return; }
-            const { error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) { alert('Erro: ' + error.message); return; }
-            alert('Conta criada com sucesso! Faça login.'); switchAuthView('login');
+            const client = getSupabase();
+            
+            if (password !== confirm) { alert('As senhas não coincidem.'); return; }
+            if (!client) { alert('Erro: Cliente Supabase não inicializado.'); return; }
+            
+            const { error } = await client.auth.signUp({ email, password });
+            if (error) { alert('Erro no cadastro: ' + error.message); return; }
+            
+            alert('Conta criada com sucesso! Faça login.'); 
+            switchAuthView('login');
         }
 
         async function handleForgotPassword() {
             const email = document.getElementById('login-email').value;
-            if (!email) { alert('Informe seu e-mail no campo de login.'); return; }
-            if (!supabaseClient) return;
-            await supabaseClient.auth.resetPasswordForEmail(email);
-            alert('E-mail de recuperação enviado.');
+            const client = getSupabase();
+            if (!email) { alert('Informe seu e-mail no campo de login primeiro.'); return; }
+            if (!client) return;
+            
+            const { error } = await client.auth.resetPasswordForEmail(email);
+            if (error) { alert('Erro: ' + error.message); } 
+            else { alert('E-mail de recuperação enviado com sucesso!'); }
         }
 
         async function handleLogout() {
-            if (supabaseClient) await supabaseClient.auth.signOut();
+            const client = getSupabase();
+            if (client) await client.auth.signOut();
             state.currentUser = null;
             document.getElementById('app-container').classList.add('hidden');
             document.getElementById('auth-container').classList.remove('hidden');
@@ -378,17 +405,23 @@
         }
 
         async function fetchUserData() {
-            if (!supabaseClient || !state.currentUser) return;
-            const { data: t } = await supabaseClient.from('turmas').select('*');
+            const client = getSupabase();
+            if (!client || !state.currentUser) return;
+            const { data: t } = await client.from('turmas').select('*');
             if (t) state.turmas = t;
-            const { data: a } = await supabaseClient.from('alunos').select('*');
+            
+            const { data: a } = await client.from('alunos').select('*');
             if (a) state.alunos = a;
-            renderTurmas(); renderAlunos();
+            
+            renderTurmas(); 
+            renderAlunos();
         }
 
         function navigateTo(id) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-            const t = document.getElementById(`view-${id}`); if(t) t.classList.remove('hidden');
+            const t = document.getElementById(`view-${id}`); 
+            if(t) t.classList.remove('hidden');
+            
             document.querySelectorAll('.nav-item').forEach(i => {
                 i.classList.remove('bg-slate-800', 'text-white', 'font-bold');
                 if(i.dataset.target === id) i.classList.add('bg-slate-800', 'text-white', 'font-bold');
@@ -424,11 +457,15 @@
             e.preventDefault();
             const nome = document.getElementById('turma-nome').value;
             const serie = document.getElementById('turma-serie').value;
-            if (supabaseClient && state.currentUser) {
-                await supabaseClient.from('turmas').insert([{ nome, serie, user_id: state.currentUser.id }]);
+            const client = getSupabase();
+            
+            if (client && state.currentUser) {
+                const { error } = await client.from('turmas').insert([{ nome, serie, user_id: state.currentUser.id }]);
+                if (error) { alert('Erro ao salvar turma: ' + error.message); return; }
                 await fetchUserData();
             } else {
-                state.turmas.push({ id: Date.now(), nome, serie }); renderTurmas();
+                state.turmas.push({ id: Date.now(), nome, serie }); 
+                renderTurmas();
             }
             closeModal('modal-turma');
         }
@@ -438,19 +475,25 @@
             const nome = document.getElementById('aluno-nome').value;
             const turma = document.getElementById('aluno-turma').value;
             const numero = document.getElementById('aluno-num').value;
-            if (supabaseClient && state.currentUser) {
-                await supabaseClient.from('alunos').insert([{ nome, turma, numero: parseInt(numero), user_id: state.currentUser.id }]);
+            const client = getSupabase();
+            
+            if (client && state.currentUser) {
+                const { error } = await client.from('alunos').insert([{ nome, turma, numero: parseInt(numero), user_id: state.currentUser.id }]);
+                if (error) { alert('Erro ao salvar aluno: ' + error.message); return; }
                 await fetchUserData();
             } else {
-                state.alunos.push({ id: Date.now(), nome, turma, numero }); renderAlunos();
+                state.alunos.push({ id: Date.now(), nome, turma, numero }); 
+                renderAlunos();
             }
             closeModal('modal-aluno');
         }
 
         function generatePlano(e) { e.preventDefault(); alert('Parâmetros definidos.'); }
         function sendChatMessage() {
-            const i = document.getElementById('chat-input'); if(!i.value.trim()) return;
-            const t = i.value; i.value = '';
+            const i = document.getElementById('chat-input'); 
+            if(!i.value.trim()) return;
+            const t = i.value; 
+            i.value = '';
             const c = document.getElementById('chat-messages');
             c.innerHTML += `<div class="flex justify-end"><div class="bg-brand-500 text-slate-950 rounded-2xl p-4 text-sm max-w-lg">${t}</div></div>`;
             c.scrollTop = c.scrollHeight;
