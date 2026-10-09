@@ -576,8 +576,8 @@
             try {
                 const ai = new GoogleGenAI({ apiKey: apiKey });
                 const response = await ai.models.generateContent({
-                    model: 'gemini-3.8-flash',
-                    contents: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptText}`,
+                    model: 'gemini-3.5-flash',
+                    contents: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptTest}`,
                 });
 
                 resultContent.textContent = response.text;
