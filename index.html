@@ -576,7 +576,7 @@
             try {
                 const ai = new GoogleGenAI({ apiKey: apiKey });
                 const response = await ai.models.generateContent({
-                    model: 'gemini-3.8-flash',
+                    model: 'gemini-flash-latest',
                     contents: `Você é um professor experiente e especialista em Educação Física escolar. Crie um plano de aula estruturado, detalhado e prático com base neste pedido: ${promptText}`,
                 });
 
@@ -590,7 +590,7 @@
             }
         }
 
-        function showFeedback(message, type) {
+        function showFeedback(message, type, type) {
             const feedbackEl = document.getElementById('form-feedback');
             feedbackEl.textContent = message;
             feedbackEl.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300', 'bg-red-500/10', 'border-red-500/30', 'text-red-300');
