@@ -24,7 +24,9 @@
         let turmas = [];
         let alunos = [];
         let planos = [];
-        let provasTrabalhos = [];
+        let provasTurma = []; // { turma, titulo, tipo, conteudo, arquivoNome }
+        let circuitosAtividades = []; // { tema, estacoes, duracao }
+        let eventosCalendario = []; // { data, titulo, turma }
     </script>
 
     <!-- CONTAINER PRINCIPAL -->
@@ -109,9 +111,9 @@
                     <button onclick="changeTab('chamada')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Chamada Rápida</button>
                     <button onclick="changeTab('planos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Planos de Aula</button>
                     <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Plano para Gestão</button>
-                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas e PDFs</button>
-                    <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Atividades</button>
-                    <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Calendário</button>
+                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Provas e PDFs por Turma</button>
+                    <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Circuitos e Atividades</button>
+                    <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">Calendário Escolar</button>
                     <button onclick="changeTab('pesquisa')" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 cursor-pointer">🔍 Pesquisa Interna</button>
                 </aside>
 
@@ -122,7 +124,7 @@
                     <div id="tab-home" class="space-y-6">
                         <div>
                             <h2 class="text-2xl font-bold">Olá, Professor! 👋</h2>
-                            <p class="text-slate-400 text-sm">Pronto para organizar suas aulas de Educação Física hoje?</p>
+                            <p class="text-slate-400 text-sm">Painel otimizado para a gestão completa da Educação Física.</p>
                         </div>
                         
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -135,12 +137,12 @@
                                 <div class="text-xs text-slate-400 mt-1">Alunos Matriculados</div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                                <div class="text-2xl font-bold text-emerald-400" id="stat-planos">0</div>
-                                <div class="text-xs text-slate-400 mt-1">Planos de aula</div>
+                                <div class="text-2xl font-bold text-emerald-400" id="stat-provas">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Provas e PDFs</div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                                <div class="text-2xl font-bold text-emerald-400" id="stat-provas">0</div>
-                                <div class="text-xs text-slate-400 mt-1">Provas / PDFs</div>
+                                <div class="text-2xl font-bold text-emerald-400" id="stat-circuitos">0</div>
+                                <div class="text-xs text-slate-400 mt-1">Circuitos Criados</div>
                             </div>
                         </div>
 
@@ -152,12 +154,12 @@
                                     <div class="text-xs text-slate-400">Registar presenças do dia</div>
                                 </button>
                                 <button onclick="changeTab('provas-trabalhos')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1">Adicionar Prova / PDF</div>
-                                    <div class="text-xs text-slate-400">Guardar e imprimir avaliações</div>
+                                    <div class="text-lg font-bold mb-1">Provas por Turma (PDF)</div>
+                                    <div class="text-xs text-slate-400">Gerir e imprimir avaliações</div>
                                 </button>
-                                <button onclick="changeTab('gestao')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
-                                    <div class="text-lg font-bold mb-1">Plano para Gestão</div>
-                                    <div class="text-xs text-slate-400">Documento formal para a direção</div>
+                                <button onclick="changeTab('atividades')" class="p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition-colors cursor-pointer">
+                                    <div class="text-lg font-bold mb-1">Circuitos e Estações</div>
+                                    <div class="text-xs text-slate-400">Organizar aulas práticas</div>
                                 </button>
                             </div>
                         </div>
@@ -250,90 +252,97 @@
                         </div>
                     </div>
 
-                    <!-- ABA PLANO PARA GESTÃO -->
+                    <!-- ABA PLANO PARA GESTÃO (NOVO E CRIATIVO) -->
                     <div id="tab-gestao" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h2 class="text-2xl font-bold">Plano para Gestão Escolar</h2>
-                                <p class="text-slate-400 text-sm">Documento institucional estruturado para entrega à direção/coordenação.</p>
+                                <h2 class="text-2xl font-bold">Plano Diretor e Cronograma de Desporto</h2>
+                                <p class="text-slate-400 text-sm">Planeamento anual estratégico e metas para a direção escolar.</p>
                             </div>
                             <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">🖨️ Imprimir / Salvar PDF</button>
                         </div>
                         <div class="bg-white text-slate-900 p-8 rounded-2xl shadow-xl space-y-6 max-w-3xl">
                             <div class="text-center border-b pb-4 space-y-1">
-                                <h3 class="text-xl font-bold uppercase">Plano de Ação Pedagógica - Educação Física</h3>
-                                <p class="text-xs text-slate-600">Ano Letivo de 2026 | Documento Institucional</p>
+                                <h3 class="text-xl font-bold uppercase text-slate-900">PROJETOS E METAS DO DESPORTO ESCOLAR</h3>
+                                <p class="text-xs text-slate-600">Componente Curricular: Educação Física | Professor Titular</p>
                             </div>
                             <div class="space-y-4 text-sm leading-relaxed">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">1. Apresentação</h4>
-                                    <p class="text-slate-600">A Educação Física escolar constitui um componente curricular obrigatório que visa o desenvolvimento integral do aluno, promovendo a cultura corporal de movimento, a saúde, a cooperação e a cidadania.</p>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-900 mb-1">🎯 1. Missão Pedagógica</h4>
+                                    <p class="text-slate-700">Consolidar a escola como um ambiente promotor de bem-estar físico, inclusão social e hábitos saudáveis através da cultura corporal e do desporto educacional.</p>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800">2. Objetivos Gerais</h4>
-                                    <ul class="list-disc list-inside text-slate-600 space-y-1">
-                                        <li>Proporcionar a vivência de diferentes práticas corporais (jogos, desportos, ginásticas, danças e lutas).</li>
-                                        <li>Estimular hábitos de vida ativos e saudáveis.</li>
-                                        <li>Fomentar o respeito mútuo, a inclusão e o trabalho em equipa.</li>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-900 mb-1">📅 2. Cronograma de Eventos Anuais</h4>
+                                    <ul class="list-disc list-inside text-slate-700 space-y-1">
+                                        <li><b>1º Bimestre:</b> Festival de Jogos Cooperativos e Avaliação Postural.</li>
+                                        <li><b>2º Bimestre:</b> Torneio Interno de Modalidades Coletivas (Futsal e Basquetebol).</li>
+                                        <li><b>3º Bimestre:</b> Feira de Conhecimento: "Saúde, Nutrição e Atividade Física".</li>
+                                        <li><b>4º Bimestre:</b> Olimpíada Escolar Recreativa e Encerramento do Ano Letivo.</li>
                                     </ul>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800">3. Metodologia e Avaliação</h4>
-                                    <p class="text-slate-600">A metodologia baseia-se na abordagem participativa e formativa. A avaliação é processual e contínua, considerando a participação, o envolvimento, o respeito às regras e o desenvolvimento motor do estudante.</p>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-900 mb-1">📊 3. Indicadores de Desempenho</h4>
+                                    <p class="text-slate-700">Meta de 95% de participação ativa nas aulas práticas, acompanhamento individualizado de frequência e relatórios bimestrais entregues à coordenação.</p>
                                 </div>
                             </div>
-                            <div class="pt-8 border-t flex justify-between text-xs text-slate-500">
-                                <div>Assinatura do Professor: __________________________</div>
-                                <div>Visto da Coordenação: __________________________</div>
+                            <div class="pt-6 border-t flex justify-between text-xs text-slate-600">
+                                <div>Assinatura do Docente: __________________________</div>
+                                <div>Aprovação da Direção: __________________________</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ABA PROVAS E TRABALHOS EM PDF -->
+                    <!-- ABA PROVAS E PDFs POR TURMAS -->
                     <div id="tab-provas-trabalhos" class="hidden space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h2 class="text-2xl font-bold">Provas e Trabalhos (PDF)</h2>
-                                <p class="text-slate-400 text-sm">Adicione avaliações, questionários ou fichas para imprimir quando precisar.</p>
+                                <h2 class="text-2xl font-bold">Provas e PDFs por Turma</h2>
+                                <p class="text-slate-400 text-sm">Organize avaliações, questionários ou fichas específicas para cada turma.</p>
                             </div>
-                            <button onclick="abrirModalProvaTrabalho()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Adicionar Prova / Trabalho</button>
+                            <button onclick="abrirModalProvaTurma()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Adicionar Documento</button>
                         </div>
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden max-w-3xl">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
-                                    <tr><th class="p-3.5">Título / Descrição</th><th class="p-3.5">Tipo</th><th class="p-3.5">Ficheiro</th><th class="p-3.5 text-right">Ações</th></tr>
+                                    <tr><th class="p-3.5">Turma</th><th class="p-3.5">Título / Documento</th><th class="p-3.5">Tipo</th><th class="p-3.5 text-right">Ações</th></tr>
                                 </thead>
-                                <tbody id="tabela-provas-trabalhos" class="divide-y divide-slate-800">
-                                    <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento registado.</td></tr>
+                                <tbody id="tabela-provas-turmas" class="divide-y divide-slate-800">
+                                    <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas.</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- ABA ATIVIDADES -->
+                    <!-- ABA CIRCUITOS E ATIVIDADES (CONTEXTUALIZADA) -->
                     <div id="tab-atividades" class="hidden space-y-6">
-                        <div>
-                            <h2 class="text-2xl font-bold">Registo de Atividades Físicas</h2>
-                            <p class="text-slate-400 text-sm">Crie circuitos, dinâmicas e jogos lúdicos.</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold">Circuitos e Estações Práticas</h2>
+                                <p class="text-slate-400 text-sm">Crie estações de treino motor, circuitos de agilidade e dinâmicas para a quadra.</p>
+                            </div>
+                            <button onclick="abrirModalCircuito()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Criar Circuito</button>
                         </div>
-                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-2xl">
-                            <input type="text" id="ativ-tema" placeholder="Tema ou Categoria (Ex: Circuito Motor)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                            <button onclick="registarAtividade()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-3 rounded-xl transition-colors cursor-pointer">Salvar Atividade</button>
-                        </div>
-                        <div id="resultado-atividade" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3 max-w-2xl">
-                            <h3 class="text-lg font-bold text-emerald-400">Atividade Guardada</h3>
-                            <div id="ativ-corpo" class="text-sm text-slate-300 space-y-2 whitespace-pre-wrap bg-slate-950 p-4 rounded-xl border border-slate-800"></div>
+                        <div id="lista-circuitos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-slate-400 text-sm col-span-2 text-center">
+                                Nenhum circuito prático registado. Clique em "+ Criar Circuito" para estruturar a sua aula.
+                            </div>
                         </div>
                     </div>
 
-                    <!-- ABA CALENDÁRIO -->
+                    <!-- ABA CALENDÁRIO ESCOLAR (AJUSTADO E INTERATIVO) -->
                     <div id="tab-calendario" class="hidden space-y-6">
-                        <div>
-                            <h2 class="text-2xl font-bold">Calendário Escolar</h2>
-                            <p class="text-slate-400 text-sm">Outubro de 2026</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold">Calendário Escolar e Desportivo</h2>
+                                <p class="text-slate-400 text-sm">Outubro de 2026 - Gestão de eventos, testes e campeonatos.</p>
+                            </div>
+                            <button onclick="abrirModalEvento()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Agendar Evento</button>
                         </div>
-                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center text-slate-400 text-sm">
-                            Calendário de eventos e aulas programadas sincronizado com sucesso.
+                        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-3xl space-y-4">
+                            <h3 class="text-lg font-bold text-emerald-400">Eventos e Datas Programadas</h3>
+                            <div id="lista-eventos-calendario" class="space-y-3">
+                                <p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -341,10 +350,10 @@
                     <div id="tab-pesquisa" class="hidden space-y-6">
                         <div>
                             <h2 class="text-2xl font-bold">Pesquisa Interna no Sistema</h2>
-                            <p class="text-slate-400 text-sm">Consulte rapidamente qualquer aluno, turma ou documento registado.</p>
+                            <p class="text-slate-400 text-sm">Consulte rapidamente qualquer aluno, turma, prova ou circuito registado.</p>
                         </div>
                         <div class="max-w-xl">
-                            <input type="text" id="input-pesquisa-interna" oninput="executarPesquisaInterna(this.value)" placeholder="Digite o nome do aluno, turma ou prova..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            <input type="text" id="input-pesquisa-interna" oninput="executarPesquisaInterna(this.value)" placeholder="Digite o termo que procura..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500">
                         </div>
                         <div id="resultado-pesquisa-interna" class="space-y-3 max-w-xl">
                             <p class="text-sm text-slate-500">Comece a digitar para ver os resultados...</p>
@@ -370,30 +379,86 @@
         </div>
     </div>
 
-    <!-- MODAL PARA PROVAS E TRABALHOS (PDF) -->
-    <div id="modal-prova-trabalho" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <!-- MODAL DE PROVAS POR TURMA (COM UPLOAD/PDF) -->
+    <div id="modal-prova-turma" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-            <h3 class="font-bold text-lg text-white">Adicionar Prova ou Trabalho</h3>
-            <form onsubmit="salvarProvaTrabalho(event)" class="space-y-3">
+            <h3 class="font-bold text-lg text-white">Adicionar Prova / PDF para Turma</h3>
+            <form onsubmit="salvarProvaTurma(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Título / Assunto</label>
-                    <input type="text" id="pt-titulo" required placeholder="Ex: Avaliação Teórica de Basquetebol" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Tipo de Documento</label>
-                    <select id="pt-tipo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-                        <option value="Prova Teórica">Prova Teórica</option>
-                        <option value="Trabalho de Pesquisa">Trabalho de Pesquisa</option>
-                        <option value="Ficha de Exercícios">Ficha de Exercícios</option>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Selecionar Turma</label>
+                    <select id="pt-turma-select" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                        <!-- Preenchido dinamicamente -->
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs uppercase text-slate-400 mb-1">Conteúdo / Questões para Impressão</label>
-                    <textarea id="pt-conteudo" rows="4" required placeholder="Escreva aqui as perguntas ou orientações que sairão na folha impressa..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Título do Documento</label>
+                    <input type="text" id="pt-titulo" required placeholder="Ex: Avaliação de Voleibol - 8º Ano" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Tipo</label>
+                    <select id="pt-tipo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                        <option value="Prova Teórica">Prova Teórica</option>
+                        <option value="Ficha de Trabalho">Ficha de Trabalho</option>
+                        <option value="PDF / Documento Anexado">PDF / Documento Anexado</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Conteúdo do Documento ou Notas do PDF</label>
+                    <textarea id="pt-conteudo" rows="3" required placeholder="Escreva o conteúdo ou instruções do PDF para impressão..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea>
                 </div>
                 <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="fecharModalProvaTrabalho()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
+                    <button type="button" onclick="fecharModalProvaTurma()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CIRCUITOS -->
+    <div id="modal-circuito" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
+            <h3 class="font-bold text-lg text-white">Criar Circuito de Estações</h3>
+            <form onsubmit="salvarCircuito(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Tema da Aula Prática</label>
+                    <input type="text" id="circ-tema" required placeholder="Ex: Circuito Motor e Agilidade" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Duração por Estação</label>
+                    <input type="text" id="circ-duracao" required placeholder="Ex: 5 minutos cada estação" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Descrição das Estações</label>
+                    <textarea id="circ-estacoes" rows="3" required placeholder="Estação 1: Cones / Estação 2: Saltos..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="fecharModalCircuito()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE EVENTO NO CALENDÁRIO -->
+    <div id="modal-evento" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
+            <h3 class="font-bold text-lg text-white">Agendar Evento Escolar</h3>
+            <form onsubmit="salvarEvento(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Data</label>
+                    <input type="date" id="ev-data" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Título do Evento</label>
+                    <input type="text" id="ev-titulo" required placeholder="Ex: Torneio de Basquetebol" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 mb-1">Turma Envolvida</label>
+                    <input type="text" id="ev-turma" required placeholder="Ex: 8º Ano A" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="fecharModalEvento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Cancelar</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm cursor-pointer">Agendar</button>
                 </div>
             </form>
         </div>
@@ -428,7 +493,9 @@
             if(view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
                 atualizarSelectTurmasChamada();
-                atualizarTabelaProvasTrabalhos();
+                atualizarTabelaProvasTurmas();
+                atualizarListaCircuitos();
+                atualizarListaEventos();
             }
         }
 
@@ -443,7 +510,9 @@
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             if(tabId === 'chamada') atualizarSelectTurmasChamada();
-            if(tabId === 'provas-trabalhos') atualizarTabelaProvasTrabalhos();
+            if(tabId === 'provas-trabalhos') atualizarTabelaProvasTurmas();
+            if(tabId === 'atividades') atualizarListaCircuitos();
+            if(tabId === 'calendario') atualizarListaEventos();
         }
 
         function abrirModalTurma() {
@@ -469,9 +538,22 @@
             document.getElementById('modal-app').classList.remove('hidden');
         }
 
+        function abrirModalProvaTurma() {
+            const select = document.getElementById('pt-turma-select');
+            if(turmas.length === 0) {
+                alert('Crie pelo menos uma turma antes de adicionar provas.');
+                return;
+            }
+            select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
+            document.getElementById('modal-prova-turma').classList.remove('hidden');
+        }
+
+        function abrirModalCircuito() { document.getElementById('modal-circuito').classList.remove('hidden'); }
+        function abrirModalEvento() { document.getElementById('modal-evento').classList.remove('hidden'); }
         function fecharModal() { document.getElementById('modal-app').classList.add('hidden'); }
-        function abrirModalProvaTrabalho() { document.getElementById('modal-prova-trabalho').classList.remove('hidden'); }
-        function fecharModalProvaTrabalho() { document.getElementById('modal-prova-trabalho').classList.add('hidden'); }
+        function fecharModalProvaTurma() { document.getElementById('modal-prova-turma').classList.add('hidden'); }
+        function fecharModalCircuito() { document.getElementById('modal-circuito').classList.add('hidden'); }
+        function fecharModalEvento() { document.getElementById('modal-evento').classList.add('hidden'); }
         function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
 
         function salvarModal(e) {
@@ -496,52 +578,76 @@
             fecharModal();
         }
 
-        function salvarProvaTrabalho(e) {
+        function salvarProvaTurma(e) {
             e.preventDefault();
+            const turma = document.getElementById('pt-turma-select').value;
             const titulo = document.getElementById('pt-titulo').value;
             const tipo = document.getElementById('pt-tipo').value;
             const conteudo = document.getElementById('pt-conteudo').value;
 
-            provasTrabalhos.push({ titulo, tipo, conteudo });
-            atualizarTabelaProvasTrabalhos();
+            provasTurma.push({ turma, titulo, tipo, conteudo });
+            atualizarTabelaProvasTurmas();
             atualizarEstatisticas();
-            fecharModalProvaTrabalho();
+            fecharModalProvaTurma();
         }
 
-        function atualizarTabelaProvasTrabalhos() {
-            const tbody = document.getElementById('tabela-provas-trabalhos');
+        function salvarCircuito(e) {
+            e.preventDefault();
+            const tema = document.getElementById('circ-tema').value;
+            const duracao = document.getElementById('circ-duracao').value;
+            const estacoes = document.getElementById('circ-estacoes').value;
+
+            circuitosAtividades.push({ tema, duracao, estacoes });
+            atualizarListaCircuitos();
+            atualizarEstatisticas();
+            fecharModalCircuito();
+        }
+
+        function salvarEvento(e) {
+            e.preventDefault();
+            const data = document.getElementById('ev-data').value;
+            const titulo = document.getElementById('ev-titulo').value;
+            const turma = document.getElementById('ev-turma').value;
+
+            eventosCalendario.push({ data, titulo, turma });
+            atualizarListaEventos();
+            fecharModalEvento();
+        }
+
+        function atualizarTabelaProvasTurmas() {
+            const tbody = document.getElementById('tabela-provas-turmas');
             if(!tbody) return;
-            if(provasTrabalhos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento registado.</td></tr>`;
+            if(provasTurma.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhum documento associado a turmas.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = provasTrabalhos.map((pt, idx) => `
+            tbody.innerHTML = provasTurma.map((pt, idx) => `
                 <tr class="hover:bg-slate-900/50">
+                    <td class="p-4 font-medium text-emerald-400">${pt.turma}</td>
                     <td class="p-4 font-medium text-white">${pt.titulo}</td>
-                    <td class="p-4 text-slate-300"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs">${pt.tipo}</span></td>
-                    <td class="p-4 text-slate-400 text-xs">Pronto para Impressão</td>
+                    <td class="p-4 text-slate-300"><span class="bg-slate-800 px-2.5 py-1 rounded-full text-xs">${pt.tipo}</span></td>
                     <td class="p-4 text-right space-x-2">
-                        <button onclick="imprimirDocumento(${idx})" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">🖨️ Imprimir</button>
-                        <button onclick="removerProvaTrabalho(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
+                        <button onclick="imprimirProvaTurma(${idx})" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">🖨️ Imprimir</button>
+                        <button onclick="removerProvaTurma(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function imprimirDocumento(idx) {
-            const doc = provasTrabalhos[idx];
+        function imprimirProvaTurma(idx) {
+            const doc = provasTurma[idx];
             const janela = window.open('', '_blank');
             janela.document.write(`
                 <html>
                 <head><title>${doc.titulo}</title></head>
                 <body style="font-family: Arial; padding: 40px; color: #111;">
                     <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">ESCOLA DE EDUCAÇÃO FÍSICA</h2>
-                    <h3>Documento: ${doc.titulo}</h3>
+                    <h3>Turma: ${doc.turma} | Documento: ${doc.titulo}</h3>
                     <p><strong>Tipo:</strong> ${doc.tipo}</p>
                     <hr style="margin: 20px 0;" />
                     <div style="font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${doc.conteudo}</div>
                     <br/><br/><br/>
-                    <p>Nome do Aluno: __________________________________________ Turma: _________ Data: ___/___/2026</p>
+                    <p>Nome do Aluno: __________________________________________ Data: ___/___/2026</p>
                 </body>
                 </html>
             `);
@@ -549,10 +655,58 @@
             janela.print();
         }
 
-        function removerProvaTrabalho(idx) {
-            provasTrabalhos.splice(idx, 1);
-            atualizarTabelaProvasTrabalhos();
+        function removerProvaTurma(idx) {
+            provasTurma.splice(idx, 1);
+            atualizarTabelaProvasTurmas();
             atualizarEstatisticas();
+        }
+
+        function atualizarListaCircuitos() {
+            const container = document.getElementById('lista-circuitos');
+            if(!container) return;
+            if(circuitosAtividades.length === 0) {
+                container.innerHTML = `<div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-slate-400 text-sm col-span-2 text-center">Nenhum circuito prático registado. Clique em "+ Criar Circuito" para estruturar a sua aula.</div>`;
+                return;
+            }
+            container.innerHTML = circuitosAtividades.map((c, idx) => `
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-emerald-400">${c.tema}</h3>
+                        <button onclick="removerCircuito(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
+                    </div>
+                    <p class="text-xs text-slate-400">⏱️ Duração: ${c.duracao}</p>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-sm text-slate-300 whitespace-pre-wrap">${c.estacoes}</div>
+                </div>
+            `).join('');
+        }
+
+        function removerCircuito(idx) {
+            circuitosAtividades.splice(idx, 1);
+            atualizarListaCircuitos();
+            atualizarEstatisticas();
+        }
+
+        function atualizarListaEventos() {
+            const container = document.getElementById('lista-eventos-calendario');
+            if(!container) return;
+            if(eventosCalendario.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400">Nenhum evento agendado no calendário.</p>`;
+                return;
+            }
+            container.innerHTML = eventosCalendario.map((ev, idx) => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
+                    <div>
+                        <div class="font-bold text-white">${ev.titulo}</div>
+                        <div class="text-xs text-slate-400">📅 ${ev.data} | Turma: ${ev.turma}</div>
+                    </div>
+                    <button onclick="removerEvento(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
+                </div>
+            `).join('');
+        }
+
+        function removerEvento(idx) {
+            eventosCalendario.splice(idx, 1);
+            atualizarListaEventos();
         }
 
         function atualizarTabelaTurmas() {
@@ -658,10 +812,10 @@
             }
 
             let encontrados = [];
-            turmas.forEach(t => { if(t.nome.toLowerCase().includes(termoLimpo) || t.ano.toLowerCase().includes(termoLimpo)) encontrados.push(`🏫 Turma: <b>${t.nome}</b> (${t.ano})`); });
-            alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b> (Turma: ${a.turma})`); });
-            planos.forEach(p => { if(p.tema.toLowerCase().includes(termoLimpo)) encontrados.push(`📋 Plano: <b>${p.tema}</b> (${p.serie})`); });
-            provasTrabalhos.forEach(pt => { if(pt.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📄 Prova/Trabalho: <b>${pt.titulo}</b> (${pt.tipo})`); });
+            turmas.forEach(t => { if(t.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`🏫 Turma: <b>${t.nome}</b>`); });
+            alunos.forEach(a => { if(a.nome.toLowerCase().includes(termoLimpo)) encontrados.push(`👤 Aluno: <b>${a.nome}</b>`); });
+            provasTurma.forEach(pt => { if(pt.titulo.toLowerCase().includes(termoLimpo)) encontrados.push(`📄 Prova (${pt.turma}): <b>${pt.titulo}</b>`); });
+            circuitosAtividades.forEach(c => { if(c.tema.toLowerCase().includes(termoLimpo)) encontrados.push(`🏃 Circuito: <b>${c.tema}</b>`); });
 
             if(encontrados.length === 0) {
                 resultado.innerHTML = `<p class="text-sm text-slate-400">Nenhum registo encontrado para "${termo}".</p>`;
@@ -697,8 +851,8 @@
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
-            document.getElementById('stat-planos').textContent = planos.length;
-            document.getElementById('stat-provas').textContent = provasTrabalhos.length;
+            document.getElementById('stat-provas').textContent = provasTurma.length;
+            document.getElementById('stat-circuitos').textContent = circuitosAtividades.length;
         }
 
         function registarPlanoAula() {
@@ -707,19 +861,9 @@
             if(!serie || !tema) return alert('Por favor, preencha a série e o tema.');
 
             planos.push({ serie, tema });
-            atualizarEstatisticas();
-
-            const texto = `PLANO DE AULA - EDUCAÇÃO FÍSICA ESCOLAR\n--------------------------------------------------\n• Ano / Série: ${serie}\n• Tema Central: ${tema}\n\n1. OBJETIVOS:\n- Promover a prática corporal e o desenvolvimento motor.\n- Estimular a cooperação e o respeito mútuo.\n\n2. RECURSOS NECESSÁRIOS:\n- Espaço adequado, materiais desportivos e sinalizadores.\n\n3. DESENVOLVIMENTO:\n- Aquecimento, vivência prática da matéria e volta à calma.`;
+            const texto = `PLANO DE AULA - EDUCAÇÃO FÍSICA ESCOLAR\n--------------------------------------------------\n• Ano / Série: ${serie}\n• Tema Central: ${tema}\n\n1. OBJETIVOS:\n- Promover a prática corporal e o desenvolvimento motor.\n\n2. DESENVOLVIMENTO:\n- Aquecimento, vivência prática da matéria e volta à calma.`;
             document.getElementById('conteudo-plano-gerado').textContent = texto;
             document.getElementById('resultado-plano').classList.remove('hidden');
-        }
-
-        function registarAtividade() {
-            const tema = document.getElementById('ativ-tema').value.trim();
-            if(!tema) return alert('Informe o tema da atividade.');
-            const texto = `ATIVIDADE PRÁTICA: ${tema}\n--------------------------------------------------\n• Objetivo: Dinâmica motora e integração da turma.\n• Organização: Estações de trabalho rotativas com regras adaptadas.`;
-            document.getElementById('ativ-corpo').textContent = texto;
-            document.getElementById('resultado-atividade').classList.remove('hidden');
         }
     </script>
 </body>
