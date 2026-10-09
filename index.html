@@ -339,7 +339,48 @@
         </div>
     </div>
 
-    <!-- SCRIPT DO SISTEMA -->
+    <!-- WIDGET DO PROFESSOR IA -->
+    <div id="professor-ia-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Janela de Conversa (Inicialmente Oculta) -->
+        <div id="ia-chat-window" class="hidden w-80 md:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl mb-4 flex flex-col h-[450px] overflow-hidden">
+            <!-- Cabeçalho -->
+            <div class="bg-emerald-600/20 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">🤖</span>
+                    <span class="font-bold text-sm text-emerald-400">Professor IA</span>
+                </div>
+                <button onclick="toggleIaChat()" class="text-slate-400 hover:text-white text-sm cursor-pointer px-2 py-1">✕</button>
+            </div>
+            
+            <!-- Mensagens -->
+            <div id="ia-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-slate-300 max-w-[85%]">
+                    Olá, professor! Sou o Professor IA, seu assistente de Educação Física. Como posso ajudar você hoje?
+                </div>
+            </div>
+
+            <!-- Indicador de Digitação -->
+            <div id="ia-typing-indicator" class="hidden px-4 py-2 text-xs text-slate-400 italic">
+                Professor IA está a escrever...
+            </div>
+
+            <!-- Rodapé / Input -->
+            <div class="p-3 bg-slate-950 border-t border-slate-800 flex gap-2">
+                <input type="text" id="ia-chat-input" placeholder="Digite sua dúvida..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" onkeypress="if(event.key==='Enter') enviarMensagemIA()">
+                <button onclick="enviarMensagemIA()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl font-semibold text-sm cursor-pointer transition-colors">Enviar</button>
+            </div>
+        </div>
+
+        <!-- Botão Flutuante (Personagem 2D / Ícone) -->
+        <button onclick="toggleIaChat()" class="group relative bg-emerald-600 hover:bg-emerald-500 text-slate-950 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition-transform hover:scale-105 cursor-pointer">
+            🏋️‍♂️
+            <span class="absolute right-16 bg-slate-900 text-slate-100 text-xs px-3 py-1 rounded-xl shadow-md border border-slate-800 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                Falar com Professor IA
+            </span>
+        </button>
+    </div>
+
+    <!-- SCRIPT DO SISTEMA E DO PROFESSOR IA -->
     <script>
         let modalTipo = '';
 
@@ -475,6 +516,44 @@
             const texto = `AVALIAÇÃO TEÓRICA - ${tema.toUpperCase()}\n--------------------------------------------------\n1. Qual a importância de ${tema} para a saúde?\n2. Descreva os principais fundamentos práticos abordados em aula.`;
             document.getElementById('prova-corpo').textContent = texto;
             document.getElementById('resultado-prova').classList.remove('hidden');
+        }
+
+        // Funções de Controlo do Professor IA (Interface)
+        function toggleIaChat() {
+            const chatWindow = document.getElementById('ia-chat-window');
+            chatWindow.classList.toggle('hidden');
+        }
+
+        function enviarMensagemIA() {
+            const input = document.getElementById('ia-chat-input');
+            const mensagem = input.value.trim();
+            if (!mensagem) return;
+
+            const mensagensContainer = document.getElementById('ia-chat-messages');
+            
+            // Adicionar mensagem do professor
+            mensagensContainer.innerHTML += `
+                <div class="bg-emerald-950/40 border border-emerald-900/50 p-3.5 rounded-xl ml-auto max-w-[85%] text-slate-200">
+                    ${mensagem}
+                </div>
+            `;
+            input.value = '';
+            mensagensContainer.scrollTop = mensagensContainer.scrollHeight;
+
+            // Mostrar indicador de digitação
+            const typingIndicator = document.getElementById('ia-typing-indicator');
+            typingIndicator.classList.remove('hidden');
+
+            // Simulação temporária da resposta (No próximo passo ligaremos à Edge Function do Supabase)
+            setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+                mensagensContainer.innerHTML += `
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-slate-300 max-w-[85%]">
+                        Compreendi a sua dúvida sobre "${mensagem}". Na próxima etapa, esta resposta será gerada automaticamente em segurança pela inteligência artificial do Supabase!
+                    </div>
+                `;
+                mensagensContainer.scrollTop = mensagensContainer.scrollHeight;
+            }, 1000);
         }
     </script>
 </body>
