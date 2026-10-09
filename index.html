@@ -117,6 +117,16 @@
                             <h2 class="text-2xl font-bold">Olá, Professor! 👋</h2>
                             <p class="text-slate-400 text-sm">Pronto para organizar suas aulas de Educação Física hoje?</p>
                         </div>
+
+                        <!-- CAIXA DE CONFIGURAÇÃO RÁPIDA DA CHAVE IA (SEMPRE VISÍVEL NO INÍCIO) -->
+                        <div class="bg-slate-900 border border-emerald-500/30 p-5 rounded-2xl space-y-3">
+                            <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider">🤖 Configuração do Assistente IA</h3>
+                            <p class="text-xs text-slate-400">Insira a sua chave API do Google Gemini para ativar o Professor IA no canto inferior direito:</p>
+                            <div class="flex gap-2">
+                                <input type="password" id="cfg-gemini-key" placeholder="Cole sua chave API aqui (AIzaSy...)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                                <button onclick="salvarChaveGemini()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-4 py-2 rounded-xl text-sm cursor-pointer transition-colors">Salvar Chave</button>
+                            </div>
+                        </div>
                         
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
@@ -318,7 +328,7 @@
                         <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 max-w-xl">
                             <div>
                                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Chave API Google Gemini</label>
-                                <input type="password" id="cfg-gemini-key" placeholder="Insira a sua chave API aqui (AIzaSy...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                                <input type="password" id="cfg-gemini-key-2" placeholder="Insira a sua chave API aqui (AIzaSy...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
                             </div>
                             <button onclick="salvarChaveGemini()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-4 py-2 rounded-xl text-sm cursor-pointer transition-colors">Salvar Chave</button>
                         </div>
@@ -413,18 +423,23 @@
         window.addEventListener('DOMContentLoaded', () => {
             const savedKey = localStorage.getItem('gemini_api_key');
             if(savedKey) {
-                const inputEl = document.getElementById('cfg-gemini-key');
-                if(inputEl) inputEl.value = savedKey;
+                const input1 = document.getElementById('cfg-gemini-key');
+                const input2 = document.getElementById('cfg-gemini-key-2');
+                if(input1) input1.value = savedKey;
+                if(input2) input2.value = savedKey;
             }
         });
 
         function salvarChaveGemini() {
-            const inputEl = document.getElementById('cfg-gemini-key');
-            if(!inputEl) return;
-            const key = inputEl.value.trim();
+            const input1 = document.getElementById('cfg-gemini-key');
+            const input2 = document.getElementById('cfg-gemini-key-2');
+            const key = (input1 && input1.value.trim()) || (input2 && input2.value.trim());
+            
             if(!key) return alert('Por favor, insira uma chave válida.');
             localStorage.setItem('gemini_api_key', key);
-            alert('Chave guardada com sucesso no seu navegador!');
+            if(input1) input1.value = key;
+            if(input2) input2.value = key;
+            alert('Chave guardada com sucesso! O Professor IA está pronto a funcionar.');
         }
 
         function abrirModalTurma() {
@@ -552,8 +567,8 @@
 
             let apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
-                alert('Por favor, vá a "Configurações" no menu lateral e guarde a sua Chave API do Google Gemini.');
-                changeTab('configuracoes');
+                alert('Por favor, insira primeiro a sua Chave API do Google Gemini na caixa de configuração (visível no ecrã Inicial ou nas Configurações).');
+                changeTab('home');
                 toggleIaChat();
                 return;
             }
