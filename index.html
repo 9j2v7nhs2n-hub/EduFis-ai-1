@@ -161,17 +161,17 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <h2 class="text-2xl font-bold">Gerenciamento de Turmas</h2>
-                                <p class="text-slate-400 text-sm">Cadastre e organize suas turmas escolares.</p>
+                                <p class="text-slate-400 text-sm">Cadastre turmas e visualize os alunos vinculados.</p>
                             </div>
                             <button onclick="abrirModalTurma()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Nova Turma</button>
                         </div>
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-slate-950 border-b border-slate-800 text-slate-400">
-                                    <tr><th class="p-3.5">Nome da Turma</th><th class="p-3.5">Série / Ano</th><th class="p-3.5">Turno</th><th class="p-3.5 text-right">Ação</th></tr>
+                                    <tr><th class="p-3.5">Nome da Turma</th><th class="p-3.5">Série / Ano</th><th class="p-3.5">Turno</th><th class="p-3.5">Alunos</th><th class="p-3.5 text-right">Ação</th></tr>
                                 </thead>
                                 <tbody id="tabela-turmas" class="divide-y divide-slate-800">
-                                    <tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>
+                                    <tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -182,7 +182,7 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <h2 class="text-2xl font-bold">Alunos Matriculados</h2>
-                                <p class="text-slate-400 text-sm">Gerencie os estudantes por turma e chamada.</p>
+                                <p class="text-slate-400 text-sm">Gerencie os estudantes e distribua-os pelas turmas.</p>
                             </div>
                             <button onclick="abrirModalAluno()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer">+ Novo Aluno</button>
                         </div>
@@ -339,6 +339,23 @@
         </div>
     </div>
 
+    <!-- MODAL PARA VER ALUNOS DA TURMA -->
+    <div id="modal-detalhes-turma" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 id="detalhe-turma-titulo" class="font-bold text-lg text-emerald-400">Alunos da Turma</h3>
+                <button type="button" onclick="fecharModalDetalhes()" class="text-slate-400 hover:text-white cursor-pointer">✕</button>
+            </div>
+            <div id="detalhe-turma-corpo" class="space-y-3 max-h-60 overflow-y-auto">
+                <!-- Lista de alunos da turma -->
+            </div>
+            <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
+                <span class="text-xs text-slate-400" id="detalhe-turma-total">0 alunos matriculados</span>
+                <button type="button" onclick="fecharModalDetalhes()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm cursor-pointer">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT DO SISTEMA -->
     <script>
         let modalTipo = '';
@@ -383,12 +400,13 @@
             document.getElementById('modal-corpo').innerHTML = `
                 <div><label class="block text-xs uppercase text-slate-400 mb-1">Nome Completo</label><input type="text" id="m-a-nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
                 <div><label class="block text-xs uppercase text-slate-400 mb-1">E-mail ou Contato</label><input type="text" id="m-a-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white"></div>
-                <div><label class="block text-xs uppercase text-slate-400 mb-1">Turma</label><select id="m-a-turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">${turmasOpts}</select></div>
+                <div><label class="block text-xs uppercase text-slate-400 mb-1">Atribuir à Turma</label><select id="m-a-turma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">${turmasOpts}</select></div>
             `;
             document.getElementById('modal-app').classList.remove('hidden');
         }
 
         function fecharModal() { document.getElementById('modal-app').classList.add('hidden'); }
+        function fecharModalDetalhes() { document.getElementById('modal-detalhes-turma').classList.add('hidden'); }
 
         function salvarModal(e) {
             e.preventDefault();
@@ -406,6 +424,7 @@
                     turma: document.getElementById('m-a-turma').value
                 });
                 atualizarTabelaAlunos();
+                atualizarTabelaTurmas();
             }
             atualizarEstatisticas();
             fecharModal();
@@ -414,17 +433,24 @@
         function atualizarTabelaTurmas() {
             const tbody = document.getElementById('tabela-turmas');
             if(turmas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhuma turma registada.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = turmas.map((t, idx) => `
-                <tr class="hover:bg-slate-900/50">
-                    <td class="p-4 font-medium text-white">${t.nome}</td>
-                    <td class="p-4 text-slate-300">${t.ano}</td>
-                    <td class="p-4 text-slate-300">${t.turno}</td>
-                    <td class="p-4 text-right"><button onclick="removerTurma(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button></td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = turmas.map((t, idx) => {
+                const totalAlunos = alunos.filter(a => a.turma === t.nome).length;
+                return `
+                    <tr class="hover:bg-slate-900/50">
+                        <td class="p-4 font-medium text-white">${t.nome}</td>
+                        <td class="p-4 text-slate-300">${t.ano}</td>
+                        <td class="p-4 text-slate-300">${t.turno}</td>
+                        <td class="p-4"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs font-semibold">${totalAlunos} aluno(s)</span></td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-400 text-xs font-semibold hover:underline cursor-pointer">Ver Alunos</button>
+                            <button onclick="removerTurma(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function atualizarTabelaAlunos() {
@@ -437,14 +463,51 @@
                 <tr class="hover:bg-slate-900/50">
                     <td class="p-4 font-medium text-white">${a.nome}</td>
                     <td class="p-4 text-slate-300">${a.email || '-'}</td>
-                    <td class="p-4 text-slate-300">${a.turma}</td>
+                    <td class="p-4 text-slate-300"><span class="bg-slate-800 px-2.5 py-1 rounded-md text-xs">${a.turma}</span></td>
                     <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-400 text-xs font-semibold cursor-pointer">Excluir</button></td>
                 </tr>
             `).join('');
         }
 
-        function removerTurma(idx) { turmas.splice(idx, 1); atualizarTabelaTurmas(); atualizarEstatisticas(); }
-        function removerAluno(idx) { alunos.splice(idx, 1); atualizarTabelaAlunos(); atualizarEstatisticas(); }
+        function verAlunosTurma(nomeTurma) {
+            document.getElementById('detalhe-turma-titulo').textContent = `Alunos da Turma: ${nomeTurma}`;
+            const alunosDaTurma = alunos.filter(a => a.turma === nomeTurma);
+            const corpo = document.getElementById('detalhe-turma-corpo');
+            
+            if(alunosDaTurma.length === 0) {
+                corpo.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">Nenhum aluno cadastrado nesta turma ainda.</p>`;
+            } else {
+                corpo.innerHTML = alunosDaTurma.map(a => `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-sm">
+                        <div>
+                            <div class="font-medium text-white">${a.nome}</div>
+                            <div class="text-xs text-slate-400">${a.email || 'Sem e-mail'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('detalhe-turma-total').textContent = `${alunosDaTurma.length} aluno(s) matriculado(s)`;
+            document.getElementById('detalhe-turmas-total-geral');
+            document.getElementById('modal-detalhes-turma').classList.remove('hidden');
+        }
+
+        function removerTurma(idx) { 
+            const nomeTurma = turmas[idx].nome;
+            // Remover associação dos alunos desta turma ou atualizar para 'Geral'
+            alunos.forEach(a => { if(a.turma === nomeTurma) a.turma = 'Sem Turma'; });
+            turmas.splice(idx, 1); 
+            atualizarTabelaTurmas(); 
+            atualizarTabelaAlunos();
+            atualizarEstatisticas(); 
+        }
+
+        function removerAluno(idx) { 
+            alunos.splice(idx, 1); 
+            atualizarTabelaAlunos(); 
+            atualizarTabelaTurmas();
+            atualizarEstatisticas(); 
+        }
+
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
