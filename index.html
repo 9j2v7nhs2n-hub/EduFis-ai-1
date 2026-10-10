@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- FAVICON LOGO EDUFÍS PRO (Substitui o planeta no separador do navegador) -->
+    <!-- FAVICON LOGO EDUFÍS PRO -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23059669'/><path d='M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40' stroke='white' stroke-width='8' stroke-linecap='round'/></svg>">
     
-    <title>EduFís Pro v5.3 - Painel de Educação Física</title>
+    <title>EduFís Pro v6.0 - Painel de Educação Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -22,14 +22,16 @@
 
         let turmas = JSON.parse(localStorage.getItem('edufis_turmas')) || [];
         let alunos = JSON.parse(localStorage.getItem('edufis_alunos')) || [];
-        let provasTurma = JSON.parse(localStorage.getItem('edufis_provas')) || []; 
+        let documentosPDF = JSON.parse(localStorage.getItem('edufis_pdfs')) || []; 
+        let documentosWord = JSON.parse(localStorage.getItem('edufis_word_docs')) || []; 
         let circuitosAtividades = JSON.parse(localStorage.getItem('edufis_circuitos')) || []; 
         let eventosCalendario = JSON.parse(localStorage.getItem('edufis_eventos')) || []; 
 
         function salvarDadosLocais() {
             localStorage.setItem('edufis_turmas', JSON.stringify(turmas));
             localStorage.setItem('edufis_alunos', JSON.stringify(alunos));
-            localStorage.setItem('edufis_provas', JSON.stringify(provasTurma));
+            localStorage.setItem('edufis_pdfs', JSON.stringify(documentosPDF));
+            localStorage.setItem('edufis_word_docs', JSON.stringify(documentosWord));
             localStorage.setItem('edufis_circuitos', JSON.stringify(circuitosAtividades));
             localStorage.setItem('edufis_eventos', JSON.stringify(eventosCalendario));
         }
@@ -39,9 +41,9 @@
             if(statusEl) statusEl.textContent = "⏳ A enviar backup para a nuvem...";
 
             const dadosBackup = {
-                versao: "5.3",
+                versao: "6.0",
                 dataBackup: new Date().toISOString(),
-                turmas, alunos, provasTurma, circuitosAtividades, eventosCalendario
+                turmas, alunos, documentosPDF, documentosWord, circuitosAtividades, eventosCalendario
             };
 
             try {
@@ -70,7 +72,8 @@
                     const conteudo = JSON.parse(e.target.result);
                     if(conteudo.turmas) turmas = conteudo.turmas;
                     if(conteudo.alunos) alunos = conteudo.alunos;
-                    if(conteudo.provasTurma) provasTurma = conteudo.provasTurma;
+                    if(conteudo.documentosPDF) documentosPDF = conteudo.documentosPDF;
+                    if(conteudo.documentosWord) documentosWord = conteudo.documentosWord;
                     if(conteudo.circuitosAtividades) circuitosAtividades = conteudo.circuitosAtividades;
                     if(conteudo.eventosCalendario) eventosCalendario = conteudo.eventosCalendario;
                     
@@ -92,17 +95,6 @@
             { codigo: "EF67EF08", tema: "Dança", desc: "Experimentar e fruir danças urbanas, folclóricas e de salão, valorizando a diversidade cultural." },
             { codigo: "EF89EF03", tema: "Esportes", desc: "Formular e utilizar estratégias para solucionar desafios em esportes de invasão (futebol, basquete, handebol)." },
             { codigo: "EM13LP01", tema: "Saúde", desc: "Relacionar a prática regular de exercícios físicos com a melhoria da qualidade de vida e saúde mental." }
-        ];
-
-        const topicos50 = [
-            "Regras Oficiais do Voleibol", "Fundamentos de Manchete e Toque", "Sistema Tático 5x1 no Voleibol", "Rodízio e Posições no Voleibol",
-            "Regras Oficiais do Futsal", "Posicionamento Tático no Futsal", "Sistemas Defensivos no Futsal", "Fundamentos de Passes e Drible no Futsal",
-            "Regras e Fundamentos do Basquetebol", "Arremessos e Bandejas no Basquetebol", "Drible e Fintas no Basquetebol", "Defesa e Ataque no Basquetebol",
-            "Regras e Fundamentos do Handebol", "Sistema Ofensivo e Defensivo no Handebol", "Técnica de Lançamento no Handebol",
-            "Aptidão Física Relacionada à Saúde", "Importância da Hidratação na Atividade Física", "Fisiologia Básica: Frequência Cardíaca", "Nutrição e Desempenho Desportivo",
-            "Ginástica Artística e Aparelhos", "Ginástica Rítmica e Elementos", "Ginástica de Consciência Corporal", "Treinamento Funcional para Jovens",
-            "Judô: História, Golpes e Respeito", "Capoeira: Movimentos, Música e Herança", "Danças Urbanas e Street Dance", "Danças Folclóricas Regionais",
-            "Jogos Cooperativos vs Competitivos", "Brincadeiras Populares Tradicionais", "Fair Play e Ética Desportiva", "Inclusão e Adaptação de Jogos para PCD"
         ];
     </script>
 
@@ -209,9 +201,9 @@
                     <button onclick="changeTab('chamada')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📋 Chamada Rápida</button>
                     
                     <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400 px-3 pt-4 pb-1">Ferramentas Pro</div>
-                    <button onclick="changeTab('construtor')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">⚡ Construtor (50+ Tópicos)</button>
+                    <button onclick="changeTab('editor-word')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📝 Editor de Atividades (Word)</button>
+                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📄 Gestor de Documentos & PDFs</button>
                     <button onclick="changeTab('gestao')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📅 Plano de Gestão & BNCC</button>
-                    <button onclick="changeTab('provas-trabalhos')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📄 Provas por Turma (PDF)</button>
                     <button onclick="changeTab('atividades')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">🏃 Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">🗓️ Calendário Escolar</button>
                     <button onclick="changeTab('backup')" class="nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">☁️ Google Drive Auto-Backup</button>
@@ -237,7 +229,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm"><div class="text-3xl font-black text-emerald-600" id="stat-turmas">0</div><div class="text-xs font-semibold text-slate-500 mt-1 uppercase">Turmas Ativas</div></div>
                         <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm"><div class="text-3xl font-black text-emerald-600" id="stat-alunos">0</div><div class="text-xs font-semibold text-slate-500 mt-1 uppercase">Alunos Matriculados</div></div>
-                        <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm"><div class="text-3xl font-black text-emerald-600" id="stat-documentos">0</div><div class="text-xs font-semibold text-slate-500 mt-1 uppercase">Provas Geradas</div></div>
+                        <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm"><div class="text-3xl font-black text-emerald-600" id="stat-documentos">0</div><div class="text-xs font-semibold text-slate-500 mt-1 uppercase">Documentos & PDFs</div></div>
                         <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm"><div class="text-3xl font-black text-emerald-600" id="stat-circuitos">0</div><div class="text-xs font-semibold text-slate-500 mt-1 uppercase">Circuitos Práticos</div></div>
                     </div>
                 </div>
@@ -283,19 +275,79 @@
                     </div>
                 </div>
 
-                <!-- ABA CONSTRUTOR -->
-                <div id="tab-construtor" class="hidden space-y-6">
-                    <div><h2 class="text-2xl font-black text-slate-900">⚡ Construtor de Provas</h2></div>
-                    <div class="bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl space-y-6 max-w-3xl shadow-sm">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma Alvo</label><select id="builder-turma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm"><option value="Geral">Geral</option></select></div>
-                            <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Tipo de Documento</label><select id="builder-tipo" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm"><option value="Prova Teórica Escolar">Prova Teórica Escolar</option><option value="Trabalho de Casa (TPC)">Trabalho de Casa (TPC)</option><option value="Ficha de Exercícios Práticos">Ficha de Exercícios Práticos</option></select></div>
+                <!-- ABA EDITOR DE TEXTO (ESTILO WORD) -->
+                <div id="tab-editor-word" class="hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900">📝 Editor de Atividades</h2>
+                            <p class="text-slate-500 text-sm">Escreva e formate atividades, avaliações e textos pedagógicos.</p>
                         </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center"><label class="text-xs uppercase font-semibold text-slate-600">Selecione Tópicos:</label><input type="text" oninput="filtrarTopicosConstrutor(this.value)" placeholder="Filtrar..." class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs"></div>
-                            <div id="container-topicos-50" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs max-h-72 overflow-y-auto p-2 bg-slate-50 border border-slate-200 rounded-2xl"></div>
+                        <div class="flex gap-2">
+                            <button onclick="novoDocumentoWord()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-200 cursor-pointer">+ Novo Documento</button>
+                            <button onclick="salvarDocumentoWord()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md cursor-pointer">💾 Guardar Atividade</button>
+                            <button onclick="imprimirDocumentoWord()" class="bg-sky-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer">🖨️ Imprimir / PDF</button>
                         </div>
-                        <button onclick="gerarDocumentoAutomatico()" class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-xl cursor-pointer">Gerar e Guardar Documento</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- PAINEL DO EDITOR WORD -->
+                        <div class="md:col-span-2 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Título do Documento</label>
+                                    <input type="text" id="doc-word-titulo" placeholder="Ex: Ficha de Exercícios - Regras Futsal" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma Destino</label>
+                                    <select id="doc-word-turma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></select>
+                                </div>
+                            </div>
+
+                            <!-- BARRA DE FERRAMENTAS ESTILO WORD -->
+                            <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-100 border border-slate-200 rounded-2xl text-xs font-semibold">
+                                <button type="button" onclick="execCmd('bold')" class="px-3 py-1.5 bg-white border rounded-lg font-bold hover:bg-slate-50">B</button>
+                                <button type="button" onclick="execCmd('italic')" class="px-3 py-1.5 bg-white border rounded-lg italic hover:bg-slate-50">I</button>
+                                <button type="button" onclick="execCmd('underline')" class="px-3 py-1.5 bg-white border rounded-lg underline hover:bg-slate-50">U</button>
+                                <div class="h-4 w-px bg-slate-300 mx-1"></div>
+                                <button type="button" onclick="execCmd('formatBlock', '<h1>')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">H1</button>
+                                <button type="button" onclick="execCmd('formatBlock', '<h2>')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">H2</button>
+                                <button type="button" onclick="execCmd('formatBlock', '<p>')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">Texto</button>
+                                <div class="h-4 w-px bg-slate-300 mx-1"></div>
+                                <button type="button" onclick="execCmd('justifyLeft')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">⬅️</button>
+                                <button type="button" onclick="execCmd('justifyCenter')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">↔️</button>
+                                <button type="button" onclick="execCmd('justifyRight')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">➡️</button>
+                                <div class="h-4 w-px bg-slate-300 mx-1"></div>
+                                <button type="button" onclick="execCmd('insertUnorderedList')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">• Lista</button>
+                                <button type="button" onclick="execCmd('insertOrderedList')" class="px-2.5 py-1.5 bg-white border rounded-lg hover:bg-slate-50">1. Lista</button>
+                            </div>
+
+                            <!-- ÁREA DE TEXTO EDITÁVEL (FOLHA DE PAPEL) -->
+                            <div id="editor-word-area" contenteditable="true" class="min-h-[380px] p-6 bg-white border border-slate-300 rounded-2xl focus:outline-none focus:border-emerald-500 shadow-inner leading-relaxed text-sm">
+                                <p>Comece a escrever o seu plano de aula ou atividade aqui...</p>
+                            </div>
+                        </div>
+
+                        <!-- LISTA DE DOCUMENTOS SALVOS -->
+                        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+                            <h3 class="font-bold text-base text-slate-900">📚 Atividades Guardadas</h3>
+                            <div id="lista-docs-word" class="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+                                <p class="text-xs text-slate-400">Nenhum documento guardado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA PROVAS E PDFS POR TURMA -->
+                <div id="tab-provas-trabalhos" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900">📄 Gestor de Documentos & PDFs</h2>
+                            <p class="text-slate-500 text-sm">Anexe e organize arquivos PDF por turma.</p>
+                        </div>
+                        <button onclick="abrirModalUploadPDF()" class="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer">+ Adicionar PDF</button>
+                    </div>
+                    <div id="lista-provas-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center">Nenhum ficheiro PDF anexado.</div>
                     </div>
                 </div>
 
@@ -317,12 +369,6 @@
                             <div><label class="font-bold block mb-1">2. Habilidades BNCC:</label><textarea id="plano-bncc-texto" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs">(EF67EF01) - Experimentar e fruir diferentes esportes de marca, precisão e invasão.</textarea></div>
                         </div>
                     </div>
-                </div>
-
-                <!-- ABA PROVAS E TRABALHOS -->
-                <div id="tab-provas-trabalhos" class="hidden space-y-6">
-                    <div class="flex justify-between items-center"><div><h2 class="text-2xl font-black text-slate-900">Provas e PDFs por Turma</h2></div><button onclick="changeTab('construtor')" class="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer">+ Criar Prova</button></div>
-                    <div id="lista-provas-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5"><div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center">Nenhum documento gerado.</div></div>
                 </div>
 
                 <!-- ABA CIRCUITOS -->
@@ -384,7 +430,32 @@
         </div>
     </div>
 
-    <!-- MODAIS -->
+    <!-- MODAL ADICIONAR PDF -->
+    <div id="modal-upload-pdf" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
+            <h3 class="font-bold text-lg text-slate-900">Anexar Ficheiro PDF</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Título do Documento</label>
+                    <input type="text" id="pdf-titulo" placeholder="Ex: Prova Teórica 1º Trimestre" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma Destino</label>
+                    <select id="pdf-turma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></select>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Ficheiro PDF</label>
+                    <input type="file" id="pdf-file-input" accept="application/pdf" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button type="button" onclick="fecharModalPDF()" class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium">Cancelar</button>
+                <button type="button" onclick="salvarPDFDirecto()" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-md cursor-pointer">Anexar PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAIS GERAIS -->
     <div id="modal-app" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 w-full max-w-md space-y-5 shadow-2xl">
             <h3 id="modal-titulo" class="font-bold text-lg text-slate-900">Registar</h3>
@@ -438,6 +509,7 @@
     <script>
         let modalTipo = '';
         let editIndex = -1;
+        let activeWordIndex = -1;
 
         function toggleMobileMenu() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
@@ -447,30 +519,13 @@
         function carregarTudoNaTela() {
             atualizarTabelaTurmas();
             atualizarTabelaAlunos();
-            atualizarTabelaProvasTurmas();
+            atualizarTabelaPDFs();
+            atualizarListaDocsWord();
             atualizarListaCircuitos();
             atualizarListaEventos();
             atualizarSelectTurmasChamada();
-            atualizarSelectBuilderTurmas();
+            atualizarSelectTurmasWord();
             atualizarEstatisticas();
-        }
-
-        function carregarTopicosConstrutor() {
-            const container = document.getElementById('container-topicos-50');
-            if(!container) return;
-            container.innerHTML = topicos50.map((t) => `
-                <label class="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer hover:border-emerald-500">
-                    <input type="checkbox" value="${t}" class="builder-topico accent-emerald-600 w-4 h-4 rounded">
-                    <span class="text-slate-700">${t}</span>
-                </label>
-            `).join('');
-        }
-
-        function filtrarTopicosConstrutor(termo) {
-            const termoLimpo = termo.toLowerCase();
-            document.querySelectorAll('#container-topicos-50 label').forEach(l => {
-                l.style.display = l.textContent.toLowerCase().includes(termoLimpo) ? 'flex' : 'none';
-            });
         }
 
         function switchView(view) {
@@ -482,7 +537,6 @@
             if(view === 'register') document.getElementById('view-register').classList.remove('hidden');
             if(view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
-                carregarTopicosConstrutor();
                 filtrarBNCC('');
                 carregarTudoNaTela();
             }
@@ -493,20 +547,158 @@
         function logout() { switchView('login'); }
 
         function changeTab(tabId) {
-            ['home', 'turmas', 'alunos', 'chamada', 'construtor', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'backup', 'pesquisa'].forEach(t => {
+            ['home', 'turmas', 'alunos', 'chamada', 'editor-word', 'gestao', 'provas-trabalhos', 'atividades', 'calendario', 'backup', 'pesquisa'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
             if(tabId === 'chamada') atualizarSelectTurmasChamada();
-            if(tabId === 'construtor') { atualizarSelectBuilderTurmas(); carregarTopicosConstrutor(); }
-            if(tabId === 'provas-trabalhos') atualizarTabelaProvasTurmas();
+            if(tabId === 'editor-word') { atualizarSelectTurmasWord(); atualizarListaDocsWord(); }
+            if(tabId === 'provas-trabalhos') atualizarTabelaPDFs();
             if(tabId === 'atividades') atualizarListaCircuitos();
             if(tabId === 'calendario') atualizarListaEventos();
             if(tabId === 'gestao') filtrarBNCC('');
         }
 
+        // LÓGICA DO EDITOR ESTILO WORD
+        function execCmd(command, value = null) {
+            document.execCommand(command, false, value);
+        }
+
+        function atualizarSelectTurmasWord() {
+            const select = document.getElementById('doc-word-turma');
+            if(!select) return;
+            select.innerHTML = turmas.length === 0 ? '<option value="Geral">Geral</option>' : turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
+        }
+
+        function novoDocumentoWord() {
+            activeWordIndex = -1;
+            document.getElementById('doc-word-titulo').value = '';
+            document.getElementById('editor-word-area').innerHTML = '<p>Comece a escrever o seu plano de aula ou atividade aqui...</p>';
+        }
+
+        function salvarDocumentoWord() {
+            const titulo = document.getElementById('doc-word-titulo').value.trim();
+            const turma = document.getElementById('doc-word-turma').value;
+            const conteudo = document.getElementById('editor-word-area').innerHTML;
+
+            if(!titulo) { alert('Por favor insira um título para o documento.'); return; }
+
+            if(activeWordIndex >= 0) {
+                documentosWord[activeWordIndex] = { titulo, turma, conteudo, data: new Date().toLocaleDateString('pt-PT') };
+            } else {
+                documentosWord.push({ titulo, turma, conteudo, data: new Date().toLocaleDateString('pt-PT') });
+            }
+
+            salvarDadosLocais();
+            atualizarListaDocsWord();
+            atualizarEstatisticas();
+            alert('Atividade guardada com sucesso!');
+        }
+
+        function carregarDocumentoWord(idx) {
+            activeWordIndex = idx;
+            const doc = documentosWord[idx];
+            document.getElementById('doc-word-titulo').value = doc.titulo;
+            document.getElementById('doc-word-turma').value = doc.turma;
+            document.getElementById('editor-word-area').innerHTML = doc.conteudo;
+        }
+
+        function removerDocumentoWord(idx) {
+            documentosWord.splice(idx, 1);
+            salvarDadosLocais();
+            atualizarListaDocsWord();
+            atualizarEstatisticas();
+            if(activeWordIndex === idx) novoDocumentoWord();
+        }
+
+        function imprimirDocumentoWord() {
+            const titulo = document.getElementById('doc-word-titulo').value || 'Atividade EduFís Pro';
+            const conteudo = document.getElementById('editor-word-area').innerHTML;
+            const janela = window.open('', '_blank');
+            janela.document.write(`<html><head><title>${titulo}</title><style>body{font-family:Arial,sans-serif;padding:40px;line-height:1.6;}</style></head><body><h2>${titulo}</h2><hr/><br/>${conteudo}</body></html>`);
+            janela.document.close();
+            janela.print();
+        }
+
+        function atualizarListaDocsWord() {
+            const container = document.getElementById('lista-docs-word');
+            if(!container) return;
+            container.innerHTML = documentosWord.length === 0 ? `<p class="text-xs text-slate-400">Nenhum documento guardado.</p>` : documentosWord.map((d, idx) => `
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex justify-between items-center text-xs">
+                    <div>
+                        <strong class="text-slate-900 block font-semibold">${d.titulo}</strong>
+                        <span class="text-slate-500">${d.turma} | ${d.data}</span>
+                    </div>
+                    <div class="space-x-1.5">
+                        <button onclick="carregarDocumentoWord(${idx})" class="text-emerald-700 font-bold hover:underline">Abrir</button>
+                        <button onclick="removerDocumentoWord(${idx})" class="text-rose-600 hover:underline">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // LÓGICA DO GESTOR DE PDFS
+        function abrirModalUploadPDF() {
+            const select = document.getElementById('pdf-turma');
+            select.innerHTML = turmas.length === 0 ? '<option value="Geral">Geral</option>' : turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
+            document.getElementById('modal-upload-pdf').classList.remove('hidden');
+        }
+
+        function fecharModalPDF() { document.getElementById('modal-upload-pdf').classList.add('hidden'); }
+
+        function salvarPDFDirecto() {
+            const titulo = document.getElementById('pdf-titulo').value;
+            const turma = document.getElementById('pdf-turma').value;
+            const fileInput = document.getElementById('pdf-file-input');
+
+            if(!titulo || !fileInput.files[0]) { alert('Preencha o título e selecione um ficheiro PDF.'); return; }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const pdfData = e.target.result;
+                documentosPDF.push({ titulo, turma, nomeFicheiro: file.name, pdfData, data: new Date().toLocaleDateString('pt-PT') });
+                salvarDadosLocais();
+                atualizarTabelaPDFs();
+                atualizarEstatisticas();
+                fecharModalPDF();
+                alert('PDF anexado com sucesso!');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function atualizarTabelaPDFs() {
+            const container = document.getElementById('lista-provas-cards');
+            if(!container) return;
+            if(documentosPDF.length === 0) { container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center">Nenhum ficheiro PDF anexado.</div>`; return; }
+            container.innerHTML = documentosPDF.map((pt, idx) => `
+                <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start"><span class="bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs">🏫 ${pt.turma}</span><span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs">PDF</span></div>
+                        <h3 class="font-bold text-base text-slate-900">${pt.titulo}</h3>
+                        <p class="text-xs text-slate-500">📎 ${pt.nomeFicheiro} (${pt.data})</p>
+                    </div>
+                    <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                        <button onclick="visualizarPDF(${idx})" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer">👁️ Abrir PDF</button>
+                        <button onclick="removerPDF(${idx})" class="bg-rose-50 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function visualizarPDF(idx) {
+            const pdf = documentosPDF[idx];
+            const win = window.open();
+            win.document.write(`<iframe src="${pdf.pdfData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+        }
+
+        function removerPDF(idx) { documentosPDF.splice(idx, 1); salvarDadosLocais(); atualizarTabelaPDFs(); atualizarEstatisticas(); }
+
+        // MÓDULO BNCC E GESTÃO
         function filtrarBNCC(termo) {
             const container = document.getElementById('resultado-busca-bncc');
             const termoLimpo = termo.trim().toLowerCase();
@@ -527,33 +719,7 @@
             alert(`Habilidade [${codigo}] inserida no plano!`);
         }
 
-        function atualizarSelectBuilderTurmas() {
-            const select = document.getElementById('builder-turma');
-            if(!select) return;
-            select.innerHTML = turmas.length === 0 ? '<option value="Geral">Geral</option>' : turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
-        }
-
-        function gerarDocumentoAutomatico() {
-            const turma = document.getElementById('builder-turma').value;
-            const tipo = document.getElementById('builder-tipo').value;
-            const checkboxes = document.querySelectorAll('.builder-topico:checked');
-
-            if(checkboxes.length === 0) { alert('Selecione pelo menos um tópico.'); return; }
-
-            let questoesHtml = '';
-            checkboxes.forEach((cb, idx) => {
-                questoesHtml += `<div class="mb-3"><strong>${idx + 1}. Tópico: ${cb.value}</strong><br>Explique os conceitos práticos e teóricos abordados.</div>`;
-            });
-
-            provasTurma.push({ turma, titulo: `${tipo} (Personalizado)`, tipo, conteudo: questoesHtml });
-            salvarDadosLocais();
-            atualizarEstatisticas();
-            atualizarTabelaProvasTurmas();
-            alert('Documento gerado com sucesso!');
-            changeTab('provas-trabalhos');
-        }
-
-        // ABRIR MODAL DA TURMA (CRIAR OU EDITAR)
+        // MODAIS DE EDICAO DE TURMAS E ALUNOS
         function abrirModalTurma(idx = -1) {
             modalTipo = 'turma';
             editIndex = idx;
@@ -568,7 +734,6 @@
             document.getElementById('modal-app').classList.remove('hidden');
         }
 
-        // ABRIR MODAL DO ALUNO (CRIAR OU EDITAR)
         function abrirModalAluno(idx = -1) {
             modalTipo = 'aluno';
             editIndex = idx;
@@ -647,35 +812,6 @@
             fecharModalEvento();
         }
 
-        function atualizarTabelaProvasTurmas() {
-            const container = document.getElementById('lista-provas-cards');
-            if(!container) return;
-            if(provasTurma.length === 0) { container.innerHTML = `<div class="bg-white border border-slate-200 p-8 rounded-3xl text-slate-400 text-sm col-span-2 text-center">Nenhum documento gerado.</div>`; return; }
-            container.innerHTML = provasTurma.map((pt, idx) => `
-                <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm">
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-start"><span class="bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs">🏫 ${pt.turma}</span><span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs">${pt.tipo}</span></div>
-                        <h3 class="font-bold text-base text-slate-900">${pt.titulo}</h3>
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 max-h-36 overflow-y-auto whitespace-pre-wrap">${pt.conteudo.replace(/<[^>]*>/g, '')}</div>
-                    </div>
-                    <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                        <button onclick="imprimirProvaTurma(${idx})" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer">🖨️ Imprimir PDF</button>
-                        <button onclick="removerProvaTurma(${idx})" class="bg-rose-50 text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold">Excluir</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function imprimirProvaTurma(idx) {
-            const doc = provasTurma[idx];
-            const janela = window.open('', '_blank');
-            janela.document.write(`<html><head><title>${doc.titulo}</title></head><body style="font-family: Arial; padding: 40px;"><h2>ESCOLA DE EDUCAÇÃO FÍSICA</h2><h3>Turma: ${doc.turma} - ${doc.titulo}</h3><hr/><div>${doc.conteudo}</div></body></html>`);
-            janela.document.close();
-            janela.print();
-        }
-
-        function removerProvaTurma(idx) { provasTurma.splice(idx, 1); salvarDadosLocais(); atualizarTabelaProvasTurmas(); atualizarEstatisticas(); }
-        
         function atualizarListaCircuitos() {
             const container = document.getElementById('lista-circuitos');
             if(!container) return;
@@ -778,7 +914,7 @@
         function atualizarEstatisticas() {
             document.getElementById('stat-turmas').textContent = turmas.length;
             document.getElementById('stat-alunos').textContent = alunos.length;
-            document.getElementById('stat-documentos').textContent = provasTurma.length;
+            document.getElementById('stat-documentos').textContent = documentosPDF.length + documentosWord.length;
             document.getElementById('stat-circuitos').textContent = circuitosAtividades.length;
         }
     </script>
