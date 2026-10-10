@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23059669'/><path d='M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40' stroke='white' stroke-width='8' stroke-linecap='round'/></svg>">
-    <title>EduFís Pro v6.3 - Painel de Educação Física</title>
+    <title>EduFís Pro v6.4 - Painel de Educação Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -22,6 +22,7 @@
         let documentosWord = JSON.parse(localStorage.getItem('edufis_word_docs')) || []; 
         let circuitosAtividades = JSON.parse(localStorage.getItem('edufis_circuitos')) || []; 
         let eventosCalendario = JSON.parse(localStorage.getItem('edufis_eventos')) || []; 
+        let planoGestaoDados = JSON.parse(localStorage.getItem('edufis_plano_gestao')) || {};
 
         function salvarDadosLocais() {
             localStorage.setItem('edufis_turmas', JSON.stringify(turmas));
@@ -30,6 +31,7 @@
             localStorage.setItem('edufis_word_docs', JSON.stringify(documentosWord));
             localStorage.setItem('edufis_circuitos', JSON.stringify(circuitosAtividades));
             localStorage.setItem('edufis_eventos', JSON.stringify(eventosCalendario));
+            localStorage.setItem('edufis_plano_gestao', JSON.stringify(planoGestaoDados));
         }
 
         async function salvarAutomaticoNoGoogleDrive() {
@@ -37,9 +39,9 @@
             if(statusEl) statusEl.textContent = "⏳ A enviar backup para a nuvem...";
 
             const dadosBackup = {
-                versao: "6.3",
+                versao: "6.4",
                 dataBackup: new Date().toISOString(),
-                turmas, alunos, documentosPDF, documentosWord, circuitosAtividades, eventosCalendario
+                turmas, alunos, documentosPDF, documentosWord, circuitosAtividades, eventosCalendario, planoGestaoDados
             };
 
             try {
@@ -71,6 +73,7 @@
                     if(conteudo.documentosWord) documentosWord = conteudo.documentosWord;
                     if(conteudo.circuitosAtividades) circuitosAtividades = conteudo.circuitosAtividades;
                     if(conteudo.eventosCalendario) eventosCalendario = conteudo.eventosCalendario;
+                    if(conteudo.planoGestaoDados) planoGestaoDados = conteudo.planoGestaoDados;
                     
                     salvarDadosLocais();
                     carregarTudoNaTela();
@@ -81,6 +84,17 @@
             };
             reader.readAsText(file);
         }
+
+        const baseBNCC = [
+            { codigo: "EF67EF01", tema: "Esportes", desc: "Experimentar e fruir diferentes esportes de marca, precisão, invasão e técnico-combinativas, valorizando o trabalho coletivo." },
+            { codigo: "EF67EF02", tema: "Esportes", desc: "Praticar um ou mais esportes oferecidos pela escola, usando estratégias básicas para solucionar problemas motores." },
+            { codigo: "EF67EF03", tema: "Lutas", desc: "Experimentar e fruir diferentes lutas do contexto comunitário e regional, respeitando a integridade física própria e do oponente." },
+            { codigo: "EF67EF07", tema: "Ginástica", desc: "Propor e produzir alternativas para a prática da ginástica de conscientização corporal, reconhecendo suas potencialidades." },
+            { codigo: "EF67EF08", tema: "Dança", desc: "Experimentar e fruir danças urbanas, folclóricas e de salão, valorizando a diversidade cultural." },
+            { codigo: "EF89EF01", tema: "Esportes", desc: "Experimentar e fruir esportes de rede/parede, campo e taco, invasão e combate." },
+            { codigo: "EF89EF03", tema: "Esportes", desc: "Formular e utilizar estratégias para solucionar desafios em esportes de invasão e combate." },
+            { codigo: "EM13LP01", tema: "Saúde", desc: "Relacionar a prática regular de exercícios físicos com a melhoria da qualidade de vida e saúde mental." }
+        ];
     </script>
 
     <!-- LOGIN -->
@@ -122,7 +136,7 @@
                 </div>
                 <div>
                     <span class="text-lg font-bold text-slate-900 leading-none block">EduFís</span>
-                    <span class="text-[10px] uppercase text-emerald-600 font-bold">Pro v6.3</span>
+                    <span class="text-[10px] uppercase text-emerald-600 font-bold">Pro v6.4</span>
                 </div>
             </div>
             <button onclick="logout()" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-3.5 py-2 rounded-xl font-semibold cursor-pointer">Sair</button>
@@ -139,9 +153,9 @@
                     <button onclick="changeTab('chamada')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📋 Chamada Rápida</button>
                     
                     <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-4 pb-1">Ferramentas</div>
-                    <button onclick="changeTab('editor-word')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 flex items-center gap-3 cursor-pointer">📝 Editor de Atividades (Word)</button>
+                    <button onclick="changeTab('editor-word')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📝 Editor de Atividades (Word)</button>
                     <button onclick="changeTab('provas-trabalhos')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📄 Gestor de Documentos & PDFs</button>
-                    <button onclick="changeTab('gestao')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📅 Plano de Gestão & BNCC</button>
+                    <button onclick="changeTab('gestao')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 flex items-center gap-3 cursor-pointer">📅 Plano de Gestão & BNCC</button>
                     <button onclick="changeTab('atividades')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">🏃 Circuitos e Estações</button>
                     <button onclick="changeTab('calendario')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">🗓️ Calendário Escolar</button>
                     <button onclick="changeTab('backup')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">☁️ Google Drive Auto-Backup</button>
@@ -155,7 +169,7 @@
                     <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-8 rounded-3xl shadow-xl flex justify-between items-center">
                         <div>
                             <h2 class="text-3xl font-black">Bem-vindo ao EduFís Pro 🏋️</h2>
-                            <p class="text-emerald-100 text-sm mt-1">Botão flutuante ativo apenas no painel.</p>
+                            <p class="text-emerald-100 text-sm mt-1">Plano de Gestão & BNCC Totalmente Funcional.</p>
                         </div>
                         <button onclick="salvarAutomaticoNoGoogleDrive()" class="bg-white text-emerald-700 font-bold px-5 py-3 rounded-2xl text-sm shadow-md cursor-pointer">🚀 Backup para o Drive</button>
                     </div>
@@ -281,11 +295,63 @@
                     </div>
                 </div>
 
-                <!-- ABA PLANO DE GESTÃO & BNCC -->
+                <!-- ABA PLANO DE GESTÃO & BNCC (REFORMULADO E FUNCIONAL) -->
                 <div id="tab-gestao" class="hidden space-y-6">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-2xl font-black text-slate-900">Plano de Gestão & BNCC</h2>
-                        <button onclick="window.print()" class="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer">🖨️ Imprimir / PDF</button>
+                    <div class="flex justify-between items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900">📅 Plano de Gestão Pedagógica & BNCC</h2>
+                            <p class="text-slate-500 text-sm">Pesquise habilidades da BNCC e elabore o seu plano de gestão anual/trimestral.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="salvarPlanoGestao()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md cursor-pointer">💾 Guardar Plano</button>
+                            <button onclick="imprimirPlanoGestao()" class="bg-sky-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer">🖨️ Imprimir / PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- REPOSITÓRIO BNCC INTERATIVO -->
+                    <div class="bg-white border border-slate-200 p-6 rounded-3xl space-y-3 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-700">🔍 Repositório de Habilidades BNCC</h3>
+                            <span class="text-xs text-slate-400">Clique em <b>＋ Inserir</b> para adicionar ao plano</span>
+                        </div>
+                        <input type="text" oninput="filtrarBNCC(this.value)" placeholder="Pesquisar por código (ex: EF67EF01), esporte, dança, lutas..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm">
+                        <div id="resultado-busca-bncc" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <!-- FORMULÁRIO DO PLANO DE GESTÃO -->
+                    <div class="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm space-y-5 max-w-4xl">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 border-b border-slate-100">
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-600 mb-1">Turma / Ano Alvo</label>
+                                <select id="plano-turma-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-600 mb-1">Período Letivo</label>
+                                <input type="text" id="plano-periodo" placeholder="Ex: 1º Trimestre / Anual" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm">
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-700 mb-1">1. Objetivos Estratégicos & Geral da Disciplina</label>
+                                <textarea id="plano-objetivos" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-sm" placeholder="Desenvolver competências motoras, cognitivas e socioemocionais..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-700 mb-1">2. Habilidades da BNCC Selecionadas</label>
+                                <textarea id="plano-bncc-texto" rows="4" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-sm font-mono text-emerald-800" placeholder="As habilidades BNCC selecionadas do campo acima vão aparecer aqui..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-700 mb-1">3. Conteúdos Programáticos & Unidades Temáticas</label>
+                                <textarea id="plano-conteudos" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-sm" placeholder="Esportes de Invasão (Futsal/Basquetebol), Ginástica Geral, Jogos Cooperativos..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-slate-700 mb-1">4. Metodologia & Critérios de Avaliação</label>
+                                <textarea id="plano-metodologia" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-sm" placeholder="Aulas práticas em circuito, autoavaliação, participação nas atividades e prova teórica..."></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -334,11 +400,11 @@
             <button onclick="atalhoIrPara('provas-trabalhos')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
                 📄 Anexar Ficheiro PDF
             </button>
+            <button onclick="atalhoIrPara('gestao')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
+                📅 Plano de Gestão & BNCC
+            </button>
             <button onclick="atalhoIrPara('chamada')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
                 📋 Fazer Chamada
-            </button>
-            <button onclick="atalhoNovaTurma()" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
-                🏫 + Criar Nova Turma
             </button>
         </div>
 
@@ -396,19 +462,12 @@
         let activeWordIndex = -1;
 
         function toggleMenuAtalhos() {
-            const menu = document.getElementById('menu-atalhos');
-            menu.classList.toggle('hidden');
+            document.getElementById('menu-atalhos').classList.toggle('hidden');
         }
 
         function atalhoIrPara(tabId) {
             changeTab(tabId);
             toggleMenuAtalhos();
-        }
-
-        function atalhoNovaTurma() {
-            toggleMenuAtalhos();
-            changeTab('turmas');
-            abrirModalTurma(-1);
         }
 
         function carregarTudoNaTela() {
@@ -420,20 +479,21 @@
             atualizarListaEventos();
             atualizarSelectTurmasChamada();
             atualizarSelectTurmasWord();
+            carregarPlanoGestao();
             atualizarEstatisticas();
         }
 
         function switchView(view) {
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-dashboard').classList.add('hidden');
-            document.getElementById('floating-basketball').classList.add('hidden'); // Oculta a bola por padrão
+            document.getElementById('floating-basketball').classList.add('hidden');
 
             if(view === 'login') {
                 document.getElementById('view-login').classList.remove('hidden');
             }
             if(view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
-                document.getElementById('floating-basketball').classList.remove('hidden'); // Mostra a bola apenas no dashboard
+                document.getElementById('floating-basketball').classList.remove('hidden');
                 carregarTudoNaTela();
             }
         }
@@ -451,6 +511,84 @@
             if(tabId === 'chamada') atualizarSelectTurmasChamada();
             if(tabId === 'editor-word') { atualizarSelectTurmasWord(); atualizarListaDocsWord(); }
             if(tabId === 'provas-trabalhos') atualizarTabelaPDFs();
+            if(tabId === 'gestao') { carregarSelectTurmasPlano(); filtrarBNCC(''); }
+        }
+
+        // LÓGICA DO PLANO DE GESTÃO & BNCC
+        function carregarSelectTurmasPlano() {
+            const select = document.getElementById('plano-turma-select');
+            if(!select) return;
+            select.innerHTML = turmas.length === 0 ? '<option value="Geral">Todas as Turmas (Geral)</option>' : turmas.map(t => `<option value="${t.nome}">${t.nome} (${t.ano})</option>`).join('');
+        }
+
+        function filtrarBNCC(termo) {
+            const container = document.getElementById('resultado-busca-bncc');
+            if(!container) return;
+            const termoLimpo = termo.trim().toLowerCase();
+            const filtradas = baseBNCC.filter(b => b.codigo.toLowerCase().includes(termoLimpo) || b.tema.toLowerCase().includes(termoLimpo) || b.desc.toLowerCase().includes(termoLimpo));
+
+            if(filtradas.length === 0) { container.innerHTML = `<p class="text-xs text-slate-400 p-2">Nenhuma habilidade encontrada.</p>`; return; }
+
+            container.innerHTML = filtradas.map(b => `
+                <div onclick="inserirBNCCNoPlano('${b.codigo}', '${b.desc.replace(/'/g, "\\'")}')" class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 hover:border-emerald-500 cursor-pointer flex justify-between items-center transition-all">
+                    <div><strong class="text-emerald-700 font-bold">[${b.codigo}]</strong> <span class="bg-slate-200 text-slate-800 px-2 py-0.5 rounded text-[10px] uppercase font-bold">${b.tema}</span><br><span class="text-slate-600">${b.desc}</span></div>
+                    <button type="button" class="bg-emerald-600 text-white font-bold px-3 py-1 rounded-lg text-xs hover:bg-emerald-500 whitespace-nowrap ml-2">＋ Inserir</button>
+                </div>
+            `).join('');
+        }
+
+        function inserirBNCCNoPlano(codigo, desc) {
+            const campo = document.getElementById('plano-bncc-texto');
+            const textoAtual = campo.value.trim();
+            const novaLinha = `• [${codigo}] - ${desc}`;
+            campo.value = textoAtual ? `${textoAtual}\n${novaLinha}` : novaLinha;
+            alert(`Habilidade ${codigo} inserida no plano!`);
+        }
+
+        function salvarPlanoGestao() {
+            planoGestaoDados = {
+                turma: document.getElementById('plano-turma-select').value,
+                periodo: document.getElementById('plano-periodo').value,
+                objetivos: document.getElementById('plano-objetivos').value,
+                bncc: document.getElementById('plano-bncc-texto').value,
+                conteudos: document.getElementById('plano-conteudos').value,
+                metodologia: document.getElementById('plano-metodologia').value
+            };
+            salvarDadosLocais();
+            alert('Plano de Gestão Pedagógica guardado com sucesso!');
+        }
+
+        function carregarPlanoGestao() {
+            if(planoGestaoDados.periodo) document.getElementById('plano-periodo').value = planoGestaoDados.periodo;
+            if(planoGestaoDados.objetivos) document.getElementById('plano-objetivos').value = planoGestaoDados.objetivos;
+            if(planoGestaoDados.bncc) document.getElementById('plano-bncc-texto').value = planoGestaoDados.bncc;
+            if(planoGestaoDados.conteudos) document.getElementById('plano-conteudos').value = planoGestaoDados.conteudos;
+            if(planoGestaoDados.metodologia) document.getElementById('plano-metodologia').value = planoGestaoDados.metodologia;
+        }
+
+        function imprimirPlanoGestao() {
+            const turma = document.getElementById('plano-turma-select').value || 'Geral';
+            const periodo = document.getElementById('plano-periodo').value || 'Anual';
+            const objetivos = document.getElementById('plano-objetivos').value;
+            const bncc = document.getElementById('plano-bncc-texto').value;
+            const conteudos = document.getElementById('plano-conteudos').value;
+            const metodologia = document.getElementById('plano-metodologia').value;
+
+            const janela = window.open('', '_blank');
+            janela.document.write(`
+                <html><head><title>Plano de Gestão Pedagógica - ${turma}</title>
+                <style>body{font-family:Arial,sans-serif;padding:40px;line-height:1.6;} h2{color:#059669;} h4{margin-bottom:4px;color:#334155;} hr{border:0;border-top:1px solid #ccc;margin:20px 0;}</style>
+                </head><body>
+                <h2>PLANO DE GESTÃO PEDAGÓGICA - EDUCAÇÃO FÍSICA</h2>
+                <p><b>Turma:</b> ${turma} | <b>Período:</b> ${periodo}</p><hr/>
+                <h4>1. Objetivos Estratégicos</h4><p>${objetivos.replace(/\n/g, '<br>')}</p>
+                <h4>2. Habilidades BNCC</h4><p>${bncc.replace(/\n/g, '<br>')}</p>
+                <h4>3. Conteúdos Programáticos</h4><p>${conteudos.replace(/\n/g, '<br>')}</p>
+                <h4>4. Metodologia e Avaliação</h4><p>${metodologia.replace(/\n/g, '<br>')}</p>
+                </body></html>
+            `);
+            janela.document.close();
+            janela.print();
         }
 
         function execCmd(command, value = null) { document.execCommand(command, false, value); }
