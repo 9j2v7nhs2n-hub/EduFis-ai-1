@@ -14,7 +14,6 @@
 
     <!-- MOTOR DE DADOS E CONEXÃO AUTO DRIVE -->
     <script>
-        // LINK DO GOOGLE APPS SCRIPT JÁ CONFIGURADO
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyTUXPXMwt_qEjteIef1pfSDs1kgzc_ck3QJkLpGzHygB8nOq03zANVHAfvDC1vKfrvKA/exec";
 
         let turmas = JSON.parse(localStorage.getItem('edufis_turmas')) || [];
@@ -107,7 +106,10 @@
     <div id="view-login" class="flex flex-col items-center justify-center flex-1 p-4 sm:p-6 bg-gradient-to-br from-emerald-50 via-slate-100 to-slate-200">
         <div class="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6">
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold shadow-md shadow-emerald-600/30">🏋️</div>
+                <!-- LOGO NA TELA DE LOGIN -->
+                <div class="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md shadow-emerald-600/30 overflow-hidden">
+                    <img src="logo.png" alt="EduFís Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='🏋️';">
+                </div>
                 <h1 class="text-2xl font-black tracking-tight text-slate-900">EduFís Pro</h1>
                 <p class="text-slate-500 text-sm">Plataforma Inteligente de Gestão de Educação Física</p>
             </div>
@@ -163,14 +165,17 @@
     <!-- 3. DASHBOARD -->
     <div id="view-dashboard" class="hidden flex flex-col flex-1">
         
-        <!-- HEADER -->
+        <!-- HEADER COM LOGO -->
         <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-sm">
             <div class="flex items-center gap-3">
                 <button onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-slate-900 p-1.5 rounded-xl bg-slate-100 cursor-pointer">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div class="flex items-center gap-2">
-                    <div class="w-9 h-9 bg-emerald-600 text-white rounded-xl flex items-center justify-center font-black text-lg shadow-md shadow-emerald-600/20">E</div>
+                <div class="flex items-center gap-2.5">
+                    <!-- LOGO PRINCIPAL NO CABEÇALHO -->
+                    <div class="w-9 h-9 bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 overflow-hidden">
+                        <img src="logo.png" alt="EduFís Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\"font-black text-lg\">E</span>';">
+                    </div>
                     <div>
                         <span class="text-lg font-bold tracking-tight text-slate-900 block leading-none">EduFís</span>
                         <span class="text-[10px] uppercase tracking-wider text-emerald-600 font-bold">Pro Dashboard</span>
