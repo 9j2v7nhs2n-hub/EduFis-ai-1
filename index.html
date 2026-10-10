@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- FAVICON LOGO EDUFÍS PRO (Substitui o planeta na aba do navegador) -->
+    <!-- FAVICON LOGO EDUFÍS PRO -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23059669'/><path d='M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40' stroke='white' stroke-width='8' stroke-linecap='round'/></svg>">
     
     <title>EduFís - Painel Profissional de Educação Física</title>
@@ -39,7 +39,7 @@
             if(statusEl) statusEl.textContent = "⏳ A enviar backup para a nuvem...";
 
             const dadosBackup = {
-                versao: "5.0",
+                versao: "5.1",
                 dataBackup: new Date().toISOString(),
                 turmas, alunos, provasTurma, circuitosAtividades, eventosCalendario
             };
@@ -110,7 +110,6 @@
     <div id="view-login" class="flex flex-col items-center justify-center flex-1 p-4 sm:p-6 bg-gradient-to-br from-emerald-50 via-slate-100 to-slate-200">
         <div class="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6">
             <div class="text-center space-y-2">
-                <!-- LOGO SVG NA TELA DE LOGIN -->
                 <div class="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-md shadow-emerald-600/30 p-3">
                     <svg class="w-full h-full text-white" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round">
                         <path d="M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40"/>
@@ -171,14 +170,13 @@
     <!-- 3. DASHBOARD -->
     <div id="view-dashboard" class="hidden flex flex-col flex-1">
         
-        <!-- HEADER COM LOGO -->
+        <!-- HEADER -->
         <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-sm">
             <div class="flex items-center gap-3">
                 <button onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-slate-900 p-1.5 rounded-xl bg-slate-100 cursor-pointer">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <div class="flex items-center gap-2.5">
-                    <!-- LOGO PRINCIPAL NO CABEÇALHO -->
                     <div class="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/20 p-2">
                         <svg class="w-full h-full text-white" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round">
                             <path d="M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40"/>
@@ -252,7 +250,7 @@
                     </div>
                     <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase"><tr><th class="p-4">Nome</th><th class="p-4">Série / Ano</th><th class="p-4">Turno</th><th class="p-4">Alunos</th><th class="p-4 text-right">Ação</th></tr></thead>
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase"><tr><th class="p-4">Nome</th><th class="p-4">Série / Ano</th><th class="p-4">Turno</th><th class="p-4">Alunos</th><th class="p-4 text-right">Ações</th></tr></thead>
                             <tbody id="tabela-turmas" class="divide-y divide-slate-100"><tr><td colspan="5" class="p-8 text-center text-slate-400">Nenhuma turma.</td></tr></tbody>
                         </table>
                     </div>
@@ -266,7 +264,7 @@
                     </div>
                     <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase"><tr><th class="p-4">Nome</th><th class="p-4">E-mail</th><th class="p-4">Turma</th><th class="p-4 text-right">Ação</th></tr></thead>
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase"><tr><th class="p-4">Nome</th><th class="p-4">E-mail</th><th class="p-4">Turma</th><th class="p-4 text-right">Ações</th></tr></thead>
                             <tbody id="tabela-alunos" class="divide-y divide-slate-100"><tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum aluno.</td></tr></tbody>
                         </table>
                     </div>
@@ -439,6 +437,7 @@
     <!-- FUNÇÕES DE LÓGICA E INTERFACE -->
     <script>
         let modalTipo = '';
+        let editIndex = -1;
 
         function toggleMobileMenu() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
@@ -554,24 +553,33 @@
             changeTab('provas-trabalhos');
         }
 
-        function abrirModalTurma() {
+        // TURMAS: ABRIR MODAL (NOVO OU EDITAR)
+        function abrirModalTurma(index = -1) {
             modalTipo = 'turma';
-            document.getElementById('modal-titulo').textContent = 'Nova Turma';
+            editIndex = index;
+            const t = index >= 0 ? turmas[index] : { nome: '', ano: '', turno: '' };
+
+            document.getElementById('modal-titulo').textContent = index >= 0 ? 'Editar Turma' : 'Nova Turma';
             document.getElementById('modal-corpo').innerHTML = `
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Nome</label><input type="text" id="m-t-nome" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Ano / Série</label><input type="text" id="m-t-ano" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turno</label><input type="text" id="m-t-turno" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Nome</label><input type="text" id="m-t-nome" value="${t.nome}" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Ano / Série</label><input type="text" id="m-t-ano" value="${t.ano}" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turno</label><input type="text" id="m-t-turno" value="${t.turno}" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
             `;
             document.getElementById('modal-app').classList.remove('hidden');
         }
 
-        function abrirModalAluno() {
+        // ALUNOS: ABRIR MODAL (NOVO OU EDITAR)
+        function abrirModalAluno(index = -1) {
             modalTipo = 'aluno';
-            document.getElementById('modal-titulo').textContent = 'Novo Aluno';
-            let turmasOpts = turmas.length ? turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas</option>';
+            editIndex = index;
+            const a = index >= 0 ? alunos[index] : { nome: '', email: '', turma: '' };
+
+            document.getElementById('modal-titulo').textContent = index >= 0 ? 'Editar Aluno' : 'Novo Aluno';
+            let turmasOpts = turmas.length ? turmas.map(t => `<option value="${t.nome}" ${a.turma === t.nome ? 'selected' : ''}>${t.nome}</option>`).join('') : '<option value="Geral">Sem turmas</option>';
+            
             document.getElementById('modal-corpo').innerHTML = `
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Nome</label><input type="text" id="m-a-nome" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
-                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">E-mail</label><input type="text" id="m-a-email" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Nome</label><input type="text" id="m-a-nome" value="${a.nome}" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
+                <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">E-mail</label><input type="text" id="m-a-email" value="${a.email || ''}" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm"></div>
                 <div><label class="block text-xs uppercase font-semibold text-slate-600 mb-1">Turma</label><select id="m-a-turma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm">${turmasOpts}</select></div>
             `;
             document.getElementById('modal-app').classList.remove('hidden');
@@ -590,14 +598,24 @@
                 const ano = document.getElementById('m-t-ano').value;
                 const turno = document.getElementById('m-t-turno').value;
                 if(!nome || !ano) { alert('Preencha os campos!'); return; }
-                turmas.push({ nome, ano, turno });
+
+                if(editIndex >= 0) {
+                    turmas[editIndex] = { nome, ano, turno };
+                } else {
+                    turmas.push({ nome, ano, turno });
+                }
                 atualizarTabelaTurmas();
             } else if(modalTipo === 'aluno') {
                 const nome = document.getElementById('m-a-nome').value;
                 const email = document.getElementById('m-a-email').value;
                 const turma = document.getElementById('m-a-turma').value;
                 if(!nome) { alert('Insira o nome!'); return; }
-                alunos.push({ nome, email, turma });
+
+                if(editIndex >= 0) {
+                    alunos[editIndex] = { nome, email, turma };
+                } else {
+                    alunos.push({ nome, email, turma });
+                }
                 atualizarTabelaAlunos();
                 atualizarTabelaTurmas();
             }
@@ -690,7 +708,11 @@
                 <tr class="hover:bg-slate-50">
                     <td class="p-4 font-semibold text-slate-900">${t.nome}</td><td class="p-4 text-slate-600">${t.ano}</td><td class="p-4 text-slate-600">${t.turno}</td>
                     <td class="p-4"><span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs">${alunos.filter(a => a.turma === t.nome).length} aluno(s)</span></td>
-                    <td class="p-4 text-right space-x-2"><button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-700 text-xs font-semibold">Ver Alunos</button><button onclick="removerTurma(${idx})" class="text-rose-600 text-xs">Excluir</button></td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="verAlunosTurma('${t.nome}')" class="text-emerald-700 text-xs font-semibold">Ver Alunos</button>
+                        <button onclick="abrirModalTurma(${idx})" class="text-sky-600 text-xs font-semibold">Editar</button>
+                        <button onclick="removerTurma(${idx})" class="text-rose-600 text-xs font-semibold">Excluir</button>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -701,7 +723,10 @@
             tbody.innerHTML = alunos.length === 0 ? `<tr><td colspan="4" class="p-8 text-center text-slate-400">Nenhum aluno.</td></tr>` : alunos.map((a, idx) => `
                 <tr class="hover:bg-slate-50">
                     <td class="p-4 font-semibold text-slate-900">${a.nome}</td><td class="p-4 text-slate-600">${a.email || '-'}</td><td class="p-4 text-slate-600"><span class="bg-slate-100 px-3 py-1 rounded-md text-xs">${a.turma}</span></td>
-                    <td class="p-4 text-right"><button onclick="removerAluno(${idx})" class="text-rose-600 text-xs">Excluir</button></td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="abrirModalAluno(${idx})" class="text-sky-600 text-xs font-semibold">Editar</button>
+                        <button onclick="removerAluno(${idx})" class="text-rose-600 text-xs font-semibold">Excluir</button>
+                    </td>
                 </tr>
             `).join('');
         }
