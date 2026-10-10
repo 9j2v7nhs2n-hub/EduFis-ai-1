@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23059669'/><path d='M30 35 v30 M70 35 v30 M20 40 v20 M80 40 v20 M30 50 h40' stroke='white' stroke-width='8' stroke-linecap='round'/></svg>">
-    <title>EduFís Pro v6.1 - Painel de Educação Física</title>
+    <title>EduFís Pro v6.2 - Painel de Educação Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col relative">
 
     <script>
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyTUXPXMwt_qEjteIef1pfSDs1kgzc_ck3QJkLpGzHygB8nOq03zANVHAfvDC1vKfrvKA/exec";
@@ -37,7 +37,7 @@
             if(statusEl) statusEl.textContent = "⏳ A enviar backup para a nuvem...";
 
             const dadosBackup = {
-                versao: "6.1",
+                versao: "6.2",
                 dataBackup: new Date().toISOString(),
                 turmas, alunos, documentosPDF, documentosWord, circuitosAtividades, eventosCalendario
             };
@@ -132,7 +132,7 @@
                 </div>
                 <div>
                     <span class="text-lg font-bold text-slate-900 leading-none block">EduFís</span>
-                    <span class="text-[10px] uppercase text-emerald-600 font-bold">Pro v6.1</span>
+                    <span class="text-[10px] uppercase text-emerald-600 font-bold">Pro v6.2</span>
                 </div>
             </div>
             <button onclick="logout()" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-3.5 py-2 rounded-xl font-semibold cursor-pointer">Sair</button>
@@ -149,7 +149,7 @@
                     <button onclick="changeTab('chamada')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📋 Chamada Rápida</button>
                     
                     <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-4 pb-1">Ferramentas</div>
-                    <button onclick="changeTab('editor-word')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 flex items-center gap-3 cursor-pointer">📝 Editor de Atividades (Estilo Word)</button>
+                    <button onclick="changeTab('editor-word')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 flex items-center gap-3 cursor-pointer">📝 Editor de Atividades (Word)</button>
                     <button onclick="changeTab('provas-trabalhos')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📄 Gestor de Documentos & PDFs</button>
                     <button onclick="changeTab('gestao')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">📅 Plano de Gestão & BNCC</button>
                     <button onclick="changeTab('atividades')" class="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-3 cursor-pointer">🏃 Circuitos e Estações</button>
@@ -165,7 +165,7 @@
                     <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-8 rounded-3xl shadow-xl flex justify-between items-center">
                         <div>
                             <h2 class="text-3xl font-black">Bem-vindo ao EduFís Pro 🏋️</h2>
-                            <p class="text-emerald-100 text-sm mt-1">Painel atualizado com Editor Word e Gestor de PDFs.</p>
+                            <p class="text-emerald-100 text-sm mt-1">Painel atualizado com Botão Flutuante de Basquetebol 🏀</p>
                         </div>
                         <button onclick="salvarAutomaticoNoGoogleDrive()" class="bg-white text-emerald-700 font-bold px-5 py-3 rounded-2xl text-sm shadow-md cursor-pointer">🚀 Backup para o Drive</button>
                     </div>
@@ -339,6 +339,37 @@
         </div>
     </div>
 
+    <!-- BOTÃO FLUTUANTE DE BOLA DE BASQUETEBOL COM MENU DE ATALHOS -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- MENU DE ATALHOS (INICIALMENTE OCULTO) -->
+        <div id="menu-atalhos" class="hidden mb-3 bg-white border border-slate-200 rounded-3xl p-3 shadow-2xl space-y-2 w-56 transform transition-all duration-200">
+            <div class="text-[10px] uppercase font-bold text-slate-400 px-3 py-1 border-b border-slate-100">⚡ Atalhos Rápido</div>
+            <button onclick="atalhoIrPara('editor-word')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
+                📝 Escrever Atividade (Word)
+            </button>
+            <button onclick="atalhoIrPara('provas-trabalhos')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
+                📄 Anexar Ficheiro PDF
+            </button>
+            <button onclick="atalhoIrPara('chamada')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
+                📋 Fazer Chamada
+            </button>
+            <button onclick="atalhoNovaTurma()" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 cursor-pointer">
+                🏫 + Criar Nova Turma
+            </button>
+        </div>
+
+        <!-- BOLA DE BASQUETEBOL (BOTÃO) -->
+        <button onclick="toggleMenuAtalhos()" title="Atalhos Rápidos" class="w-14 h-14 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/50 transform hover:scale-110 active:scale-95 transition-all cursor-pointer p-2.5 border-2 border-white">
+            <svg class="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
+                <circle cx="50" cy="50" r="44" stroke="currentColor" fill="#ea580c"/>
+                <line x1="6" y1="50" x2="94" y2="50" stroke="currentColor"/>
+                <line x1="50" y1="6" x2="50" y2="94" stroke="currentColor"/>
+                <path d="M 20 15 A 45 45 0 0 1 20 85" stroke="currentColor"/>
+                <path d="M 80 15 A 45 45 0 0 0 80 85" stroke="currentColor"/>
+            </svg>
+        </button>
+    </div>
+
     <!-- MODAL PDF -->
     <div id="modal-upload-pdf" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white border border-slate-200 rounded-3xl p-8 w-full max-w-md space-y-5">
@@ -380,6 +411,22 @@
         let modalTipo = '';
         let editIndex = -1;
         let activeWordIndex = -1;
+
+        function toggleMenuAtalhos() {
+            const menu = document.getElementById('menu-atalhos');
+            menu.classList.toggle('hidden');
+        }
+
+        function atalhoIrPara(tabId) {
+            changeTab(tabId);
+            toggleMenuAtalhos();
+        }
+
+        function atalhoNovaTurma() {
+            toggleMenuAtalhos();
+            changeTab('turmas');
+            abrirModalTurma(-1);
+        }
 
         function carregarTudoNaTela() {
             atualizarTabelaTurmas();
